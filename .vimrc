@@ -3,16 +3,16 @@ set nocompatible
 let mapleader=','
 let localmapleader='\'
 
-" terminal {{{
+"---- terminal {{{
 set clipboard=unnamed
 set encoding=utf-8
 set termencoding=utf-8
 set t_Co=256
 set ttyfast
 set ttymouse=xterm2
-" }}}
+"---- }}}
 
-" editing {{{
+"---- editing {{{
 set backspace=indent,eol,start
 set cursorline
 set hidden
@@ -29,31 +29,31 @@ set numberwidth=1
 set ruler
 set scrolloff=3
 set showmatch
-" }}}
+"---- }}}
 
-" searching {{{
+"---- searching {{{
 set incsearch
-" }}}
+"---- }}}
 
-" wild {{{
+"---- wild {{{
 set wildmenu
 set wildignorecase
 set wildmode=list:longest,list:full
 " }}}
 
-" backup {{{
+"---- backup {{{
 set backup
 set history=1024
 set undofile
 
-" directories {{{
+"------ directories {{{
 set directory=~/.vim/tmp
 set backupdir=~/.vim/tmp/backup
 set undodir=~/.vim/tmp/undo
-" }}}
-" }}}
+"------ }}}
+"---- }}}
 
-" mappings {{{
+"---- mappings {{{
 " faster command mode
 nmap ; :
 
@@ -63,7 +63,6 @@ map k gk
 
 " faster exit insert
 inoremap jk <Esc>
-inoremap kj <Esc>
 
 " make undo and yank consistent
 nnoremap U <C-r>
@@ -94,7 +93,7 @@ cmap w!! %!sudo tee > /dev/null %
 " insert the current directory into a command-line path
 cmap <C-p> <C-R>=expand("%:p:h") . "/"<CR>
 
-" leader mappings {{{
+"------ leaders {{{
 " Some helpers to edit mode
 " http://vimcasts.org/e/14
 cnoremap %% <C-R>=expand('%:h').'/'<CR>
@@ -116,11 +115,10 @@ map <silent><leader>\ :%s/\s\+$//<CR>:let @/=''<cr>
 
 " toggle highlight search
 nmap <leader>/ :set hlsearch! hlsearch?<CR>
-" }}}
-" }}}
+"------ }}}
+"---- }}}
 
-
-" plugins {{{
+"---- plugins {{{
 filetype off
 runtime macros/matchit.vim
 set rtp+=~/.vim/bundle/vundle
@@ -128,7 +126,7 @@ call vundle#rc()
 
 Bundle 'gmarik/vundle'
 
-" tools {{{
+"------ tools {{{
 Bundle 'mileszs/ack.vim'
 Bundle 'kien/ctrlp.vim'
 Bundle 'Raimondi/delimitMate'
@@ -138,89 +136,96 @@ Bundle 'sjl/gundo.vim'
 Bundle 'scrooloose/nerdtree'
 Bundle 'Lokaltog/vim-powerline'
 Bundle 'tpope/vim-repeat'
+Bundle 'tpope/vim-rvm'
 Bundle 'tpope/vim-surround'
 Bundle 'scrooloose/syntastic'
 Bundle 'majutsushi/tagbar'
+Bundle 'tomtom/tcomment_vim'
 Bundle 'kana/vim-textobj-user'
 Bundle 'tpope/vim-unimpaired'
-" }}}
+Bundle 'benmills/vimux'
+"------ }}}
 
-" html {{{
+"------ html {{{
 Bundle 'gregsexton/MatchTag'
-" }}}
+"------ }}}
 
-" javascript {{{
+"------ javascript {{{
 Bundle 'pangloss/vim-javascript'
 Bundle 'teramako/jscomplete-vim'
-" }}}
+"------ }}}
 
-" ruby {{{
+"------ ruby {{{
 Bundle 'tpope/vim-endwise'
 Bundle 'vim-ruby/vim-ruby'
 Bundle 'nelstrom/vim-textobj-rubyblock'
-" }}}
+"------ }}}
 
-" rails {{{
+"------ rails {{{
 "Bundle 'cakebaker/scss-syntax.vim'
 Bundle 'tpope/vim-rails'
-" }}}
+"------ }}}
 
-" colors {{{
+"------ colors {{{
 Bundle 'w0ng/vim-hybrid'
 Bundle 'gorodinskiy/molokai'
 Bundle 'jnurmine/Zenburn'
-" }}}
+"------ }}}
 
 filetype plugin indent on
 syntax on
-" }}}
+"---- }}}
 
-" plugin settings {{{
-"----------------------------
-" delimitMate
+"---- plugin settings {{{
+
+"------ delimitMate {{{
 let g:delimitMate_expand_cr = 1
+"------ }}}
 
-"----------------------------
-" jscomplete
+"------ jscomplete {{{
 let g:jscomplete_use = ['dom']
+"------ }}}
 
-"----------------------------
-" NERDTree
+"------ NERDTree {{{
 let NERDTreeChDirMode = 2
 let NERDTreeHijackNetrw = 1
 let NERDTreeShowBookmarks = 1
 let NERDTREEShowHidden = 1
-
 " }}}
 
-" plugin mappings {{{
-"----------------------------
-" Ack
-nmap <leader>a :Ack! 
-
-"----------------------------
-" Gundo
-map <leader>u :GundoToggle<CR>
-
-"----------------------------
-" NERDTree
-map <leader>n :NERDTreeToggle<CR>
-
-"----------------------------
-" Powerline
+"------ Powerline {{{
 let g:Powerline_stl_path_style="filename" " only show filename in statusbar
+"------ }}}
 
-"----------------------------
-" TagBar
+"------ syntastic {{{
+"let g:syntastic_javascript_jshint_conf = "camelCase eqeqeq forin latedef newcap noempty nonew undef unused browser jquery"
+"------ }}}
+"---- }}}
+
+"---- plugin mappings {{{
+"------ Ack {{{
+nmap <leader>a :Ack! 
+"------ }}}
+
+"------ Gundo {{{
+map <leader>u :GundoToggle<CR>
+"------ }}}
+
+"------ NERDTree {{{
+map <leader>n :NERDTreeToggle<CR>
+"------ }}}
+
+"------ TagBar {{{
 map <leader>t :TagbarToggle<CR>
-" }}}
+"------ }}}
+"----}}}
 
-" gui {{{
+"---- gui {{{
 "let g:hybrid_use_Xresources = 1
 colorscheme hybrid
-" }}}
+"---- }}}
 
-" autocmds {{{
+"---- autocmds {{{
 if has("autocmd")
 	augroup vim
 		au BufWritePost .vimrc source $MYVIMRC
@@ -231,4 +236,4 @@ if has("autocmd")
 		"au FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
 	augroup END
 endif
-" }}}
+"---- }}}
