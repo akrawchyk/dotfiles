@@ -18,7 +18,7 @@ set autoindent
 set autoread
 set backspace=indent,eol,start
 set copyindent
-set cursorline
+set nocursorline
 set hidden
 set laststatus=2
 set list
@@ -28,7 +28,7 @@ set listchars+=trail:·
 set listchars+=extends:…
 set listchars+=precedes:…
 set matchpairs+=<:>
-set modelines=0
+set modelines=2
 set nowrap
 set number
 set numberwidth=1
@@ -162,18 +162,25 @@ Bundle 'tpope/vim-surround'
 Bundle 'scrooloose/syntastic'
 Bundle 'majutsushi/tagbar'
 Bundle 'tomtom/tcomment_vim'
-Bundle 'kana/vim-textobj-user'
 " Bundle 'SirVer/ultisnips'
 Bundle 'tpope/vim-unimpaired'
 Bundle 'Shougo/vimproc'
 Bundle 'benmills/vimux'
 "------ }}}
 
+"------ css {{{
+Bundle 'hail2u/vim-css3-syntax'
+"------ }}}
+
 "------ html {{{
+Bundle 'othree/html5.vim'
 Bundle 'gregsexton/MatchTag'
+Bundle 'tpope/vim-ragtag'
+Bundle 'rstacruz/sparkup'
 "------ }}}
 
 "------ javascript {{{
+Bundle 'nono/vim-handlebars'
 Bundle 'pangloss/vim-javascript'
 Bundle 'teramako/jscomplete-vim'
 "------ }}}
@@ -181,15 +188,13 @@ Bundle 'teramako/jscomplete-vim'
 "------ ruby {{{
 Bundle 'tpope/vim-endwise'
 Bundle 'vim-ruby/vim-ruby'
-Bundle 'nelstrom/vim-textobj-rubyblock'
 Bundle 'tpope/vim-rvm'
 "------ }}}
 
 "------ rails {{{
-"Bundle 'cakebaker/scss-syntax.vim'
 Bundle 'tpope/vim-bundler'
+Bundle 'tpope/vim-haml'
 Bundle 'tpope/vim-rails'
-Bundle 'tpope/vim-rake'
 "------ }}}
 
 "------ colors {{{
@@ -204,7 +209,7 @@ syntax on
 
 "---- plugin settings {{{
 "------ CtrlP {{{
-let g:ctrlp_user_command = "find %s -type f | egrep -v '/\.(git|hg|svn)|log|tmp/'"
+let g:ctrlp_user_command = "find %s -type f | egrep -v '/\.(git|hg|svn|DS_Store)|log|tmp/'"
 "------ }}}
 
 "------ delimitMate {{{
@@ -224,8 +229,8 @@ let g:neocomplcache_enable_at_startup = 1
 let g:neocomplcache_enable_smart_case = 1
 let g:neocomplcache_min_syntax_length = 3
 let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
-"let g:neocomplcache_enable_camel_case_completion = 1
-"let g:neocomplcache_enable_underbar_completion = 1
+let g:neocomplcache_enable_camel_case_completion = 1
+let g:neocomplcache_enable_underbar_completion = 1
 
 " Define dictionary.
 let g:neocomplcache_dictionary_filetype_lists = {
@@ -245,14 +250,14 @@ inoremap <expr><C-l>     neocomplcache#complete_common_string()
 " Recommended key-mappings.
 " <CR>: close popup and save indent.
 
-if !exists('g:neocomplcache_omni_functions')
-	let g:neocomplcache_omni_functions = {}
-endif
-let g:neocomplcache_omni_functions.css = 'csscomplete#CompleteCSS'
-let g:neocomplcache_omni_functions.html = 'htmlcomplete#CompleteTags'
-let g:neocomplcache_omni_functions.javascript = 'jscomeplete#CompleteJS'
-let g:neocomplcache_omni_functions.python = 'pythoncomplete#Complete'
-let g:neocomplcache_omni_functions.xml = 'xmlcomplete#CompleteTags'
+" if !exists('g:neocomplcache_omni_functions')
+" 	let g:neocomplcache_omni_functions = {}
+" endif
+" let g:neocomplcache_omni_functions.css = 'csscomplete#CompleteCSS'
+" let g:neocomplcache_omni_functions.html = 'htmlcomplete#CompleteTags'
+" let g:neocomplcache_omni_functions.javascript = 'jscomeplete#CompleteJS'
+" let g:neocomplcache_omni_functions.python = 'pythoncomplete#Complete'
+" let g:neocomplcache_omni_functions.xml = 'xmlcomplete#CompleteTags'
 
 if !exists('g:neocomplcache_omni_patterns')
 	let g:neocomplcache_omni_patterns = {}
@@ -275,16 +280,12 @@ let NERDTreeShowHidden = 1
 "------ }}}
 
 "------ Powerline {{{
-source ~/.vim/bundle/powerline/powerline/ext/vim/powerline.vim
+source ~/.vim/bundle/powerline/powerline/ext/vim/source_plugin.vim
 " let g:Powerline_stl_path_style = "filename"
 " let g:Powerline_symbols_override = {
 " 			\ 'BRANCH': '∓',
 " 			\ 'LINE': '#'
 " 			\}
-"------ }}}
-
-"------ syntastic {{{
-" let g:syntastic_javascript_jshint_conf = "camelCase eqeqeq forin latedef newcap noempty nonew undef unused browser jquery"
 "------ }}}
 
 "------ vimux {{{
@@ -303,10 +304,11 @@ map <leader>u :GundoToggle<CR>
 
 "------ neocomplcache {{{
 inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+" inoremap <expr> <CR> neocomplcache#smart_close_popup()."\<C-R>=delimitMate#ExpandReturn()\<CR>"
 function! s:my_cr_function()
-	return neocomplcache#smart_close_popup() . "\<CR>"
+	return neocomplcache#smart_close_popup() . "\<C-R>=delimitMate#ExpandReturn()\<CR>"
 	" For no inserting <CR> key.
-	"return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
+	" return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
 endfunction
 " <TAB>: completion.
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
@@ -337,27 +339,32 @@ vmap <Leader>vp "vy :call VimuxRunCommand(@v . "\n", 0)<CR>
 "------ }}}
 "----}}}
 
-"---- gui {{{
-"let g:hybrid_use_Xresources = 1
-colorscheme hybrid
-
-highlight WhitespaceEOL ctermbg=Red
-match WhitespaceEOL /\s\+$/
-"---- }}}
-
 "---- autocmds {{{
 if has("autocmd")
 	augroup vim
 		au BufWritePost .vimrc source $MYVIMRC
 	augroup END
 
+	augroup omni
+		au FileType css setlocal omnifunc=csscomplete#CompleteCSS
+		au FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+		au FileType javascript setlocal omnifunc=jscomplete#CompleteJS
+		au FileType python setlocal omnifunc=pythoncomplete#Complete
+		au FileType ruby setlocal omnifunc=rubycomplete#Complete
+		au FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+	augroup END
+
 	augroup filetypes
-		" au FileType javascript setl omnifunc=jscomplete#CompleteJS
 		au FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
 	augroup END
 
 	augroup editing
 		au InsertLeave * set nopaste
+
+		au BufWinEnter * match ExtraWhitespace /\s\+$/
+		au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+		au InsertLeave * match ExtraWhitespace /\s\+$/
+		au BufWinLeave * call clearmatches()
 	augroup END
 endif
 "---- }}}
@@ -371,3 +378,13 @@ function! DiffToggle()
 	endif
 endfunction
 "---- }}}
+
+"---- gui {{{
+"let g:hybrid_use_Xresources = 1
+colorscheme hybrid
+
+highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$/
+"---- }}}
+
+" vim: foldmethod=marker foldlevel=0

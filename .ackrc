@@ -3,6 +3,7 @@
 --type-set=cucumber=.feature
 --type-set=haml=.haml
 --type-set=sass=.sass,.scss
+--type-add=html=.html.erb,.hbs
 
 # Don't search
 --ignore-dir=log
