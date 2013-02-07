@@ -4,6 +4,7 @@ let mapleader=','
 let localmapleader='\'
 
 "---- terminal {{{
+set shell=/bin/sh
 set clipboard=unnamed
 set encoding=utf-8
 set termencoding=utf-8
@@ -52,9 +53,8 @@ set completeopt=menuone,menu,longest
 "---- wild {{{
 set wildignore+=*.DS_Store
 set wildignore+=*.bmp,*.gif,*.jpg,*.png
-set wildignore+=*.sw?
-set wildignorecase
 set wildmenu
+set wildignorecase
 set wildmode=list:longest,list:full
 " }}}
 
@@ -154,6 +154,7 @@ Bundle 'xolox/vim-easytags'
 Bundle 'tpope/vim-fugitive'
 Bundle 'sjl/gundo.vim'
 Bundle 'nathanaelkane/vim-indent-guides'
+Bundle 'Valloric/ListToggle'
 Bundle 'Shougo/neocomplcache'
 Bundle 'scrooloose/nerdtree'
 Bundle 'Lokaltog/powerline'
@@ -162,7 +163,7 @@ Bundle 'tpope/vim-surround'
 Bundle 'scrooloose/syntastic'
 Bundle 'majutsushi/tagbar'
 Bundle 'tomtom/tcomment_vim'
-" Bundle 'SirVer/ultisnips'
+Bundle 'SirVer/ultisnips'
 Bundle 'tpope/vim-unimpaired'
 Bundle 'Shougo/vimproc'
 Bundle 'benmills/vimux'
@@ -174,9 +175,9 @@ Bundle 'hail2u/vim-css3-syntax'
 
 "------ html {{{
 Bundle 'othree/html5.vim'
-Bundle 'gregsexton/MatchTag'
-Bundle 'tpope/vim-ragtag'
-Bundle 'rstacruz/sparkup'
+" Bundle 'gregsexton/MatchTag'
+Bundle 'Valloric/MatchTagAlways'
+Bundle 'mattn/zencoding-vim'
 "------ }}}
 
 "------ javascript {{{
@@ -188,7 +189,6 @@ Bundle 'teramako/jscomplete-vim'
 "------ ruby {{{
 Bundle 'tpope/vim-endwise'
 Bundle 'vim-ruby/vim-ruby'
-Bundle 'tpope/vim-rvm'
 "------ }}}
 
 "------ rails {{{
@@ -243,22 +243,6 @@ if !exists('g:neocomplcache_keyword_patterns')
 endif
 let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
 
-" Plugin key-mappings.
-inoremap <expr><C-g>     neocomplcache#undo_completion()
-inoremap <expr><C-l>     neocomplcache#complete_common_string()
-
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-
-" if !exists('g:neocomplcache_omni_functions')
-" 	let g:neocomplcache_omni_functions = {}
-" endif
-" let g:neocomplcache_omni_functions.css = 'csscomplete#CompleteCSS'
-" let g:neocomplcache_omni_functions.html = 'htmlcomplete#CompleteTags'
-" let g:neocomplcache_omni_functions.javascript = 'jscomeplete#CompleteJS'
-" let g:neocomplcache_omni_functions.python = 'pythoncomplete#Complete'
-" let g:neocomplcache_omni_functions.xml = 'xmlcomplete#CompleteTags'
-
 if !exists('g:neocomplcache_omni_patterns')
 	let g:neocomplcache_omni_patterns = {}
 endif
@@ -275,17 +259,11 @@ let NERDTreeIgnore = [
 			\'\.bundle$','\.git$'
 			\]
 let NERDTreeHijackNetrw = 1
-let NERDTreeShowBookmarks = 1
 let NERDTreeShowHidden = 1
 "------ }}}
 
 "------ Powerline {{{
-source ~/.vim/bundle/powerline/powerline/ext/vim/source_plugin.vim
-" let g:Powerline_stl_path_style = "filename"
-" let g:Powerline_symbols_override = {
-" 			\ 'BRANCH': '∓',
-" 			\ 'LINE': '#'
-" 			\}
+source ~/.vim/bundle/powerline/powerline/bindings/vim/plugin/source_plugin.vim
 "------ }}}
 
 "------ vimux {{{
@@ -303,13 +281,15 @@ map <leader>u :GundoToggle<CR>
 "------ }}}
 
 "------ neocomplcache {{{
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-" inoremap <expr> <CR> neocomplcache#smart_close_popup()."\<C-R>=delimitMate#ExpandReturn()\<CR>"
+" inoremap <expr><C-e> neocomplcache#cancel_popup()
+
 function! s:my_cr_function()
 	return neocomplcache#smart_close_popup() . "\<C-R>=delimitMate#ExpandReturn()\<CR>"
 	" For no inserting <CR> key.
 	" return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
 endfunction
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+" inoremap <expr> <CR> neocomplcache#smart_close_popup()."\<C-R>=delimitMate#ExpandReturn()\<CR>"
 " <TAB>: completion.
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 " <C-h>, <BS>: close popup and delete backword char.
@@ -325,6 +305,24 @@ map <leader>n :NERDTreeToggle<CR>
 
 "------ TagBar {{{
 map <leader>t :TagbarToggle<CR>
+"------ }}}
+
+"------ UltiSnips {{{
+" if exists('did_UltiSnips_vim')
+	" function! Ulti_ExpandOrJump_and_getRes()
+	"     call UltiSnips_ExpandSnippetOrJump()
+	"     return g:ulti_expand_or_jump_res
+	" endfunction
+	" inoremap <expr> <Tab> <C-R>=(UltiSnips_ExpandSnippetOrJump() > 0) ?
+	"             \ UltiSnips_ExpandSnippet()
+	"             \ : pumvisible() ? "\<C-n>" : "\<Tab>"
+
+	" inoremap <expr> <Tab> UltiSnips_ListSnippets() ?
+	" 			\ UltiSnips_ExpandSnippet()
+	" 			\ : pumvisible() ? "\<C-n>" : "\<Tab>"
+	" inoremap <expr> <C-j> UltiSnips_JumpForwards()
+	" inoremap <expr> <C-k> UltiSnips_JumpBackwards()
+" endif
 "------ }}}
 
 "------ vimux {{{
@@ -382,6 +380,9 @@ endfunction
 "---- gui {{{
 "let g:hybrid_use_Xresources = 1
 colorscheme hybrid
+
+let &colorcolumn=join(range(81,999),",")
+highlight ColorColumn ctermbg=235 guibg=#2c2d27
 
 highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$/

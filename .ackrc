@@ -3,7 +3,8 @@
 --type-set=cucumber=.feature
 --type-set=haml=.haml
 --type-set=sass=.sass,.scss
---type-add=html=.html.erb,.hbs
+--type-set=mustache=.handlebars,.hbs
+--type-add=html=.html.erb,.html.haml,.handlebars,.hbs
 
 # Don't search
 --ignore-dir=log
