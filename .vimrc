@@ -17,27 +17,30 @@ set visualbell
 "---- editing {{{
 set autoindent
 set autoread
+set autowrite
 set backspace=indent,eol,start
+set complete-=i
 set copyindent
 set nocursorline
 set hidden
 set laststatus=2
 set list
-set listchars=""
-set listchars+=tab:›\  
-set listchars+=trail:·
-set listchars+=extends:…
-set listchars+=precedes:…
+set listchars=tab:⇥\ ,trail:·,extends:…,precedes:…
 set matchpairs+=<:>
 set modelines=2
 set nowrap
 set number
 set numberwidth=1
 set ruler
+set sidescrolloff=3
 set scrolloff=3
+set shiftround
 set shortmess=aoOstT
 set showmatch
 set smartindent
+set smarttab
+set ttimeout
+set ttimeoutlen=50
 "---- }}}
 
 "---- searching {{{
@@ -140,7 +143,7 @@ noremap <silent><leader>dt :call DiffToggle()<CR>
 
 "---- plugins {{{
 filetype off
-runtime macros/matchit.vim
+runtime $VIMRUNTIME/macros/matchit.vim
 set rtp+=~/.vim/bundle/vundle
 call vundle#rc()
 
@@ -148,14 +151,15 @@ Bundle 'gmarik/vundle'
 
 "------ tools {{{
 Bundle 'mileszs/ack.vim'
+Bundle "daylerees/colour-schemes", { "rtp": "vim-themes/" }
 Bundle 'kien/ctrlp.vim'
 Bundle 'Raimondi/delimitMate'
 Bundle 'xolox/vim-easytags'
 Bundle 'tpope/vim-fugitive'
+Bundle 'airblade/vim-gitgutter'
 Bundle 'sjl/gundo.vim'
 Bundle 'nathanaelkane/vim-indent-guides'
 Bundle 'Valloric/ListToggle'
-Bundle 'Shougo/neocomplcache'
 Bundle 'scrooloose/nerdtree'
 Bundle 'Lokaltog/powerline'
 Bundle 'tpope/vim-repeat'
@@ -163,10 +167,12 @@ Bundle 'tpope/vim-surround'
 Bundle 'scrooloose/syntastic'
 Bundle 'majutsushi/tagbar'
 Bundle 'tomtom/tcomment_vim'
+Bundle 'kana/vim-textobj-user'
 Bundle 'SirVer/ultisnips'
 Bundle 'tpope/vim-unimpaired'
 Bundle 'Shougo/vimproc'
 Bundle 'benmills/vimux'
+Bundle 'Valloric/YouCompleteMe'
 "------ }}}
 
 "------ css {{{
@@ -175,9 +181,7 @@ Bundle 'hail2u/vim-css3-syntax'
 
 "------ html {{{
 Bundle 'othree/html5.vim'
-" Bundle 'gregsexton/MatchTag'
-Bundle 'Valloric/MatchTagAlways'
-Bundle 'mattn/zencoding-vim'
+Bundle 'gregsexton/MatchTag'
 "------ }}}
 
 "------ javascript {{{
@@ -188,6 +192,7 @@ Bundle 'teramako/jscomplete-vim'
 
 "------ ruby {{{
 Bundle 'tpope/vim-endwise'
+Bundle 'nelstrom/vim-textobj-rubyblock'
 Bundle 'vim-ruby/vim-ruby'
 "------ }}}
 
@@ -200,6 +205,7 @@ Bundle 'tpope/vim-rails'
 "------ colors {{{
 Bundle 'w0ng/vim-hybrid'
 Bundle 'gorodinskiy/molokai'
+Bundle 'sickill/vim-monokai'
 Bundle 'jnurmine/Zenburn'
 "------ }}}
 
@@ -209,7 +215,7 @@ syntax on
 
 "---- plugin settings {{{
 "------ CtrlP {{{
-let g:ctrlp_user_command = "find %s -type f | egrep -v '/\.(git|hg|svn|DS_Store)|log|tmp/'"
+let g:ctrlp_user_command = "find %s -type f | egrep -v '/\.(git|hg|svn|DS_Store|bundle)|log|tmp/'"
 "------ }}}
 
 "------ delimitMate {{{
@@ -224,34 +230,6 @@ let g:indent_guides_start_level = 2
 let g:jscomplete_use = ['dom']
 "------ }}}
 
-"------ neocomplcache {{{
-let g:neocomplcache_enable_at_startup = 1
-let g:neocomplcache_enable_smart_case = 1
-let g:neocomplcache_min_syntax_length = 3
-let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
-let g:neocomplcache_enable_camel_case_completion = 1
-let g:neocomplcache_enable_underbar_completion = 1
-
-" Define dictionary.
-let g:neocomplcache_dictionary_filetype_lists = {
-			\ 'default' : ''
-			\ }
-
-" Define keyword.
-if !exists('g:neocomplcache_keyword_patterns')
-	let g:neocomplcache_keyword_patterns = {}
-endif
-let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
-
-if !exists('g:neocomplcache_omni_patterns')
-	let g:neocomplcache_omni_patterns = {}
-endif
-let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\h\w*\|\h\w*::'
-let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-let g:neocomplcache_omni_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-let g:neocomplcache_omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-"------ }}}
-
 "------ NERDTree {{{
 let NERDTreeChDirMode = 2
 let NERDTreeIgnore = [
@@ -260,10 +238,11 @@ let NERDTreeIgnore = [
 			\]
 let NERDTreeHijackNetrw = 1
 let NERDTreeShowHidden = 1
+let NERDTreeWinSize = 30
 "------ }}}
 
 "------ Powerline {{{
-source ~/.vim/bundle/powerline/powerline/bindings/vim/plugin/source_plugin.vim
+set rtp+=~/.vim/bundle/powerline/powerline/bindings/vim
 "------ }}}
 
 "------ vimux {{{
@@ -280,49 +259,12 @@ nmap <leader>a :Ack!
 map <leader>u :GundoToggle<CR>
 "------ }}}
 
-"------ neocomplcache {{{
-" inoremap <expr><C-e> neocomplcache#cancel_popup()
-
-function! s:my_cr_function()
-	return neocomplcache#smart_close_popup() . "\<C-R>=delimitMate#ExpandReturn()\<CR>"
-	" For no inserting <CR> key.
-	" return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
-endfunction
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-" inoremap <expr> <CR> neocomplcache#smart_close_popup()."\<C-R>=delimitMate#ExpandReturn()\<CR>"
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y>  neocomplcache#close_popup()
-inoremap <expr><C-e>  neocomplcache#cancel_popup()
-"------ }}}
-
 "------ NERDTree {{{
 map <leader>n :NERDTreeToggle<CR>
 "------ }}}
 
 "------ TagBar {{{
 map <leader>t :TagbarToggle<CR>
-"------ }}}
-
-"------ UltiSnips {{{
-" if exists('did_UltiSnips_vim')
-	" function! Ulti_ExpandOrJump_and_getRes()
-	"     call UltiSnips_ExpandSnippetOrJump()
-	"     return g:ulti_expand_or_jump_res
-	" endfunction
-	" inoremap <expr> <Tab> <C-R>=(UltiSnips_ExpandSnippetOrJump() > 0) ?
-	"             \ UltiSnips_ExpandSnippet()
-	"             \ : pumvisible() ? "\<C-n>" : "\<Tab>"
-
-	" inoremap <expr> <Tab> UltiSnips_ListSnippets() ?
-	" 			\ UltiSnips_ExpandSnippet()
-	" 			\ : pumvisible() ? "\<C-n>" : "\<Tab>"
-	" inoremap <expr> <C-j> UltiSnips_JumpForwards()
-	" inoremap <expr> <C-k> UltiSnips_JumpBackwards()
-" endif
 "------ }}}
 
 "------ vimux {{{
@@ -340,25 +282,43 @@ vmap <Leader>vp "vy :call VimuxRunCommand(@v . "\n", 0)<CR>
 "---- autocmds {{{
 if has("autocmd")
 	augroup vim
+		" autosource vimrc on write
 		au BufWritePost .vimrc source $MYVIMRC
+
+		" open NERDTree automatically if no files are specified
+		au VimEnter * if !argc() | NERDTree | endif
 	augroup END
 
-	augroup omni
-		au FileType css setlocal omnifunc=csscomplete#CompleteCSS
-		au FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-		au FileType javascript setlocal omnifunc=jscomplete#CompleteJS
-		au FileType python setlocal omnifunc=pythoncomplete#Complete
-		au FileType ruby setlocal omnifunc=rubycomplete#Complete
-		au FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-	augroup END
+	" augroup omni
+	" 	" set onmicompletion types for neocomplcache
+	" 	au FileType css setlocal omnifunc=csscomplete#CompleteCSS
+	" 	au FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+	" 	au FileType javascript setlocal omnifunc=jscomplete#CompleteJS
+	" 	au FileType python setlocal omnifunc=pythoncomplete#Complete
+	" 	au FileType ruby setlocal omnifunc=rubycomplete#Complete
+	" 	au FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+	" augroup END
 
 	augroup filetypes
+		" fix html indenting
+		au FileType html setlocal indentkeys-=*<Return>
+
+		" set xml formatting command to xmllint
 		au FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
+
+		" add html as mobile erb subtype
+		au BufNewFile,BufRead *.mobile.erb let b:eruby_subtype = 'html'
 	augroup END
 
 	augroup editing
+		" exit paste mode when leaving insert mode
 		au InsertLeave * set nopaste
 
+		" only show linenumbers on current buffer
+		au BufEnter * if !exists("b:NERDTreeType") | set number | endif
+		au BufLeave * if !exists("b:NERDTreeType") | set nonumber | endif
+
+		" show extra whitespace as red
 		au BufWinEnter * match ExtraWhitespace /\s\+$/
 		au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 		au InsertLeave * match ExtraWhitespace /\s\+$/
@@ -389,3 +349,4 @@ match ExtraWhitespace /\s\+$/
 "---- }}}
 
 " vim: foldmethod=marker foldlevel=0
+

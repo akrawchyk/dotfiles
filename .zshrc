@@ -14,12 +14,9 @@ path=($(brew --prefix coreutils)/libexec/gnubin \
 	$HOME/.cabal/bin \
 	$path)
 
-plugins=(git git-extras rbenv gem rails3 rake bundler capistrano brew osx taskwarrior vagrant)
+plugins=(git git-extras rbenv gem rails3 rake bundler capistrano brew osx vagrant)
 
 source $ZSH/oh-my-zsh.sh
-
-# load rbenv
-# if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
 source $HOME/.aliases
 source $HOME/.functions
