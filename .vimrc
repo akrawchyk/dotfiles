@@ -26,7 +26,6 @@ set hidden
 set laststatus=2
 set list
 set listchars=tab:⇥\ ,trail:·,extends:…,precedes:…
-set matchpairs+=<:>
 set modelines=2
 set nowrap
 set number
@@ -143,7 +142,7 @@ noremap <silent><leader>dt :call DiffToggle()<CR>
 
 "---- plugins {{{
 filetype off
-runtime $VIMRUNTIME/macros/matchit.vim
+runtime macros/matchit.vim
 set rtp+=~/.vim/bundle/vundle
 call vundle#rc()
 
@@ -151,12 +150,10 @@ Bundle 'gmarik/vundle'
 
 "------ tools {{{
 Bundle 'mileszs/ack.vim'
-Bundle "daylerees/colour-schemes", { "rtp": "vim-themes/" }
 Bundle 'kien/ctrlp.vim'
 Bundle 'Raimondi/delimitMate'
 Bundle 'xolox/vim-easytags'
 Bundle 'tpope/vim-fugitive'
-Bundle 'airblade/vim-gitgutter'
 Bundle 'sjl/gundo.vim'
 Bundle 'nathanaelkane/vim-indent-guides'
 Bundle 'Valloric/ListToggle'
@@ -164,13 +161,13 @@ Bundle 'scrooloose/nerdtree'
 Bundle 'Lokaltog/powerline'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-surround'
+Bundle 'mhinz/vim-signify'
 Bundle 'scrooloose/syntastic'
 Bundle 'majutsushi/tagbar'
 Bundle 'tomtom/tcomment_vim'
 Bundle 'kana/vim-textobj-user'
 Bundle 'SirVer/ultisnips'
 Bundle 'tpope/vim-unimpaired'
-Bundle 'Shougo/vimproc'
 Bundle 'benmills/vimux'
 Bundle 'Valloric/YouCompleteMe'
 "------ }}}
@@ -182,6 +179,7 @@ Bundle 'hail2u/vim-css3-syntax'
 "------ html {{{
 Bundle 'othree/html5.vim'
 Bundle 'gregsexton/MatchTag'
+Bundle 'othree/xml.vim'
 "------ }}}
 
 "------ javascript {{{
@@ -204,8 +202,7 @@ Bundle 'tpope/vim-rails'
 
 "------ colors {{{
 Bundle 'w0ng/vim-hybrid'
-Bundle 'gorodinskiy/molokai'
-Bundle 'sickill/vim-monokai'
+Bundle 'jonathanfilip/vim-lucius'
 Bundle 'jnurmine/Zenburn'
 "------ }}}
 
@@ -222,6 +219,10 @@ let g:ctrlp_user_command = "find %s -type f | egrep -v '/\.(git|hg|svn|DS_Store|
 let g:delimitMate_expand_cr = 1
 "------ }}}
 
+"------ {{{
+let g:easytags_updatetime_autodisable = 1
+"------ }}}
+
 "------ indent guides {{{
 let g:indent_guides_start_level = 2
 "------ }}}
@@ -232,10 +233,7 @@ let g:jscomplete_use = ['dom']
 
 "------ NERDTree {{{
 let NERDTreeChDirMode = 2
-let NERDTreeIgnore = [
-			\'\.DS_Store$',
-			\'\.bundle$','\.git$'
-			\]
+let NERDTreeIgnore = ['\.DS_Store$','\.bundle$','\.git$']
 let NERDTreeHijackNetrw = 1
 let NERDTreeShowHidden = 1
 let NERDTreeWinSize = 30
@@ -289,25 +287,18 @@ if has("autocmd")
 		au VimEnter * if !argc() | NERDTree | endif
 	augroup END
 
-	" augroup omni
-	" 	" set onmicompletion types for neocomplcache
-	" 	au FileType css setlocal omnifunc=csscomplete#CompleteCSS
-	" 	au FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-	" 	au FileType javascript setlocal omnifunc=jscomplete#CompleteJS
-	" 	au FileType python setlocal omnifunc=pythoncomplete#Complete
-	" 	au FileType ruby setlocal omnifunc=rubycomplete#Complete
-	" 	au FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-	" augroup END
-
 	augroup filetypes
 		" fix html indenting
 		au FileType html setlocal indentkeys-=*<Return>
 
 		" set xml formatting command to xmllint
-		au FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
+		au FileType xml setlocal equalprg="XMLLINT_INDENT=	 xmllint --format --recover - 2>/dev/null"
 
 		" add html as mobile erb subtype
 		au BufNewFile,BufRead *.mobile.erb let b:eruby_subtype = 'html'
+
+		" add jquery sytax highlighting
+		au BufReadPre *.js let b:javascript_lib_use_jquery = 1
 	augroup END
 
 	augroup editing
@@ -338,7 +329,7 @@ endfunction
 "---- }}}
 
 "---- gui {{{
-"let g:hybrid_use_Xresources = 1
+let g:hybrid_use_Xresources = 1
 colorscheme hybrid
 
 let &colorcolumn=join(range(81,999),",")
