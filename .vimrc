@@ -160,6 +160,7 @@ Bundle 'Valloric/ListToggle'
 Bundle 'scrooloose/nerdtree'
 Bundle 'Lokaltog/powerline'
 Bundle 'tpope/vim-repeat'
+Bundle 'tpope/vim-sleuth'
 Bundle 'tpope/vim-surround'
 Bundle 'mhinz/vim-signify'
 Bundle 'scrooloose/syntastic'
@@ -213,6 +214,7 @@ syntax on
 "---- plugin settings {{{
 "------ CtrlP {{{
 let g:ctrlp_user_command = "find %s -type f | egrep -v '/\.(git|hg|svn|DS_Store|bundle)|log|tmp/'"
+let g:ctrlp_use_caching = 1
 "------ }}}
 
 "------ delimitMate {{{
@@ -296,9 +298,6 @@ if has("autocmd")
 
 		" add html as mobile erb subtype
 		au BufNewFile,BufRead *.mobile.erb let b:eruby_subtype = 'html'
-
-		" add jquery sytax highlighting
-		au BufReadPre *.js let b:javascript_lib_use_jquery = 1
 	augroup END
 
 	augroup editing
@@ -340,4 +339,3 @@ match ExtraWhitespace /\s\+$/
 "---- }}}
 
 " vim: foldmethod=marker foldlevel=0
-
