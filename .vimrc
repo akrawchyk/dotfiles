@@ -38,6 +38,8 @@ set shortmess=aoOstT
 set showmatch
 set smartindent
 set smarttab
+set splitbelow
+set splitright
 set ttimeout
 set ttimeoutlen=50
 "---- }}}
