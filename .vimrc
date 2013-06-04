@@ -74,6 +74,16 @@ set undodir=~/.vim/tmp/undo
 "------ }}}
 "---- }}}
 
+"---- functions {{{
+function! DiffToggle()
+	if &l:diff == 0
+		diffthis
+	else
+		diffoff
+	endif
+endfunction
+"---- }}}
+
 "---- mappings {{{
 " faster command mode
 nmap ; :
@@ -159,6 +169,7 @@ Bundle 'tpope/vim-fugitive'
 Bundle 'sjl/gundo.vim'
 Bundle 'nathanaelkane/vim-indent-guides'
 Bundle 'Valloric/ListToggle'
+Bundle 'xolox/vim-misc'
 Bundle 'scrooloose/nerdtree'
 Bundle 'Lokaltog/powerline'
 Bundle 'tpope/vim-repeat'
@@ -188,6 +199,7 @@ Bundle 'othree/xml.vim'
 "------ javascript {{{
 Bundle 'nono/vim-handlebars'
 Bundle 'pangloss/vim-javascript'
+" Bundle "jelera/vim-javascript-syntax"
 Bundle 'teramako/jscomplete-vim'
 "------ }}}
 
@@ -223,8 +235,9 @@ let g:ctrlp_use_caching = 1
 let g:delimitMate_expand_cr = 1
 "------ }}}
 
-"------ {{{
-let g:easytags_updatetime_autodisable = 1
+"------ easytags {{{
+let easytags_by_filetype = '~/.vim/tags'
+let easytags_updatetime_warn = 0
 "------ }}}
 
 "------ indent guides {{{
@@ -300,6 +313,8 @@ if has("autocmd")
 
 		" add html as mobile erb subtype
 		au BufNewFile,BufRead *.mobile.erb let b:eruby_subtype = 'html'
+
+		au FileType javascript :setl omnifunc=jscomplete#CompleteJS
 	augroup END
 
 	augroup editing
@@ -317,16 +332,6 @@ if has("autocmd")
 		au BufWinLeave * call clearmatches()
 	augroup END
 endif
-"---- }}}
-
-"---- functions {{{
-function! DiffToggle()
-	if &l:diff == 0
-		diffthis
-	else
-		diffoff
-	endif
-endfunction
 "---- }}}
 
 "---- gui {{{
