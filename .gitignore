@@ -44,6 +44,7 @@ Thumbs.db
 .rbenv-version
 .rbenv-vars
 .powrc
+.powenv
 
 # bundle paths #
 ################

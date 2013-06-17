@@ -51,7 +51,7 @@ set smartcase
 "---- }}}
 
 "---- complete {{{
-set completeopt=menuone,menu,longest
+set completeopt=menuone,preview
 "---- }}}
 
 "---- wild {{{
@@ -164,12 +164,10 @@ Bundle 'gmarik/vundle'
 Bundle 'mileszs/ack.vim'
 Bundle 'kien/ctrlp.vim'
 Bundle 'Raimondi/delimitMate'
-Bundle 'xolox/vim-easytags'
 Bundle 'tpope/vim-fugitive'
 Bundle 'sjl/gundo.vim'
 Bundle 'nathanaelkane/vim-indent-guides'
 Bundle 'Valloric/ListToggle'
-Bundle 'xolox/vim-misc'
 Bundle 'scrooloose/nerdtree'
 Bundle 'Lokaltog/powerline'
 Bundle 'tpope/vim-repeat'
@@ -206,6 +204,7 @@ Bundle 'teramako/jscomplete-vim'
 "------ ruby {{{
 Bundle 'tpope/vim-endwise'
 Bundle 'nelstrom/vim-textobj-rubyblock'
+Bundle 'tpope/vim-rbenv'
 Bundle 'vim-ruby/vim-ruby'
 "------ }}}
 
@@ -235,11 +234,6 @@ let g:ctrlp_use_caching = 1
 let g:delimitMate_expand_cr = 1
 "------ }}}
 
-"------ easytags {{{
-let easytags_by_filetype = '~/.vim/tags'
-let easytags_updatetime_warn = 0
-"------ }}}
-
 "------ indent guides {{{
 let g:indent_guides_start_level = 2
 "------ }}}
@@ -249,9 +243,13 @@ let g:jscomplete_use = ['dom']
 "------ }}}
 
 "------ NERDTree {{{
+let NERDTreeAutoDeleteBuffer = 1
+let NERDTreeCasadeOpenSingleChildDir = 1
 let NERDTreeChDirMode = 2
-let NERDTreeIgnore = ['\.DS_Store$','\.bundle$','\.git$']
 let NERDTreeHijackNetrw = 1
+let NERDTreeHighlightCursorline = 1
+let NERDTreeIgnore = ['\.DS_Store$','\.bundle$','\.git$']
+let NERDTreeQuitOnOpen = 1
 let NERDTreeShowHidden = 1
 let NERDTreeWinSize = 30
 "------ }}}
@@ -260,8 +258,23 @@ let NERDTreeWinSize = 30
 set rtp+=~/.vim/bundle/powerline/powerline/bindings/vim
 "------ }}}
 
+"------ Tagbar {{{
+let g:tagbar_autoclose = 1
+let g:tagbar_autofocus = 1
+let g:tagbar_autoshowtag = 1
+let g:tagbar_left = 1
+let g:tagbar_show_visibility = 1
+"------ }}}
+
 "------ vimux {{{
 let g:VimuxUseNearestPane = 1
+"------ }}}
+
+"------ YouCompleteMe {{{
+let g:ycm_collect_identifiers_from_tags_files = 1
+let g:ycm_key_list_select_completion = ['<Down>']
+let g:ycm_key_list_previous_completion = ['<Up>']
+let g:ycm_seed_identifiers_with_syntax = 1
 "------ }}}
 "---- }}}
 
@@ -280,6 +293,12 @@ map <leader>n :NERDTreeToggle<CR>
 
 "------ TagBar {{{
 map <leader>t :TagbarToggle<CR>
+"------ }}}
+
+"------ UltiSnips {{{
+let g:UltiSnipsExpandTrigger = "<TAB>"
+let g:UltiSnipsJumpForwardTrigger = "<TAB>"
+let g:UltiSnipsJumpBackwardTrigger = "<S-TAB>"
 "------ }}}
 
 "------ vimux {{{
