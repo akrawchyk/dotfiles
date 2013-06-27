@@ -1,53 +1,102 @@
-# compiled source #
-###################
-*.com
-*.class
-*.dll
-*.exe
-*.o
-*.so
-
-# Packages #
+# Archives #
 ############
-# it's better to unpack these files and commit the raw source
-# git has its own built in compression methods
 *.7z
-*.dmg
-*.gz
-*.iso
 *.jar
 *.rar
-*.tar
 *.zip
+*.gz
+*.bzip
+*.bz2
+*.xz
+*.lzma
+*.iso
+*.tar
+*.dmg
+*.xpi
+*.gem
+*.egg
+*.deb
+*.rpm
 
-# Logs and databases #
-######################
-*.log
-*.sql
-*.sqlite
+# Eclipse #
+###########
+*.pydevproject
+.project
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+.externalToolBuilders/
+*.launch
+.cproject
+.buildpath
 
-# OS generated files #
-######################
+# Mercurial #
+#############
+/.hg/*
+*/.hg/*
+.hgignore
+
+# OSX #
+#######
 .DS_Store
-.DS_Store?
+.AppleDouble
+.LSOverride
+Icon
 ._*
 .Spotlight-V100
 .Trashes
-#Icon?
-ehthumbs.db
-Thumbs.db
 
-# rvm/rbenv project files #
-###########################
+# svn #
+#######
+.svn/
+
+# vim #
+#######
+.*.s[a-w][a-z]
+*.un~
+Session.vim
+.netrwhist
+*~
+
+# rbenv/rvm #
+#############
 .rvmrc
 .ruby-version
 .rbenv-version
 .rbenv-vars
+
+# pow #
+#######
 .powrc
 .powenv
 
-# bundle paths #
-################
-vendor/bundle
-.bundle
-bin
+# rails #
+#########
+*.rbc
+*.sassc
+.sass-cache
+capybara-*.html
+.rspec
+.rvmrc
+/.bundle
+/bin
+/vendor/bundle
+/log/*
+/tmp/*
+/db/*.sqlite3
+/public/system/*
+/coverage/
+/spec/tmp/*
+**.orig
+rerun.txt
+pickle-email-*.html
+.project

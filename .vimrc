@@ -57,6 +57,7 @@ set completeopt=menuone,preview
 "---- wild {{{
 set wildignore+=*.DS_Store
 set wildignore+=*.bmp,*.gif,*.jpg,*.png
+set wildignore+=*/.git/*,*/.hg/*,*/.svn/*
 set wildmenu
 set wildignorecase
 set wildmode=list:longest,list:full
@@ -163,6 +164,8 @@ Bundle 'gmarik/vundle'
 "------ tools {{{
 Bundle 'mileszs/ack.vim'
 Bundle 'kien/ctrlp.vim'
+Bundle 'rizzatti/funcoo.vim'
+Bundle 'rizzatti/dash.vim'
 Bundle 'Raimondi/delimitMate'
 Bundle 'tpope/vim-fugitive'
 Bundle 'sjl/gundo.vim'
@@ -226,7 +229,7 @@ syntax on
 
 "---- plugin settings {{{
 "------ CtrlP {{{
-let g:ctrlp_user_command = "find %s -type f | egrep -v '/\.(git|hg|svn|DS_Store|bundle)|log|tmp/'"
+let g:ctrlp_user_command = "find %s -type f | egrep -v '/\.(git|hg|svn|DS_Store|bundle|jpe?g|png|gif)|log|tmp/'"
 let g:ctrlp_use_caching = 1
 "------ }}}
 
@@ -281,6 +284,10 @@ let g:ycm_seed_identifiers_with_syntax = 1
 "---- plugin mappings {{{
 "------ Ack {{{
 nmap <leader>a :Ack! 
+"------ }}}
+
+"------ {{{ Dash
+nmap <silent> <leader>d <Plug>DashSearch
 "------ }}}
 
 "------ Gundo {{{
