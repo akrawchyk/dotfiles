@@ -1,3 +1,6 @@
+[alias]
+	gpur = pull --rebase
+	gpu = pull
 [apply]
 	# Detect whitespace errors when applying a patch
 	whitespace = fix
