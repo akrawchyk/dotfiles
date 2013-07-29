@@ -7,15 +7,16 @@
 
 # Source Prezto.
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
-	source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
-path=(./bin \
-	$path \
-	/usr/local/share/npm/bin \
-	/usr/local/share/python \
-	/usr/local/share/python3)
+# Customize to your needs...
+path=(
+  ./bin
+  $path
+  /usr/local/share/npm/bin
+)
 
+source $HOME/.exports
 source $HOME/.aliases
 source $HOME/.functions
-source $HOME/.exports
