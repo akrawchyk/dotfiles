@@ -100,71 +100,6 @@ function! DeleteHiddenBuffers()
 endfunction
 "---- }}}
 
-"---- mappings {{{
-" up/down keys to be based on display lines, not physical lines
-map j gj
-map k gk
-
-" faster exit insert
-inoremap jk <Esc>
-
-" make undo and yank consistent
-nnoremap U <C-r>
-map Y y$
-
-" easier split navigating
-map <C-h> <C-w>h
-map <C-j> <C-w>j
-map <C-k> <C-w>k
-map <C-l> <C-w>l
-
-" commonly capitalized commands
-cnoremap W w
-cnoremap Wq wq
-cnoremap Q q
-
-" indenting keeps original selection in visual
-vnoremap > >gv
-vnoremap < <gv
-
-" use sane regexes
-nnoremap / /\v
-vnoremap / /\v
-
-" write file without correct permissions when opened
-cmap w!! %!sudo tee > /dev/null %
-
-" insert the current directory into a command-line path
-cmap <C-p> <C-R>=expand("%:p:h") . "/"<CR>
-
-"------ leaders {{{
-" Some helpers to edit mode
-" http://vimcasts.org/e/14
-cnoremap %% <C-R>=expand('%:h').'/'<CR>
-map <leader>ew :e %%
-map <leader>es :sp %%
-map <leader>ev :vsp %%
-map <leader>et :tabe %%
-
-" Auto-indent whole file
-nmap <leader>=  gg=G``
-map <silent><leader>=f gg=G`` :delmarks z<CR>:echo "Reformatted."<CR>
-
-" autoindent pasted blocks
-nnoremap <leader>p p`[v`]=
-nnoremap <leader>P P`]v`[=
-
-" clean trailing whitespace
-map <silent><leader>\ :%s/\s\+$//<CR>:let @/=''<CR>
-
-" toggle highlight search
-nmap <silent><leader>/ :set hlsearch! hlsearch?<CR>
-
-" toggle diff mode for current buffer
-noremap <silent><leader>dt :call DiffToggle()<CR>
-"------ }}}
-"---- }}}
-
 "---- plugins {{{
 filetype off
 runtime macros/matchit.vim
@@ -177,16 +112,19 @@ Bundle 'gmarik/vundle'
 Bundle 'mileszs/ack.vim'
 Bundle 'bling/vim-airline'
 Bundle 'kien/ctrlp.vim'
+Bundle 'tacahiroy/ctrlp-funky'
 Bundle 'rizzatti/funcoo.vim'
 Bundle 'rizzatti/dash.vim'
 Bundle 'Raimondi/delimitMate'
-Bundle 'tpope/vim-fugitive'
+Bundle 'terryma/vim-expand-region'
+Bundle 'roman/golden-ratio'
 Bundle 'sjl/gundo.vim'
+Bundle 'takac/vim-hardtime'
 Bundle 'nathanaelkane/vim-indent-guides'
 Bundle 'Valloric/ListToggle'
 Bundle 'scrooloose/nerdtree'
+Bundle 'chrisbra/NrrwRgn'
 Bundle 'tpope/vim-repeat'
-Bundle 'tpope/vim-sleuth'
 Bundle 'tpope/vim-surround'
 Bundle 'mhinz/vim-signify'
 Bundle 'scrooloose/syntastic'
@@ -194,8 +132,10 @@ Bundle 'majutsushi/tagbar'
 Bundle 'tomtom/tcomment_vim'
 Bundle 'kana/vim-textobj-user'
 Bundle 'SirVer/ultisnips'
+Bundle 'dbakker/vim-lint'
 Bundle 'tpope/vim-unimpaired'
 Bundle 'benmills/vimux'
+Bundle 'vim-scripts/yankstack'
 Bundle 'Valloric/YouCompleteMe'
 "------ }}}
 
@@ -209,10 +149,14 @@ Bundle 'gregsexton/MatchTag'
 Bundle 'othree/xml.vim'
 "------ }}}
 
+"------ git {{{
+Bundle 'tpope/vim-fugitive'
+Bundle 'gregsexton/gitv'
+""------- }}}
+
 "------ javascript {{{
 Bundle 'nono/vim-handlebars'
 Bundle 'pangloss/vim-javascript'
-" Bundle "jelera/vim-javascript-syntax"
 Bundle 'teramako/jscomplete-vim'
 "------ }}}
 
@@ -230,6 +174,7 @@ Bundle 'tpope/vim-rails'
 "------ }}}
 
 "------ colors {{{
+Bundle 'chriskempson/base16-vim'
 Bundle 'w0ng/vim-hybrid'
 Bundle 'jonathanfilip/vim-lucius'
 Bundle 'jnurmine/Zenburn'
@@ -247,10 +192,15 @@ let g:airline_linecolumn_prefix = '␊ '
 let g:airline_branch_prefix = ' ⎇  '
 "------ }}}
 
+"------ base16 {{{
+" let base16colorspace=256
+"------ }}}
+
 "------ CtrlP {{{
 "------ use find+grep to search and filter file results, cache them as well
 let g:ctrlp_user_command = "find %s -type f | egrep -v '/\.(git|hg|svn|DS_Store|bundle|jpe?g|png|gif)|log|tmp/'"
 let g:ctrlp_use_caching = 1
+let g:ctrlp_extensions = ['funky']
 "------ }}}
 
 "------ delimitMate {{{
@@ -290,6 +240,12 @@ let g:tagbar_show_visibility = 1
 let g:VimuxUseNearestPane = 1
 "------ }}}
 
+"------ yankstack {{{
+" define yankstack mappings before user paste mappings
+let g:yankstack_map_keys = 0
+call yankstack#setup()
+"------ }}}
+
 "------ YouCompleteMe {{{
 let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_key_list_select_completion = ['<Down>']
@@ -298,9 +254,79 @@ let g:ycm_seed_identifiers_with_syntax = 1
 "------ }}}
 "---- }}}
 
+"---- mappings {{{
+" up/down keys to be based on display lines, not physical lines
+map j gj
+map k gk
+
+" faster exit insert
+inoremap jk <Esc>
+
+" make undo and yank consistent
+nnoremap U <C-r>
+map Y y$
+
+" easier split navigating
+map <C-h> <C-w>h
+map <C-j> <C-w>j
+map <C-k> <C-w>k
+map <C-l> <C-w>l
+
+" commonly capitalized commands
+cnoremap W w
+cnoremap Wq wq
+cnoremap Q q
+
+" indenting keeps original selection in visual
+xnoremap > >gv
+vnoremap < <gv
+
+" use sane regexes
+nnoremap / /\v
+xnoremap / /\v
+
+" write file without correct permissions when opened
+cmap w!! %!sudo tee > /dev/null %
+
+" insert the current directory into a command-line path
+cmap <C-p> <C-R>=expand("%:p:h") . "/"<CR>
+
+"------ leaders {{{
+" Some helpers to edit mode
+" http://vimcasts.org/e/14
+cnoremap %% <C-R>=expand('%:h').'/'<CR>
+map <leader>ew :e %%
+map <leader>es :sp %%
+map <leader>ev :vsp %%
+map <leader>et :tabe %%
+
+" Auto-indent whole file
+nmap <leader>=  gg=G``
+map <silent><leader>=f gg=G`` :delmarks z<CR>:echo "Reformatted."<CR>
+
+" autoindent pasted blocks
+nnoremap <leader>[p p`[v`]=
+nnoremap <leader>]p P`]v`[=
+
+" clean trailing whitespace
+map <silent><leader>\ :%s/\s\+$//<CR>:let @/=''<CR>
+
+" toggle highlight search
+nmap <silent><leader>/ :set hlsearch! hlsearch?<CR>
+
+" toggle diff mode for current buffer
+noremap <silent><leader>dt :call DiffToggle()<CR>
+"------ }}}
+"---- }}}
+
 "---- plugin mappings {{{
 "------ Ack {{{
-nmap <leader>a :Ack! 
+nmap <leader>a :Ack!<space>
+"------ }}}
+
+"------ ctrlp {{{
+nnoremap <Leader>f :CtrlPFunky<Cr>
+nnoremap <Leader>F :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
 "------ }}}
 
 "------ {{{ Dash
@@ -333,9 +359,14 @@ map <Leader>vx :VimuxClosePanes<CR>
 map <Leader>vq :VimuxCloseRunner<CR>
 map <Leader>vc :VimuxInterruptRunner<CR>
 nmap <Leader>vp :VimuxPromptCommand<CR>
-vmap <Leader>vp "vy :call VimuxRunCommand(@v . "\n", 0)<CR>
+xmap <Leader>vp "vy :call VimuxRunCommand(@v . "\n", 0)<CR>
 "------ }}}
-"----}}}
+
+"------ yankstack {{{
+nmap <leader>p <Plug>yankstack_substitute_older_paste
+nmap <leader>P <Plug>yankstack_substitute_older_paste
+"------ }}}
+"---- }}}
 
 "---- autocmds {{{
 if has("autocmd")
@@ -378,10 +409,9 @@ endif
 "---- }}}
 
 "---- gui {{{
-let g:hybrid_use_Xresources = 1
-colorscheme hybrid
+colorscheme base16-default
 
-let &colorcolumn=join(range(81,999),",")
+let &colorcolumn=81
 highlight ColorColumn ctermbg=235 guibg=#2c2d27
 
 highlight ExtraWhitespace ctermbg=red guibg=red

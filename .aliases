@@ -8,6 +8,8 @@ alias rorsx="rake sunspot:solr:stop"
 alias rordp="rake debug:populate"
 
 alias powr="powder restart"
+alias powo="powder -o"
+alias powox="powder -o --xip"
 
 # Shortcuts
 alias dl="~/Downloads"
