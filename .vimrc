@@ -1,86 +1,146 @@
+"--- important {{{
 set nocompatible
+"--- }}}
 
-let mapleader=','
-let localmapleader='\'
+"--- moving around, searching and patterns {{{
+set incsearch
+set ignorecase
+set smartcase
+"--- }}}
 
-"---- terminal {{{
-set shell=/bin/sh
-set clipboard=unnamed
-set encoding=utf-8
-set termencoding=utf-8
-set t_Co=256
-set ttyfast
-set ttymouse=xterm2
-set visualbell
-"---- }}}
+"--- tags {{{
+"--- }}}
 
-"---- editing {{{
-set autoindent
-set autoread
-set autowrite
-set backspace=indent,eol,start
-set complete-=i
-set copyindent
-set nocursorline
-set hidden
-set laststatus=2
+"--- displaying text {{{
+set nowrap
+set scrolloff=3
+set sidescrolloff=3
 set lazyredraw
 set list
 set listchars=tab:⇥\ ,trail:·,extends:…,precedes:…
-set modelines=2
-set nowrap
 set number
 set numberwidth=1
-set ruler
-set sidescrolloff=3
-set scrolloff=3
-set shiftround
-set shortmess=aoOstT
-set showmatch
-set smartindent
-set smarttab
+"--- }}}
+
+"--- syntax, highlighting and spelling {{{
+set background=dark
+set nocursorline
+"--- }}}
+
+"--- multiple windows {{{
+set laststatus=2
+set equalalways
+set eadirection=both
+set winheight=5
+set winminheight=2
+set winwidth=5
+set winminwidth=5
+set hidden
 set splitbelow
 set splitright
+"--- }}}
+
+"--- multiple tab pages {{{
+"--- }}}
+
+"--- terminal {{{
+"set term=screen-256color
+set ttyfast
+set scrolljump=3
+set t_Co=256
+"--- }}}
+
+"--- using the mouse {{{
+set mouse=a
+set ttymouse=xterm2
+"--- }}}
+
+"--- printing {{{
+"--- }}}
+
+"--- messages and info {{{
+set shortmess=aoOstTI
+set visualbell
+"--- }}}
+
+"--- selecting text {{{
+set clipboard=unnamed
+"--- }}}
+
+"--- editing text {{{
+set backspace=indent,eol,start
+set completeopt=menuone,preview
+set showmatch
+"--- }}}
+
+"--- tabs and indenting {{{
+set tabstop=8
+set shiftwidth=8
+set smarttab
+set softtabstop=0
+set shiftround
+set noexpandtab
+set smartindent
+set copyindent
+"--- }}}
+
+"--- folding {{{
+set foldenable
+set foldlevel=1
+set foldmethod=syntax
+"--- }}}
+
+"--- diff mode {{{
+"--- }}}
+
+"--- mapping {{{
 set ttimeout
 set ttimeoutlen=50
-"---- }}}
+"--- }}}
 
-"---- searching {{{
-"---- show results as we type a search term, only find by case if term has case
-set ignorecase
-set incsearch
-set smartcase
-"---- }}}
+"--- reading and writing files {{{
+set modelines=0
+"set fileformat=unix
+set backup
+set backupdir=~/.vim/tmp/backup
+set autowrite
+set autoread
+"--- }}}
 
-"---- complete {{{
-"---- show completion menu even if 1 result, with extra information
-set completeopt=menuone,preview
-"---- }}}
+"--- the swap file {{{
+set directory=~/.vim/tmp
+"--- }}}
 
-"---- wild {{{
-"---- enable enhanced command line completion, complete longest common string
-set wildmenu
+"--- command line editing {{{
+set history=1024
+set wildmode=longest:full,list:full
 set wildignorecase
-set wildmode=list:longest,list:full
-
-"------ ignore {{{
 set wildignore+=*.DS_Store
 set wildignore+=*.bmp,*.gif,*.jpg,*.png
 set wildignore+=*/.git/*,*/.hg/*,*/.svn/*
-"------ }}}
-"---- }}}
-
-"---- backup {{{
-set backup
-set history=1024
+set wildmenu
 set undofile
-
-"------ directories {{{
-set directory=~/.vim/tmp
-set backupdir=~/.vim/tmp/backup
 set undodir=~/.vim/tmp/undo
-"------ }}}
-"---- }}}
+"--- }}}
+
+"--- executing external commands {{{
+set shell=zsh
+"--- }}}
+
+"--- running make and jumping to errors {{{
+"--- }}}
+
+"--- language specific {{{
+"--- }}}
+
+"--- multi-byte characters {{{
+set encoding=utf-8
+set termencoding=utf-8
+"--- }}}
+
+"--- various {{{
+set sessionoptions=blank,curdir,folds,help,tabpages,winpos
+"--- }}}
 
 "---- functions {{{
 function! DiffToggle()
@@ -98,6 +158,12 @@ function! DeleteHiddenBuffers()
 		silent execute 'bwipeout' buf
 	endfor
 endfunction
+
+function! ReloadAll()
+	set noconfirm
+	tabdo e!
+	set confirm
+endfunction
 "---- }}}
 
 "---- plugins {{{
@@ -109,24 +175,21 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 
 "------ tools {{{
+Bundle 'tpope/vim-abolish'
 Bundle 'mileszs/ack.vim'
 Bundle 'bling/vim-airline'
 Bundle 'kien/ctrlp.vim'
 Bundle 'tacahiroy/ctrlp-funky'
-Bundle 'rizzatti/funcoo.vim'
-Bundle 'rizzatti/dash.vim'
 Bundle 'Raimondi/delimitMate'
 Bundle 'terryma/vim-expand-region'
-Bundle 'roman/golden-ratio'
 Bundle 'sjl/gundo.vim'
-Bundle 'takac/vim-hardtime'
 Bundle 'nathanaelkane/vim-indent-guides'
 Bundle 'Valloric/ListToggle'
 Bundle 'scrooloose/nerdtree'
 Bundle 'chrisbra/NrrwRgn'
 Bundle 'tpope/vim-repeat'
-Bundle 'tpope/vim-surround'
 Bundle 'mhinz/vim-signify'
+Bundle 'tpope/vim-surround'
 Bundle 'scrooloose/syntastic'
 Bundle 'majutsushi/tagbar'
 Bundle 'tomtom/tcomment_vim'
@@ -135,7 +198,6 @@ Bundle 'SirVer/ultisnips'
 Bundle 'dbakker/vim-lint'
 Bundle 'tpope/vim-unimpaired'
 Bundle 'benmills/vimux'
-Bundle 'vim-scripts/yankstack'
 Bundle 'Valloric/YouCompleteMe'
 "------ }}}
 
@@ -146,7 +208,6 @@ Bundle 'hail2u/vim-css3-syntax'
 "------ html {{{
 Bundle 'othree/html5.vim'
 Bundle 'gregsexton/MatchTag'
-Bundle 'othree/xml.vim'
 "------ }}}
 
 "------ git {{{
@@ -158,6 +219,7 @@ Bundle 'gregsexton/gitv'
 Bundle 'nono/vim-handlebars'
 Bundle 'pangloss/vim-javascript'
 Bundle 'teramako/jscomplete-vim'
+Bundle 'marijnh/tern_for_vim'
 "------ }}}
 
 "------ ruby {{{
@@ -175,9 +237,6 @@ Bundle 'tpope/vim-rails'
 
 "------ colors {{{
 Bundle 'chriskempson/base16-vim'
-Bundle 'w0ng/vim-hybrid'
-Bundle 'jonathanfilip/vim-lucius'
-Bundle 'jnurmine/Zenburn'
 "------ }}}
 
 filetype plugin indent on
@@ -185,6 +244,10 @@ syntax on
 "---- }}}
 
 "---- plugin settings {{{
+"------ ack {{{
+let g:ackprg = 'ag --nogroup --nocolor --column'
+"------ }}}
+
 "------ airline {{{
 let g:airline_left_sep = ''
 let g:airline_right_sep = ''
@@ -197,10 +260,12 @@ let g:airline_branch_prefix = ' ⎇  '
 "------ }}}
 
 "------ CtrlP {{{
+let g:ctrlp_dotfiles = 1
+let g:ctrlp_persistent_input = 0
+let g:ctrlp_extensions = ['funky']
 "------ use find+grep to search and filter file results, cache them as well
 let g:ctrlp_user_command = "find %s -type f | egrep -v '/\.(git|hg|svn|DS_Store|bundle|jpe?g|png|gif)|log|tmp/'"
 let g:ctrlp_use_caching = 1
-let g:ctrlp_extensions = ['funky']
 "------ }}}
 
 "------ delimitMate {{{
@@ -228,6 +293,17 @@ let NERDTreeShowHidden = 1
 let NERDTreeWinSize = 30
 "------ }}}
 
+"------ surround {{{
+let g:surround_indent = 1
+"------ }}}
+
+"------ Syntastic {{{
+let g:syntastic_auto_jump = 1
+let g:syntastic_enable_signs = 1
+let g:syntastic_error_symbol = '✗'
+let g:syntastic_warning_symbol = '⚠'
+"------- }}}
+
 "------ Tagbar {{{
 let g:tagbar_autoclose = 1
 let g:tagbar_autofocus = 1
@@ -240,13 +316,9 @@ let g:tagbar_show_visibility = 1
 let g:VimuxUseNearestPane = 1
 "------ }}}
 
-"------ yankstack {{{
-" define yankstack mappings before user paste mappings
-let g:yankstack_map_keys = 0
-call yankstack#setup()
-"------ }}}
-
 "------ YouCompleteMe {{{
+let g:ycm_add_preview_to_completeopt = 1
+let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_key_list_select_completion = ['<Down>']
 let g:ycm_key_list_previous_completion = ['<Up>']
@@ -292,6 +364,9 @@ cmap w!! %!sudo tee > /dev/null %
 cmap <C-p> <C-R>=expand("%:p:h") . "/"<CR>
 
 "------ leaders {{{
+let mapleader=','
+let localmapleader='\'
+
 " Some helpers to edit mode
 " http://vimcasts.org/e/14
 cnoremap %% <C-R>=expand('%:h').'/'<CR>
@@ -371,6 +446,8 @@ nmap <leader>P <Plug>yankstack_substitute_older_paste
 "---- autocmds {{{
 if has("autocmd")
 	augroup vim
+		au!
+
 		" autosource vimrc on write
 		au BufWritePost .vimrc source $MYVIMRC
 
@@ -379,6 +456,8 @@ if has("autocmd")
 	augroup END
 
 	augroup filetypes
+		au!
+
 		" fix html indenting
 		au FileType html setlocal indentkeys-=*<Return>
 
@@ -388,10 +467,27 @@ if has("autocmd")
 		" add html as mobile erb subtype
 		au BufNewFile,BufRead *.mobile.erb let b:eruby_subtype = 'html'
 
+		" use jscomplete for javscript completion
 		au FileType javascript :setl omnifunc=jscomplete#CompleteJS
+
+		" set custom indentation
+		au FileType scss,css,erb,haml setlocal sts=2 sw=2
+
+		" set tab completion on css-classes
+		au FileType scss,css setlocal iskeyword+=-
+
+		" surround custom replacements
+		au FileType erb let b:surround_45 = "<% \r %>"
+		au FileType erb let b:surround_61 = "<%= \r %>"
+		au FileType erb let b:surround_92 = "<%# \r %>"
+		au FileType html,erb let b:surround_100 = "<div>\r</div>"
+		au FileType html,erb let b:surround_112 = "<p>\r</p>"
+		au FileType html,erb let b:surround_115 = "<span>\r</span>"
 	augroup END
 
 	augroup editing
+		au!
+
 		" exit paste mode when leaving insert mode
 		au InsertLeave * set nopaste
 
@@ -409,13 +505,14 @@ endif
 "---- }}}
 
 "---- gui {{{
-colorscheme base16-default
+colorscheme base16-tomorrow
 
 let &colorcolumn=81
-highlight ColorColumn ctermbg=235 guibg=#2c2d27
+highlight ColorColumn ctermbg=10 guibg=#2c2d27
 
-highlight ExtraWhitespace ctermbg=red guibg=red
+highlight ExtraWhitespace ctermbg=196 guibg=red
 match ExtraWhitespace /\s\+$/
-"---- }}}
 
-" vim: foldmethod=marker foldlevel=0
+highlight SyntasticErrorLine ctermbg=196
+highlight SyntasticWarningLine ctermbg=202
+"---- }}}
