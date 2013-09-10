@@ -44,14 +44,12 @@ set splitright
 "--- }}}
 
 "--- terminal {{{
-"set term=screen-256color
 set ttyfast
 set scrolljump=3
 set t_Co=256
 "--- }}}
 
 "--- using the mouse {{{
-set mouse=a
 set ttymouse=xterm2
 "--- }}}
 
@@ -86,7 +84,7 @@ set copyindent
 
 "--- folding {{{
 set foldenable
-set foldlevel=1
+set foldlevelstart=2
 set foldmethod=syntax
 "--- }}}
 
@@ -100,7 +98,6 @@ set ttimeoutlen=50
 
 "--- reading and writing files {{{
 set modelines=0
-"set fileformat=unix
 set backup
 set backupdir=~/.vim/tmp/backup
 set autowrite
@@ -124,7 +121,6 @@ set undodir=~/.vim/tmp/undo
 "--- }}}
 
 "--- executing external commands {{{
-set shell=zsh
 "--- }}}
 
 "--- running make and jumping to errors {{{
@@ -164,6 +160,90 @@ function! ReloadAll()
 	tabdo e!
 	set confirm
 endfunction
+
+function! MyModified()
+  return &ft =~ 'help' ? '' : &modified ? '+' : &modifiable ? '' : '-'
+endfunction
+
+function! MyReadonly()
+  return &ft !~? 'help' && &readonly ? 'RO' : ''
+endfunction
+
+function! MyFilename()
+  let fname = expand('%:t')
+  return fname == 'ControlP' ? g:lightline.ctrlp_item :
+        \ fname == '__Tagbar__' ? g:lightline.fname :
+        \ fname =~ '__Gundo\|NERD_tree' ? '' :
+        \ ('' != MyReadonly() ? MyReadonly() . ' ' : '') .
+        \ ('' != fname ? fname : '[No Name]') .
+        \ ('' != MyModified() ? ' ' . MyModified() : '')
+endfunction
+
+function! MyFugitive()
+  try
+    if expand('%:t') !~? 'Tagbar\|Gundo\|NERD' && exists('*fugitive#head')
+      let mark = ''  " edit here for cool mark
+      let _ = fugitive#head()
+      return strlen(_) ? mark._ : ''
+    endif
+  catch
+  endtry
+  return ''
+endfunction
+
+function! MyFileformat()
+  return winwidth('.') > 70 ? &fileformat : ''
+endfunction
+
+function! MyFiletype()
+  return winwidth('.') > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
+endfunction
+
+function! MyFileencoding()
+  return winwidth('.') > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
+endfunction
+
+function! MyMode()
+  let fname = expand('%:t')
+  return fname == '__Tagbar__' ? 'Tagbar' :
+        \ fname == 'ControlP' ? 'CtrlP' :
+        \ fname == '__Gundo__' ? 'Gundo' :
+        \ fname == '__Gundo_Preview__' ? 'Gundo Preview' :
+        \ fname =~ 'NERD_tree' ? 'NERDTree' :
+        \ winwidth('.') > 60 ? lightline#mode() : ''
+endfunction
+
+function! CtrlPMark()
+  if expand('%:t') =~ 'ControlP'
+    call lightline#link('iR'[g:lightline.ctrlp_regex])
+    return lightline#concatenate([g:lightline.ctrlp_prev, g:lightline.ctrlp_item
+          \ , g:lightline.ctrlp_next], 0)
+  else
+    return ''
+  endif
+endfunction
+
+let g:ctrlp_status_func = {
+  \ 'main': 'CtrlPStatusFunc_1',
+  \ 'prog': 'CtrlPStatusFunc_2',
+  \ }
+
+function! CtrlPStatusFunc_1(focus, byfname, regex, prev, item, next, marked)
+  let g:lightline.ctrlp_regex = a:regex
+  let g:lightline.ctrlp_prev = a:prev
+  let g:lightline.ctrlp_item = a:item
+  let g:lightline.ctrlp_next = a:next
+  return lightline#statusline(0)
+endfunction
+
+function! CtrlPStatusFunc_2(str)
+  return lightline#statusline(0)
+endfunction
+
+function! TagbarStatusFunc(current, sort, fname, ...) abort
+    let g:lightline.fname = a:fname
+  return lightline#statusline(0)
+endfunction
 "---- }}}
 
 "---- plugins {{{
@@ -177,13 +257,13 @@ Bundle 'gmarik/vundle'
 "------ tools {{{
 Bundle 'tpope/vim-abolish'
 Bundle 'mileszs/ack.vim'
-Bundle 'bling/vim-airline'
 Bundle 'kien/ctrlp.vim'
 Bundle 'tacahiroy/ctrlp-funky'
 Bundle 'Raimondi/delimitMate'
 Bundle 'terryma/vim-expand-region'
 Bundle 'sjl/gundo.vim'
 Bundle 'nathanaelkane/vim-indent-guides'
+Bundle 'itchyny/lightline.vim'
 Bundle 'Valloric/ListToggle'
 Bundle 'scrooloose/nerdtree'
 Bundle 'chrisbra/NrrwRgn'
@@ -248,17 +328,6 @@ syntax on
 let g:ackprg = 'ag --nogroup --nocolor --column'
 "------ }}}
 
-"------ airline {{{
-let g:airline_left_sep = ''
-let g:airline_right_sep = ''
-let g:airline_linecolumn_prefix = '␊ '
-let g:airline_branch_prefix = ' ⎇  '
-"------ }}}
-
-"------ base16 {{{
-" let base16colorspace=256
-"------ }}}
-
 "------ CtrlP {{{
 let g:ctrlp_dotfiles = 1
 let g:ctrlp_persistent_input = 0
@@ -281,6 +350,31 @@ let g:indent_guides_start_level = 2
 let g:jscomplete_use = ['dom']
 "------ }}}
 
+"------ lightline {{{
+let g:lightline = {
+	\ 'colorscheme': 'Tomorrow_Night',
+	\ 'active': {
+	\	'left': [['mode', 'paste'],
+	\		['fugitive', 'readonly', 'filename', 'modified']]
+	\ },
+	\ 'component_function': {
+	\	'fugitive': 'MyFugitive',
+	\	'filename': 'MyFilename',
+	\	'fileformat': 'MyFileformat',
+	\	'filetype': 'MyFiletype',
+	\	'fileencoding': 'MyFileencoding',
+	\	'mode': 'MyMode',
+	\	'ctrlpmark': 'CtrlPMark',
+	\ },
+	\ 'component_expand': {
+	\	'syntastic': 'SyntasticStatuslineFlag',
+	\ },
+	\ 'component_type': {
+	\	'syntastic': 'error',
+	\ }
+\ }
+"------ }}}
+
 "------ NERDTree {{{
 let NERDTreeAutoDeleteBuffer = 1
 let NERDTreeCasadeOpenSingleChildDir = 1
@@ -298,7 +392,7 @@ let g:surround_indent = 1
 "------ }}}
 
 "------ Syntastic {{{
-let g:syntastic_auto_jump = 1
+" let g:syntastic_auto_jump = 1
 let g:syntastic_enable_signs = 1
 let g:syntastic_error_symbol = '✗'
 let g:syntastic_warning_symbol = '⚠'
@@ -310,6 +404,7 @@ let g:tagbar_autofocus = 1
 let g:tagbar_autoshowtag = 1
 let g:tagbar_left = 1
 let g:tagbar_show_visibility = 1
+let g:tagbar_status_func = 'TagbarStatusFunc'
 "------ }}}
 
 "------ vimux {{{
@@ -513,6 +608,8 @@ highlight ColorColumn ctermbg=10 guibg=#2c2d27
 highlight ExtraWhitespace ctermbg=196 guibg=red
 match ExtraWhitespace /\s\+$/
 
-highlight SyntasticErrorLine ctermbg=196
-highlight SyntasticWarningLine ctermbg=202
+highlight SyntasticErrorLine ctermbg=210 ctermfg=160
+highlight SyntasticErrorSign ctermbg=210 ctermfg=160
+highlight SyntasticWarningLine ctermbg=228 ctermfg=166
+highlight SyntasticWarningSign ctermbg=228 ctermfg=166
 "---- }}}
