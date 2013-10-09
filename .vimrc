@@ -67,7 +67,7 @@ set clipboard=unnamed
 
 "--- editing text {{{
 set backspace=indent,eol,start
-set completeopt=menuone,preview
+set completeopt=menuone
 set showmatch
 "--- }}}
 
@@ -269,8 +269,10 @@ Bundle 'scrooloose/nerdtree'
 Bundle 'chrisbra/NrrwRgn'
 Bundle 'tpope/vim-repeat'
 Bundle 'mhinz/vim-signify'
+Bundle 'tpope/vim-sleuth'
 Bundle 'tpope/vim-surround'
 Bundle 'scrooloose/syntastic'
+Bundle 'godlygeek/tabular'
 Bundle 'majutsushi/tagbar'
 Bundle 'tomtom/tcomment_vim'
 Bundle 'kana/vim-textobj-user'
@@ -283,6 +285,7 @@ Bundle 'Valloric/YouCompleteMe'
 
 "------ css {{{
 Bundle 'hail2u/vim-css3-syntax'
+Bundle 'groenewege/vim-less'
 "------ }}}
 
 "------ html {{{
@@ -296,10 +299,14 @@ Bundle 'gregsexton/gitv'
 ""------- }}}
 
 "------ javascript {{{
+Bundle 'kchmck/vim-coffee-script'
 Bundle 'nono/vim-handlebars'
 Bundle 'pangloss/vim-javascript'
-Bundle 'teramako/jscomplete-vim'
 Bundle 'marijnh/tern_for_vim'
+"------ }}}
+
+"------ php {{{
+Bundle 'shawncplus/phpcomplete.vim'
 "------ }}}
 
 "------ ruby {{{
@@ -315,6 +322,10 @@ Bundle 'tpope/vim-haml'
 Bundle 'tpope/vim-rails'
 "------ }}}
 
+"------ wordpress {{{
+Bundle 'miya0001/vim-dict-wordpress'
+"------ }}}
+
 "------ colors {{{
 Bundle 'chriskempson/base16-vim'
 "------ }}}
@@ -325,6 +336,7 @@ syntax on
 
 "---- plugin settings {{{
 "------ ack {{{
+" use the silver searcher: https://github.com/ggreer/the_silver_searcher#vim
 let g:ackprg = 'ag --nogroup --nocolor --column'
 "------ }}}
 
@@ -332,13 +344,12 @@ let g:ackprg = 'ag --nogroup --nocolor --column'
 let g:ctrlp_dotfiles = 1
 let g:ctrlp_persistent_input = 0
 let g:ctrlp_extensions = ['funky']
-"------ use find+grep to search and filter file results, cache them as well
-let g:ctrlp_user_command = "find %s -type f | egrep -v '/\.(git|hg|svn|DS_Store|bundle|jpe?g|png|gif)|log|tmp/'"
-let g:ctrlp_use_caching = 1
+" use find+grep to search and filter file results
+let g:ctrlp_user_command = "find %s -type f | grep -v -P '\.(git/|hg/|svn/|jpe?g|png|gif|DS_Store)|tmp/|bundle/|bin/'"
 "------ }}}
 
 "------ delimitMate {{{
-"------ start newline after a matched pair with <CR>
+" start newline after a matched pair with <CR>
 let g:delimitMate_expand_cr = 1
 "------ }}}
 
@@ -346,8 +357,8 @@ let g:delimitMate_expand_cr = 1
 let g:indent_guides_start_level = 2
 "------ }}}
 
-"------ jscomplete {{{
-let g:jscomplete_use = ['dom']
+"------ javascript {{{
+let g:javascript_enable_domhtmlcss = 1
 "------ }}}
 
 "------ lightline {{{
@@ -392,7 +403,6 @@ let g:surround_indent = 1
 "------ }}}
 
 "------ Syntastic {{{
-" let g:syntastic_auto_jump = 1
 let g:syntastic_enable_signs = 1
 let g:syntastic_error_symbol = '✗'
 let g:syntastic_warning_symbol = '⚠'
@@ -412,8 +422,6 @@ let g:VimuxUseNearestPane = 1
 "------ }}}
 
 "------ YouCompleteMe {{{
-let g:ycm_add_preview_to_completeopt = 1
-let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_key_list_select_completion = ['<Down>']
 let g:ycm_key_list_previous_completion = ['<Up>']
@@ -499,10 +507,6 @@ nnoremap <Leader>f :CtrlPFunky<Cr>
 nnoremap <Leader>F :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
 "------ }}}
 
-"------ {{{ Dash
-nmap <silent> <leader>d <Plug>DashSearch
-"------ }}}
-
 "------ Gundo {{{
 map <leader>u :GundoToggle<CR>
 "------ }}}
@@ -531,11 +535,6 @@ map <Leader>vc :VimuxInterruptRunner<CR>
 nmap <Leader>vp :VimuxPromptCommand<CR>
 xmap <Leader>vp "vy :call VimuxRunCommand(@v . "\n", 0)<CR>
 "------ }}}
-
-"------ yankstack {{{
-nmap <leader>p <Plug>yankstack_substitute_older_paste
-nmap <leader>P <Plug>yankstack_substitute_older_paste
-"------ }}}
 "---- }}}
 
 "---- autocmds {{{
@@ -562,22 +561,19 @@ if has("autocmd")
 		" add html as mobile erb subtype
 		au BufNewFile,BufRead *.mobile.erb let b:eruby_subtype = 'html'
 
-		" use jscomplete for javscript completion
-		au FileType javascript :setl omnifunc=jscomplete#CompleteJS
-
 		" set custom indentation
-		au FileType scss,css,erb,haml setlocal sts=2 sw=2
+		au FileType scss,css,eruby,haml setlocal sts=2 sw=2
 
 		" set tab completion on css-classes
 		au FileType scss,css setlocal iskeyword+=-
 
 		" surround custom replacements
-		au FileType erb let b:surround_45 = "<% \r %>"
-		au FileType erb let b:surround_61 = "<%= \r %>"
-		au FileType erb let b:surround_92 = "<%# \r %>"
-		au FileType html,erb let b:surround_100 = "<div>\r</div>"
-		au FileType html,erb let b:surround_112 = "<p>\r</p>"
-		au FileType html,erb let b:surround_115 = "<span>\r</span>"
+		au FileType eruby let b:surround_45 = "<% \r %>"
+		au FileType eruby let b:surround_61 = "<%= \r %>"
+		au FileType eruby let b:surround_92 = "<%# \r %>"
+		au FileType html,eruby let b:surround_100 = "<div>\r</div>"
+		au FileType html,eruby let b:surround_112 = "<p>\r</p>"
+		au FileType html,eruby let b:surround_115 = "<span>\r</span>"
 	augroup END
 
 	augroup editing
