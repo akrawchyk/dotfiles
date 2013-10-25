@@ -34,6 +34,7 @@ alias v="vim"
 alias o="open"
 alias oo="open ."
 
+alias bower="noglob bower"
 
 # Gzip-enabled `curl`
 alias gurl='curl --compressed'

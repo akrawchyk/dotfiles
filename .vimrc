@@ -223,11 +223,6 @@ function! CtrlPMark()
   endif
 endfunction
 
-let g:ctrlp_status_func = {
-  \ 'main': 'CtrlPStatusFunc_1',
-  \ 'prog': 'CtrlPStatusFunc_2',
-  \ }
-
 function! CtrlPStatusFunc_1(focus, byfname, regex, prev, item, next, marked)
   let g:lightline.ctrlp_regex = a:regex
   let g:lightline.ctrlp_prev = a:prev
@@ -258,18 +253,17 @@ Bundle 'gmarik/vundle'
 Bundle 'tpope/vim-abolish'
 Bundle 'mileszs/ack.vim'
 Bundle 'kien/ctrlp.vim'
-Bundle 'tacahiroy/ctrlp-funky'
 Bundle 'Raimondi/delimitMate'
+Bundle 'tpope/vim-dispatch'
 Bundle 'terryma/vim-expand-region'
 Bundle 'sjl/gundo.vim'
 Bundle 'nathanaelkane/vim-indent-guides'
 Bundle 'itchyny/lightline.vim'
 Bundle 'Valloric/ListToggle'
 Bundle 'scrooloose/nerdtree'
-Bundle 'chrisbra/NrrwRgn'
 Bundle 'tpope/vim-repeat'
-Bundle 'mhinz/vim-signify'
 Bundle 'tpope/vim-sleuth'
+Bundle 'justinmk/vim-sneak'
 Bundle 'tpope/vim-surround'
 Bundle 'scrooloose/syntastic'
 Bundle 'godlygeek/tabular'
@@ -277,9 +271,7 @@ Bundle 'majutsushi/tagbar'
 Bundle 'tomtom/tcomment_vim'
 Bundle 'kana/vim-textobj-user'
 Bundle 'SirVer/ultisnips'
-Bundle 'dbakker/vim-lint'
 Bundle 'tpope/vim-unimpaired'
-Bundle 'benmills/vimux'
 Bundle 'Valloric/YouCompleteMe'
 "------ }}}
 
@@ -295,7 +287,6 @@ Bundle 'gregsexton/MatchTag'
 
 "------ git {{{
 Bundle 'tpope/vim-fugitive'
-Bundle 'gregsexton/gitv'
 ""------- }}}
 
 "------ javascript {{{
@@ -303,10 +294,6 @@ Bundle 'kchmck/vim-coffee-script'
 Bundle 'nono/vim-handlebars'
 Bundle 'pangloss/vim-javascript'
 Bundle 'marijnh/tern_for_vim'
-"------ }}}
-
-"------ php {{{
-Bundle 'shawncplus/phpcomplete.vim'
 "------ }}}
 
 "------ ruby {{{
@@ -317,13 +304,8 @@ Bundle 'vim-ruby/vim-ruby'
 "------ }}}
 
 "------ rails {{{
-Bundle 'tpope/vim-bundler'
 Bundle 'tpope/vim-haml'
 Bundle 'tpope/vim-rails'
-"------ }}}
-
-"------ wordpress {{{
-Bundle 'miya0001/vim-dict-wordpress'
 "------ }}}
 
 "------ colors {{{
@@ -341,15 +323,15 @@ let g:ackprg = 'ag --nogroup --nocolor --column'
 "------ }}}
 
 "------ CtrlP {{{
-let g:ctrlp_dotfiles = 1
 let g:ctrlp_persistent_input = 0
-let g:ctrlp_extensions = ['funky']
-" use find+grep to search and filter file results
 let g:ctrlp_user_command = "find %s -type f | grep -v -P '\.(git/|hg/|svn/|jpe?g|png|gif|DS_Store)|tmp/|bundle/|bin/'"
+let g:ctrlp_status_func = {
+  \ 'main': 'CtrlPStatusFunc_1',
+  \ 'prog': 'CtrlPStatusFunc_2',
+  \ }
 "------ }}}
 
 "------ delimitMate {{{
-" start newline after a matched pair with <CR>
 let g:delimitMate_expand_cr = 1
 "------ }}}
 
@@ -412,13 +394,14 @@ let g:syntastic_warning_symbol = '⚠'
 let g:tagbar_autoclose = 1
 let g:tagbar_autofocus = 1
 let g:tagbar_autoshowtag = 1
-let g:tagbar_left = 1
 let g:tagbar_show_visibility = 1
 let g:tagbar_status_func = 'TagbarStatusFunc'
 "------ }}}
 
-"------ vimux {{{
-let g:VimuxUseNearestPane = 1
+"------ UltiSnips {{{
+let g:UltiSnipsExpandTrigger = "<TAB>"
+let g:UltiSnipsJumpForwardTrigger = "<TAB>"
+let g:UltiSnipsJumpBackwardTrigger = "<S-TAB>"
 "------ }}}
 
 "------ YouCompleteMe {{{
@@ -502,11 +485,6 @@ noremap <silent><leader>dt :call DiffToggle()<CR>
 nmap <leader>a :Ack!<space>
 "------ }}}
 
-"------ ctrlp {{{
-nnoremap <Leader>f :CtrlPFunky<Cr>
-nnoremap <Leader>F :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
-"------ }}}
-
 "------ Gundo {{{
 map <leader>u :GundoToggle<CR>
 "------ }}}
@@ -517,23 +495,6 @@ map <leader>n :NERDTreeToggle<CR>
 
 "------ TagBar {{{
 map <leader>t :TagbarToggle<CR>
-"------ }}}
-
-"------ UltiSnips {{{
-let g:UltiSnipsExpandTrigger = "<TAB>"
-let g:UltiSnipsJumpForwardTrigger = "<TAB>"
-let g:UltiSnipsJumpBackwardTrigger = "<S-TAB>"
-"------ }}}
-
-"------ vimux {{{
-" Prompt for a command to run
-map <Leader>vl :VimuxRunLastCommand<CR>
-map <Leader>vi :VimuxInspectRunner<CR>
-map <Leader>vx :VimuxClosePanes<CR>
-map <Leader>vq :VimuxCloseRunner<CR>
-map <Leader>vc :VimuxInterruptRunner<CR>
-nmap <Leader>vp :VimuxPromptCommand<CR>
-xmap <Leader>vp "vy :call VimuxRunCommand(@v . "\n", 0)<CR>
 "------ }}}
 "---- }}}
 
@@ -565,7 +526,7 @@ if has("autocmd")
 		au FileType scss,css,eruby,haml setlocal sts=2 sw=2
 
 		" set tab completion on css-classes
-		au FileType scss,css setlocal iskeyword+=-
+		au FileType scss,css,eruby,haml setlocal iskeyword+=-
 
 		" surround custom replacements
 		au FileType eruby let b:surround_45 = "<% \r %>"
@@ -583,8 +544,8 @@ if has("autocmd")
 		au InsertLeave * set nopaste
 
 		" only show linenumbers on current buffer
-		au BufEnter * if !exists("b:NERDTreeType") | set number | endif
-		au BufLeave * if !exists("b:NERDTreeType") | set nonumber | endif
+		" au BufEnter * if !exists("b:NERDTreeType") | set number | endif
+		" au BufLeave * if !exists("b:NERDTreeType") | set nonumber | endif
 
 		" show extra whitespace as red
 		au BufWinEnter * match ExtraWhitespace /\s\+$/
@@ -596,13 +557,12 @@ endif
 "---- }}}
 
 "---- gui {{{
-colorscheme base16-tomorrow
+colorscheme base16-eighties
 
 let &colorcolumn=81
 highlight ColorColumn ctermbg=10 guibg=#2c2d27
 
 highlight ExtraWhitespace ctermbg=196 guibg=red
-match ExtraWhitespace /\s\+$/
 
 highlight SyntasticErrorLine ctermbg=210 ctermfg=160
 highlight SyntasticErrorSign ctermbg=210 ctermfg=160

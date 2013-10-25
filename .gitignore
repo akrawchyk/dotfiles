@@ -66,6 +66,7 @@ Icon
 Session.vim
 .netrwhist
 *~
+.tern_project
 
 # rbenv/rvm #
 #############

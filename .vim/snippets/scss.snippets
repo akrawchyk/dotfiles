@@ -1,0 +1,29 @@
+snippet bbi "Bourbon background-image"
+@include background-image(image-url('${0:path}'));
+endsnippet
+
+snippet cf "clearfix"
+@include clearfix;$0
+endsnippet
+
+snippet nfp "Neat fill parent"
+@include fill-parent;$0
+endsnippet
+
+snippet nmq "Neat media query"
+@include media(${1:match-media}) {
+  $0
+}
+endsnippet
+
+snippet ns "Neat shift"
+@include shift(${0:columns});
+endsnippet
+
+snippet nsc "Neat span column"
+@include span-columns(${0:columns});
+endsnippet
+
+snippet no "Nead omega"
+@include omega${0:(#n)};
+endsnippet
