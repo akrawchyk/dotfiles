@@ -83,9 +83,9 @@ echo # newline
 }
 
 function uploadchanged() {
-local changes="$(git status --porcelain | sed 's/[ ]*[A-Z?]*[ ]*//' | tr '\n' ',')"
-			export FILES="$(echo $changes)"
-				cap deploy:upload
+	local changes="$(git status --porcelain | sed 's/[ ]*[A-Z?]*[ ]*//' | tr '\n' ',')"
+	export FILES="$(echo $changes)"
+	bundle exec cap deploy:upload
 }
 
 

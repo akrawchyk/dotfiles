@@ -65,8 +65,7 @@
 	email = akrawchyk@gditweb.com
 
 [push]
-	default = matching
-
+	default = current
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 

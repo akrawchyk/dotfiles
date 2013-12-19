@@ -1,25 +1,27 @@
 alias tko="tmux kill-server"
-alias cap="nocorrect cap"
 alias kma="defaults write .GlobalPreferences com.apple.mouse.scaling -1"
+
+# launch services aliases
+alias startmysql="launchctl load -w /usr/local/Cellar/mysql/5.6.15/homebrew.mxcl.mysql.plist"
+alias stopmysql="launchctl unload -w /usr/local/Cellar/mysql/5.6.15/homebrew.mxcl.mysql.plist"
+
+alias startmongo="launchctl load -w /usr/local/Cellar/mongodb/2.4.8/homebrew.mxcl.mongodb.plist"
+alias stopmongo="launchctl unload -w /usr/local/Cellar/mongodb/2.4.8/homebrew.mxcl.mongodb.plist"
+
+alias startelasticsearch="launchctl load -w /usr/local/Cellar/elasticsearch/0.90.7/homebrew.mxcl.elasticsearch.plist"
+alias stopelasticsearch="launchctl unload -w /usr/local/Cellar/elasticsearch/0.90.7/homebrew.mxcl.elasticsearch.plist"
 
 # rake aliases
 alias rorss="rake sunspot:solr:start"
 alias rorsx="rake sunspot:solr:stop"
 alias rordp="rake debug:populate"
 
-alias powr="powder restart"
-alias powo="powder -o"
-alias powox="powder -o --xip"
-
-# Shortcuts
-alias dl="~/Downloads"
-alias dt="~/Desktop"
-alias p="~/Projects"
-
+# dir aliases
 alias ak="cd ~/Projects/akrawchyk"
 alias dotfiles="cd ~/Projects/akrawchyk/dotfiles"
 
 alias awi="cd ~/Projects/trwi/awi"
+alias dialogo="cd ~/Projects/trwi/rmisa"
 alias flow="cd ~/Projects/trwi/webflow"
 alias hoa="cd ~/Projects/trwi/hoa"
 alias plugin="cd ~/Projects/trwi/gditweb_plugin"
@@ -35,6 +37,13 @@ alias o="open"
 alias oo="open ."
 
 alias bower="noglob bower"
+alias cap="noglob cap"
+
+
+# git aliases
+alias gu="git pull"
+alias gur="git pull --rebase"
+
 
 # Gzip-enabled `curl`
 alias gurl='curl --compressed'
@@ -43,15 +52,12 @@ alias gurl='curl --compressed'
 alias week='date +%V'
 
 # Get OS X Software Updates, and update installed Ruby gems, Homebrew, npm, and their installed packages
-alias update='sudo softwareupdate -i -a; brew update; brew upgrade; brew cleanup; npm update npm -g; npm update -g; gem update'
+alias update='sudo softwareupdate -i -a; brew update; brew upgrade; brew cleanup; npm update npm -g; sudo npm update -g; gem update'
 
 # IP addresses
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias localip="ipconfig getifaddr en1"
 alias ips="ifconfig -a | grep -o 'inet6\? \(\([0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+\)\|[a-fA-F0-9:]\+\)' | sed -e 's/inet6* //'"
-
-# Enhanced WHOIS lookups
-alias whois="whois -h whois-servers.net"
 
 # Flush Directory Service cache
 alias flush="dscacheutil -flushcache && killall -HUP mDNSResponder"
@@ -95,10 +101,6 @@ alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && k
 
 # URL-encode strings
 alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
-
-# Merge PDF files
-# Usage: `mergepdf -o output.pdf input{1,2,3}.pdf`
-alias mergepdf='/System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Resources/join.py'
 
 # Disable Spotlight
 alias spotoff="sudo mdutil -a -i off"

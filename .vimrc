@@ -157,87 +157,87 @@ endfunction
 
 function! ReloadAll()
 	set noconfirm
-	tabdo e!
+	bufdo e!
 	set confirm
 endfunction
 
 function! MyModified()
-  return &ft =~ 'help' ? '' : &modified ? '+' : &modifiable ? '' : '-'
+	return &ft =~ 'help' ? '' : &modified ? '+' : &modifiable ? '' : '-'
 endfunction
 
 function! MyReadonly()
-  return &ft !~? 'help' && &readonly ? 'RO' : ''
+	return &ft !~? 'help' && &readonly ? 'RO' : ''
 endfunction
 
 function! MyFilename()
-  let fname = expand('%:t')
-  return fname == 'ControlP' ? g:lightline.ctrlp_item :
-        \ fname == '__Tagbar__' ? g:lightline.fname :
-        \ fname =~ '__Gundo\|NERD_tree' ? '' :
-        \ ('' != MyReadonly() ? MyReadonly() . ' ' : '') .
-        \ ('' != fname ? fname : '[No Name]') .
-        \ ('' != MyModified() ? ' ' . MyModified() : '')
+	let fname = expand('%:t')
+	return fname == 'ControlP' ? g:lightline.ctrlp_item :
+				\ fname == '__Tagbar__' ? g:lightline.fname :
+				\ fname =~ '__Gundo\|NERD_tree' ? '' :
+				\ ('' != MyReadonly() ? MyReadonly() . ' ' : '') .
+				\ ('' != fname ? fname : '[No Name]') .
+				\ ('' != MyModified() ? ' ' . MyModified() : '')
 endfunction
 
 function! MyFugitive()
-  try
-    if expand('%:t') !~? 'Tagbar\|Gundo\|NERD' && exists('*fugitive#head')
-      let mark = ''  " edit here for cool mark
-      let _ = fugitive#head()
-      return strlen(_) ? mark._ : ''
-    endif
-  catch
-  endtry
-  return ''
+	try
+		if expand('%:t') !~? 'Tagbar\|Gundo\|NERD' && exists('*fugitive#head')
+			let mark = ''  " edit here for cool mark
+			let _ = fugitive#head()
+			return strlen(_) ? mark._ : ''
+		endif
+	catch
+	endtry
+	return ''
 endfunction
 
 function! MyFileformat()
-  return winwidth('.') > 70 ? &fileformat : ''
+	return winwidth('.') > 70 ? &fileformat : ''
 endfunction
 
 function! MyFiletype()
-  return winwidth('.') > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
+	return winwidth('.') > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
 endfunction
 
 function! MyFileencoding()
-  return winwidth('.') > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
+	return winwidth('.') > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
 endfunction
 
 function! MyMode()
-  let fname = expand('%:t')
-  return fname == '__Tagbar__' ? 'Tagbar' :
-        \ fname == 'ControlP' ? 'CtrlP' :
-        \ fname == '__Gundo__' ? 'Gundo' :
-        \ fname == '__Gundo_Preview__' ? 'Gundo Preview' :
-        \ fname =~ 'NERD_tree' ? 'NERDTree' :
-        \ winwidth('.') > 60 ? lightline#mode() : ''
+	let fname = expand('%:t')
+	return fname == '__Tagbar__' ? 'Tagbar' :
+				\ fname == 'ControlP' ? 'CtrlP' :
+				\ fname == '__Gundo__' ? 'Gundo' :
+				\ fname == '__Gundo_Preview__' ? 'Gundo Preview' :
+				\ fname =~ 'NERD_tree' ? 'NERDTree' :
+				\ winwidth('.') > 60 ? lightline#mode() : ''
 endfunction
 
 function! CtrlPMark()
-  if expand('%:t') =~ 'ControlP'
-    call lightline#link('iR'[g:lightline.ctrlp_regex])
-    return lightline#concatenate([g:lightline.ctrlp_prev, g:lightline.ctrlp_item
-          \ , g:lightline.ctrlp_next], 0)
-  else
-    return ''
-  endif
+	if expand('%:t') =~ 'ControlP'
+		call lightline#link('iR'[g:lightline.ctrlp_regex])
+		return lightline#concatenate([g:lightline.ctrlp_prev, g:lightline.ctrlp_item
+					\ , g:lightline.ctrlp_next], 0)
+	else
+		return ''
+	endif
 endfunction
 
 function! CtrlPStatusFunc_1(focus, byfname, regex, prev, item, next, marked)
-  let g:lightline.ctrlp_regex = a:regex
-  let g:lightline.ctrlp_prev = a:prev
-  let g:lightline.ctrlp_item = a:item
-  let g:lightline.ctrlp_next = a:next
-  return lightline#statusline(0)
+	let g:lightline.ctrlp_regex = a:regex
+	let g:lightline.ctrlp_prev = a:prev
+	let g:lightline.ctrlp_item = a:item
+	let g:lightline.ctrlp_next = a:next
+	return lightline#statusline(0)
 endfunction
 
 function! CtrlPStatusFunc_2(str)
-  return lightline#statusline(0)
+	return lightline#statusline(0)
 endfunction
 
 function! TagbarStatusFunc(current, sort, fname, ...) abort
-    let g:lightline.fname = a:fname
-  return lightline#statusline(0)
+	let g:lightline.fname = a:fname
+	return lightline#statusline(0)
 endfunction
 "---- }}}
 
@@ -263,6 +263,7 @@ Bundle 'Valloric/ListToggle'
 Bundle 'scrooloose/nerdtree'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-sleuth'
+Bundle 'mhinz/vim-signify'
 Bundle 'justinmk/vim-sneak'
 Bundle 'tpope/vim-surround'
 Bundle 'scrooloose/syntastic'
@@ -299,12 +300,13 @@ Bundle 'marijnh/tern_for_vim'
 "------ ruby {{{
 Bundle 'tpope/vim-endwise'
 Bundle 'nelstrom/vim-textobj-rubyblock'
-Bundle 'tpope/vim-rbenv'
 Bundle 'vim-ruby/vim-ruby'
 "------ }}}
 
 "------ rails {{{
+Bundle 'tpope/vim-bundler'
 Bundle 'tpope/vim-haml'
+Bundle 'tpope/vim-rake'
 Bundle 'tpope/vim-rails'
 "------ }}}
 
@@ -324,11 +326,11 @@ let g:ackprg = 'ag --nogroup --nocolor --column'
 
 "------ CtrlP {{{
 let g:ctrlp_persistent_input = 0
-let g:ctrlp_user_command = "find %s -type f | grep -v -P '\.(git/|hg/|svn/|jpe?g|png|gif|DS_Store)|tmp/|bundle/|bin/'"
+" let g:ctrlp_user_command = "find %s -type f | grep -v -P '\.(git/|hg/|svn/|jpe?g|png|gif|DS_Store)|tmp/|bundle/|bin/'"
 let g:ctrlp_status_func = {
-  \ 'main': 'CtrlPStatusFunc_1',
-  \ 'prog': 'CtrlPStatusFunc_2',
-  \ }
+			\ 'main': 'CtrlPStatusFunc_1',
+			\ 'prog': 'CtrlPStatusFunc_2',
+			\ }
 "------ }}}
 
 "------ delimitMate {{{
@@ -341,31 +343,32 @@ let g:indent_guides_start_level = 2
 
 "------ javascript {{{
 let g:javascript_enable_domhtmlcss = 1
+let g:javascript_ignore_javaScriptdoc = 1
 "------ }}}
 
 "------ lightline {{{
 let g:lightline = {
-	\ 'colorscheme': 'Tomorrow_Night',
-	\ 'active': {
-	\	'left': [['mode', 'paste'],
-	\		['fugitive', 'readonly', 'filename', 'modified']]
-	\ },
-	\ 'component_function': {
-	\	'fugitive': 'MyFugitive',
-	\	'filename': 'MyFilename',
-	\	'fileformat': 'MyFileformat',
-	\	'filetype': 'MyFiletype',
-	\	'fileencoding': 'MyFileencoding',
-	\	'mode': 'MyMode',
-	\	'ctrlpmark': 'CtrlPMark',
-	\ },
-	\ 'component_expand': {
-	\	'syntastic': 'SyntasticStatuslineFlag',
-	\ },
-	\ 'component_type': {
-	\	'syntastic': 'error',
-	\ }
-\ }
+			\ 'colorscheme': 'Tomorrow_Night',
+			\ 'active': {
+			\	'left': [['mode', 'paste'],
+			\		['fugitive', 'readonly', 'filename', 'modified']]
+			\ },
+			\ 'component_function': {
+			\	'fugitive': 'MyFugitive',
+			\	'filename': 'MyFilename',
+			\	'fileformat': 'MyFileformat',
+			\	'filetype': 'MyFiletype',
+			\	'fileencoding': 'MyFileencoding',
+			\	'mode': 'MyMode',
+			\	'ctrlpmark': 'CtrlPMark',
+			\ },
+			\ 'component_expand': {
+			\	'syntastic': 'SyntasticStatuslineFlag',
+			\ },
+			\ 'component_type': {
+			\	'syntastic': 'error',
+			\ }
+		\ }
 "------ }}}
 
 "------ NERDTree {{{
@@ -378,6 +381,16 @@ let NERDTreeIgnore = ['\.DS_Store$','\.bundle$','\.git$']
 let NERDTreeQuitOnOpen = 1
 let NERDTreeShowHidden = 1
 let NERDTreeWinSize = 30
+"------ }}}
+
+"------ rails.vim {{{
+let g:rails_projections = {
+			\ 'app/uploaders/*_uploader.rb': {
+			\	'command': 'uploader',
+			\	'template': 'class %SUploader < CarrierWave::Uploader::Base\nend',
+			\	'keywords': 'process version'
+			\ }
+		\ }
 "------ }}}
 
 "------ surround {{{
@@ -448,6 +461,10 @@ cmap w!! %!sudo tee > /dev/null %
 
 " insert the current directory into a command-line path
 cmap <C-p> <C-R>=expand("%:p:h") . "/"<CR>
+
+" faster scrolling
+nnoremap <C-e> 3<C-e>
+nnoremap <C-y> 3<C-y>
 
 "------ leaders {{{
 let mapleader=','
@@ -566,6 +583,6 @@ highlight ExtraWhitespace ctermbg=196 guibg=red
 
 highlight SyntasticErrorLine ctermbg=210 ctermfg=160
 highlight SyntasticErrorSign ctermbg=210 ctermfg=160
-highlight SyntasticWarningLine ctermbg=228 ctermfg=166
-highlight SyntasticWarningSign ctermbg=228 ctermfg=166
+highlight SyntasticWarningLine ctermbg=227 ctermfg=166
+highlight SyntasticWarningSign ctermbg=227 ctermfg=166
 "---- }}}
