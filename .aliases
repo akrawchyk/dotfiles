@@ -8,13 +8,14 @@ alias stopmysql="launchctl unload -w /usr/local/Cellar/mysql/5.6.15/homebrew.mxc
 alias startmongo="launchctl load -w /usr/local/Cellar/mongodb/2.4.8/homebrew.mxcl.mongodb.plist"
 alias stopmongo="launchctl unload -w /usr/local/Cellar/mongodb/2.4.8/homebrew.mxcl.mongodb.plist"
 
-alias startelasticsearch="launchctl load -w /usr/local/Cellar/elasticsearch/0.90.7/homebrew.mxcl.elasticsearch.plist"
-alias stopelasticsearch="launchctl unload -w /usr/local/Cellar/elasticsearch/0.90.7/homebrew.mxcl.elasticsearch.plist"
+alias startelasticsearch="launchctl load -w /usr/local/Cellar/elasticsearch/0.90.9/homebrew.mxcl.elasticsearch.plist"
+alias stopelasticsearch="launchctl unload -w /usr/local/Cellar/elasticsearch/0.90.9/homebrew.mxcl.elasticsearch.plist"
 
 # rake aliases
-alias rorss="rake sunspot:solr:start"
-alias rorsx="rake sunspot:solr:stop"
-alias rordp="rake debug:populate"
+alias rorss="bundle exec rake sunspot:solr:start"
+alias rorsx="bundle exec rake sunspot:solr:stop"
+alias rordp="bundle exec rake debug:populate"
+alias rorg="bundle exec guard"
 
 # dir aliases
 alias ak="cd ~/Projects/akrawchyk"

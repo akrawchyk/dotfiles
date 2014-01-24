@@ -147,20 +147,6 @@ function! DiffToggle()
 	endif
 endfunction
 
-function! DeleteHiddenBuffers()
-	let tpbl=[]
-	call map(range(1, tabpagenr('$')), 'extend(tpbl, tabpagebuflist(v:val))')
-	for buf in filter(range(1, bufnr('$')), 'bufexists(v:val) && index(tpbl, v:val)==-1')
-		silent execute 'bwipeout' buf
-	endfor
-endfunction
-
-function! ReloadAll()
-	set noconfirm
-	bufdo e!
-	set confirm
-endfunction
-
 function! MyModified()
 	return &ft =~ 'help' ? '' : &modified ? '+' : &modifiable ? '' : '-'
 endfunction
@@ -418,7 +404,6 @@ let g:UltiSnipsJumpBackwardTrigger = "<S-TAB>"
 "------ }}}
 
 "------ YouCompleteMe {{{
-let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_key_list_select_completion = ['<Down>']
 let g:ycm_key_list_previous_completion = ['<Up>']
 let g:ycm_seed_identifiers_with_syntax = 1
