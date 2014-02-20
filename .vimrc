@@ -17,7 +17,7 @@ set scrolloff=3
 set sidescrolloff=3
 set lazyredraw
 set list
-set listchars=tab:⇥\ ,trail:·,extends:…,precedes:…
+set listchars=tab:˒\ ,trail:.,extends:…,precedes:…
 set number
 set numberwidth=1
 "--- }}}
@@ -83,7 +83,7 @@ set copyindent
 "--- }}}
 
 "--- folding {{{
-set foldenable
+set nofoldenable
 set foldlevelstart=2
 set foldmethod=syntax
 "--- }}}
@@ -249,7 +249,6 @@ Bundle 'Valloric/ListToggle'
 Bundle 'scrooloose/nerdtree'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-sleuth'
-Bundle 'mhinz/vim-signify'
 Bundle 'justinmk/vim-sneak'
 Bundle 'tpope/vim-surround'
 Bundle 'scrooloose/syntastic'
@@ -257,6 +256,7 @@ Bundle 'godlygeek/tabular'
 Bundle 'majutsushi/tagbar'
 Bundle 'tomtom/tcomment_vim'
 Bundle 'kana/vim-textobj-user'
+Bundle 'coderifous/textobj-word-column.vim'
 Bundle 'SirVer/ultisnips'
 Bundle 'tpope/vim-unimpaired'
 Bundle 'Valloric/YouCompleteMe'
@@ -274,13 +274,24 @@ Bundle 'gregsexton/MatchTag'
 
 "------ git {{{
 Bundle 'tpope/vim-fugitive'
+Bundle 'mhinz/vim-signify'
 ""------- }}}
 
 "------ javascript {{{
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'nono/vim-handlebars'
 Bundle 'pangloss/vim-javascript'
+Bundle 'othree/javascript-libraries-syntax.vim'
 Bundle 'marijnh/tern_for_vim'
+"------ }}}
+
+"------ php {{{
+Bundle 'StanAngeloff/php.vim'
+Bundle 'shawncplus/phpcomplete.vim'
+"------ }}}
+
+"------ python {{{
+Bundle 'Glench/Vim-Jinja2-Syntax'
 "------ }}}
 
 "------ ruby {{{
@@ -290,10 +301,10 @@ Bundle 'vim-ruby/vim-ruby'
 "------ }}}
 
 "------ rails {{{
-Bundle 'tpope/vim-bundler'
-Bundle 'tpope/vim-haml'
-Bundle 'tpope/vim-rake'
-Bundle 'tpope/vim-rails'
+" Bundle 'tpope/vim-bundler'
+" Bundle 'tpope/vim-haml'
+" Bundle 'tpope/vim-rake'
+" Bundle 'tpope/vim-rails'
 "------ }}}
 
 "------ colors {{{
@@ -330,6 +341,7 @@ let g:indent_guides_start_level = 2
 "------ javascript {{{
 let g:javascript_enable_domhtmlcss = 1
 let g:javascript_ignore_javaScriptdoc = 1
+let g:used_javascript_libs = 'angularjs'
 "------ }}}
 
 "------ lightline {{{
@@ -370,13 +382,13 @@ let NERDTreeWinSize = 30
 "------ }}}
 
 "------ rails.vim {{{
-let g:rails_projections = {
-			\ 'app/uploaders/*_uploader.rb': {
-			\	'command': 'uploader',
-			\	'template': 'class %SUploader < CarrierWave::Uploader::Base\nend',
-			\	'keywords': 'process version'
-			\ }
-		\ }
+" let g:rails_projections = {
+" 			\ 'app/uploaders/*_uploader.rb': {
+" 			\	'command': 'uploader',
+" 			\	'template': 'class %SUploader < CarrierWave::Uploader::Base\nend',
+" 			\	'keywords': 'process version'
+" 			\ }
+" 		\ }
 "------ }}}
 
 "------ surround {{{
@@ -387,6 +399,14 @@ let g:surround_indent = 1
 let g:syntastic_enable_signs = 1
 let g:syntastic_error_symbol = '✗'
 let g:syntastic_warning_symbol = '⚠'
+let g:syntastic_html_tidy_ignore_errors = [
+	\ "trimming empty <i>",
+	\ "trimming empty <span>",
+	\ "<input> proprietary attribute \"autocomplete\"",
+	\ "proprietary attribute \"role\"",
+	\ "proprietary attribute \"hidden\"",
+	\ "proprietary attribute \"ng-"
+\ ]
 "------- }}}
 
 "------ Tagbar {{{
@@ -559,15 +579,16 @@ endif
 "---- }}}
 
 "---- gui {{{
-colorscheme base16-eighties
+" let base16colorspace=256
+colorscheme base16-tomorrow
 
 let &colorcolumn=81
 highlight ColorColumn ctermbg=10 guibg=#2c2d27
 
 highlight ExtraWhitespace ctermbg=196 guibg=red
 
-highlight SyntasticErrorLine ctermbg=210 ctermfg=160
+" highlight SyntasticErrorLine ctermbg=210 ctermfg=160
 highlight SyntasticErrorSign ctermbg=210 ctermfg=160
-highlight SyntasticWarningLine ctermbg=227 ctermfg=166
+" highlight SyntasticWarningLine ctermbg=227 ctermfg=166
 highlight SyntasticWarningSign ctermbg=227 ctermfg=166
 "---- }}}
