@@ -17,7 +17,7 @@ set scrolloff=3
 set sidescrolloff=3
 set lazyredraw
 set list
-set listchars=tab:˒\ ,trail:.,extends:…,precedes:…
+set listchars=tab:˒\ ,trail:·,extends:…,precedes:…
 set number
 set numberwidth=1
 "--- }}}
@@ -124,6 +124,9 @@ set undodir=~/.vim/tmp/undo
 "--- }}}
 
 "--- running make and jumping to errors {{{
+if executable('ag')
+  set grepprg=ag\ --nogroup\ --nocolor
+endif
 "--- }}}
 
 "--- language specific {{{
@@ -146,85 +149,6 @@ function! DiffToggle()
 		diffoff
 	endif
 endfunction
-
-function! MyModified()
-	return &ft =~ 'help' ? '' : &modified ? '+' : &modifiable ? '' : '-'
-endfunction
-
-function! MyReadonly()
-	return &ft !~? 'help' && &readonly ? 'RO' : ''
-endfunction
-
-function! MyFilename()
-	let fname = expand('%:t')
-	return fname == 'ControlP' ? g:lightline.ctrlp_item :
-				\ fname == '__Tagbar__' ? g:lightline.fname :
-				\ fname =~ '__Gundo\|NERD_tree' ? '' :
-				\ ('' != MyReadonly() ? MyReadonly() . ' ' : '') .
-				\ ('' != fname ? fname : '[No Name]') .
-				\ ('' != MyModified() ? ' ' . MyModified() : '')
-endfunction
-
-function! MyFugitive()
-	try
-		if expand('%:t') !~? 'Tagbar\|Gundo\|NERD' && exists('*fugitive#head')
-			let mark = ''  " edit here for cool mark
-			let _ = fugitive#head()
-			return strlen(_) ? mark._ : ''
-		endif
-	catch
-	endtry
-	return ''
-endfunction
-
-function! MyFileformat()
-	return winwidth('.') > 70 ? &fileformat : ''
-endfunction
-
-function! MyFiletype()
-	return winwidth('.') > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
-endfunction
-
-function! MyFileencoding()
-	return winwidth('.') > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
-endfunction
-
-function! MyMode()
-	let fname = expand('%:t')
-	return fname == '__Tagbar__' ? 'Tagbar' :
-				\ fname == 'ControlP' ? 'CtrlP' :
-				\ fname == '__Gundo__' ? 'Gundo' :
-				\ fname == '__Gundo_Preview__' ? 'Gundo Preview' :
-				\ fname =~ 'NERD_tree' ? 'NERDTree' :
-				\ winwidth('.') > 60 ? lightline#mode() : ''
-endfunction
-
-function! CtrlPMark()
-	if expand('%:t') =~ 'ControlP'
-		call lightline#link('iR'[g:lightline.ctrlp_regex])
-		return lightline#concatenate([g:lightline.ctrlp_prev, g:lightline.ctrlp_item
-					\ , g:lightline.ctrlp_next], 0)
-	else
-		return ''
-	endif
-endfunction
-
-function! CtrlPStatusFunc_1(focus, byfname, regex, prev, item, next, marked)
-	let g:lightline.ctrlp_regex = a:regex
-	let g:lightline.ctrlp_prev = a:prev
-	let g:lightline.ctrlp_item = a:item
-	let g:lightline.ctrlp_next = a:next
-	return lightline#statusline(0)
-endfunction
-
-function! CtrlPStatusFunc_2(str)
-	return lightline#statusline(0)
-endfunction
-
-function! TagbarStatusFunc(current, sort, fname, ...) abort
-	let g:lightline.fname = a:fname
-	return lightline#statusline(0)
-endfunction
 "---- }}}
 
 "---- plugins {{{
@@ -238,27 +162,31 @@ Bundle 'gmarik/vundle'
 "------ tools {{{
 Bundle 'tpope/vim-abolish'
 Bundle 'mileszs/ack.vim'
+Bundle 'bling/vim-airline'
 Bundle 'kien/ctrlp.vim'
 Bundle 'Raimondi/delimitMate'
 Bundle 'tpope/vim-dispatch'
 Bundle 'terryma/vim-expand-region'
 Bundle 'sjl/gundo.vim'
 Bundle 'nathanaelkane/vim-indent-guides'
-Bundle 'itchyny/lightline.vim'
+" Bundle 'itchyny/lightline.vim'
 Bundle 'Valloric/ListToggle'
 Bundle 'scrooloose/nerdtree'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-sleuth'
 Bundle 'justinmk/vim-sneak'
+Bundle 'honza/vim-snippets'
 Bundle 'tpope/vim-surround'
 Bundle 'scrooloose/syntastic'
 Bundle 'godlygeek/tabular'
 Bundle 'majutsushi/tagbar'
 Bundle 'tomtom/tcomment_vim'
+Bundle 'kana/vim-textobj-indent'
 Bundle 'kana/vim-textobj-user'
 Bundle 'coderifous/textobj-word-column.vim'
 Bundle 'SirVer/ultisnips'
 Bundle 'tpope/vim-unimpaired'
+Bundle 'maxbrunsfeld/vim-yankstack'
 Bundle 'Valloric/YouCompleteMe'
 "------ }}}
 
@@ -270,6 +198,7 @@ Bundle 'groenewege/vim-less'
 "------ html {{{
 Bundle 'othree/html5.vim'
 Bundle 'gregsexton/MatchTag'
+Bundle 'othree/xml.vim'
 "------ }}}
 
 "------ git {{{
@@ -280,6 +209,7 @@ Bundle 'mhinz/vim-signify'
 "------ javascript {{{
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'nono/vim-handlebars'
+Bundle 'digitaltoad/vim-jade'
 Bundle 'pangloss/vim-javascript'
 Bundle 'othree/javascript-libraries-syntax.vim'
 Bundle 'marijnh/tern_for_vim'
@@ -312,22 +242,26 @@ Bundle 'chriskempson/base16-vim'
 "------ }}}
 
 filetype plugin indent on
-syntax on
+syntax enable
 "---- }}}
 
 "---- plugin settings {{{
 "------ ack {{{
-" use the silver searcher: https://github.com/ggreer/the_silver_searcher#vim
-let g:ackprg = 'ag --nogroup --nocolor --column'
+if executable('ag')
+  let g:ackprg = 'ag --nogroup --column'
+endif
+"------ }}}
+
+"------ airline {{{
+let g:airline_theme="tomorrow"
 "------ }}}
 
 "------ CtrlP {{{
 let g:ctrlp_persistent_input = 0
-" let g:ctrlp_user_command = "find %s -type f | grep -v -P '\.(git/|hg/|svn/|jpe?g|png|gif|DS_Store)|tmp/|bundle/|bin/'"
-let g:ctrlp_status_func = {
-			\ 'main': 'CtrlPStatusFunc_1',
-			\ 'prog': 'CtrlPStatusFunc_2',
-			\ }
+
+if executable('ag')
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+endif
 "------ }}}
 
 "------ delimitMate {{{
@@ -344,31 +278,6 @@ let g:javascript_ignore_javaScriptdoc = 1
 let g:used_javascript_libs = 'angularjs'
 "------ }}}
 
-"------ lightline {{{
-let g:lightline = {
-			\ 'colorscheme': 'Tomorrow_Night',
-			\ 'active': {
-			\	'left': [['mode', 'paste'],
-			\		['fugitive', 'readonly', 'filename', 'modified']]
-			\ },
-			\ 'component_function': {
-			\	'fugitive': 'MyFugitive',
-			\	'filename': 'MyFilename',
-			\	'fileformat': 'MyFileformat',
-			\	'filetype': 'MyFiletype',
-			\	'fileencoding': 'MyFileencoding',
-			\	'mode': 'MyMode',
-			\	'ctrlpmark': 'CtrlPMark',
-			\ },
-			\ 'component_expand': {
-			\	'syntastic': 'SyntasticStatuslineFlag',
-			\ },
-			\ 'component_type': {
-			\	'syntastic': 'error',
-			\ }
-		\ }
-"------ }}}
-
 "------ NERDTree {{{
 let NERDTreeAutoDeleteBuffer = 1
 let NERDTreeCasadeOpenSingleChildDir = 1
@@ -376,7 +285,7 @@ let NERDTreeChDirMode = 2
 let NERDTreeHijackNetrw = 1
 let NERDTreeHighlightCursorline = 1
 let NERDTreeIgnore = ['\.DS_Store$','\.bundle$','\.git$']
-let NERDTreeQuitOnOpen = 1
+" let NERDTreeQuitOnOpen = 1
 let NERDTreeShowHidden = 1
 let NERDTreeWinSize = 30
 "------ }}}
@@ -396,6 +305,7 @@ let g:surround_indent = 1
 "------ }}}
 
 "------ Syntastic {{{
+let g:syntastic_check_on_open = 1
 let g:syntastic_enable_signs = 1
 let g:syntastic_error_symbol = '✗'
 let g:syntastic_warning_symbol = '⚠'
@@ -421,6 +331,12 @@ let g:tagbar_status_func = 'TagbarStatusFunc'
 let g:UltiSnipsExpandTrigger = "<TAB>"
 let g:UltiSnipsJumpForwardTrigger = "<TAB>"
 let g:UltiSnipsJumpBackwardTrigger = "<S-TAB>"
+"------ }}}
+
+"------ yankstack {{{
+let g:yankstack_map_keys = 0
+" https://github.com/maxbrunsfeld/vim-yankstack#compatibility
+call yankstack#setup()
 "------ }}}
 
 "------ YouCompleteMe {{{
@@ -517,6 +433,11 @@ map <leader>n :NERDTreeToggle<CR>
 
 "------ TagBar {{{
 map <leader>t :TagbarToggle<CR>
+"------ }}}
+
+"------ yankstack {{{
+nmap <leader>p <Plug>yankstack_substitute_older_paste
+nmap <leader>P <Plug>yankstack_substitute_newer_paste
 "------ }}}
 "---- }}}
 

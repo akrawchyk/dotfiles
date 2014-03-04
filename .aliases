@@ -42,3 +42,6 @@ alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && k
 
 alias startmysql="launchctl load /usr/local/opt/mysql/homebrew.mxcl.mysql.plist"
 alias stopmysql="launchctl unload /usr/local/opt/mysql/homebrew.mxcl.mysql.plist"
+
+# warp directory
+alias wd='. /Users/andrew/bin/wd/wd.sh'
