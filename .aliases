@@ -6,8 +6,13 @@ alias -s rb=vim
 alias -s py=vim
 
 # global aliases
-# alias -g gur="git pull --rebase"
+alias -g v="vim"
 alias -g tko="tmux kill-server"
+
+alias vup-js="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant up js mngo builder"
+alias vup-php="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant up php msql"
+alias vdown-js="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant halt js mngo builder"
+alias vdown-php="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant halt php msql"
 
 # osx utils
 # Get OS X Software Updates, and update installed Ruby gems, Homebrew, npm, and their installed packages

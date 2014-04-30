@@ -2,6 +2,85 @@
 set nocompatible
 "--- }}}
 
+
+"---- plugins {{{
+filetype off
+syntax off
+runtime macros/matchit.vim
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+Plugin 'gmarik/Vundle.vim'
+
+"------ tools {{{
+Plugin 'mileszs/ack.vim'
+Plugin 'bling/vim-airline'
+Plugin 'kien/ctrlp.vim'
+Plugin 'Raimondi/delimitMate'
+Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'scrooloose/nerdtree'
+Plugin 'tpope/vim-repeat'
+Plugin 'justinmk/vim-sneak'
+Plugin 'honza/vim-snippets'
+Plugin 'tpope/vim-surround'
+Plugin 'scrooloose/syntastic'
+Plugin 'godlygeek/tabular'
+Plugin 'majutsushi/tagbar'
+Plugin 'tomtom/tcomment_vim'
+Plugin 'kana/vim-textobj-indent'
+Plugin 'kana/vim-textobj-user'
+Plugin 'coderifous/textobj-word-column.vim'
+Plugin 'SirVer/ultisnips'
+Plugin 'tpope/vim-unimpaired'
+Plugin 'Valloric/YouCompleteMe'
+"------ }}}
+
+"------ css {{{
+Plugin 'hail2u/vim-css3-syntax'
+Plugin 'groenewege/vim-less'
+"------ }}}
+
+"------ html {{{
+Plugin 'vim-scripts/HTML-AutoCloseTag'
+Plugin 'othree/html5.vim'
+Plugin 'Valloric/MatchTagAlways'
+"------ }}}
+
+"------ git {{{
+Plugin 'tpope/vim-fugitive'
+Plugin 'mhinz/vim-signify'
+"------ }}}
+
+"------ javascript {{{
+Plugin 'nono/vim-handlebars'
+Plugin 'digitaltoad/vim-jade'
+Plugin 'pangloss/vim-javascript'
+Plugin 'othree/javascript-libraries-syntax.vim'
+Plugin 'marijnh/tern_for_vim'
+"------ }}}
+
+"------ php {{{
+"------ }}}
+
+"------ python {{{
+"------ }}}
+
+"------ ruby {{{
+"------ }}}
+
+"------ rails {{{
+"------ }}}
+
+"------ colors {{{
+Plugin 'chriskempson/base16-vim'
+"------ }}}
+
+call vundle#end()
+filetype plugin indent on
+syntax on
+"---- }}}
+
+
 "--- moving around, searching and patterns {{{
 set incsearch
 set ignorecase
@@ -9,6 +88,7 @@ set smartcase
 "--- }}}
 
 "--- tags {{{
+set tags=tags;
 "--- }}}
 
 "--- displaying text {{{
@@ -73,11 +153,11 @@ set showmatch
 
 "--- tabs and indenting {{{
 set tabstop=8
-set shiftwidth=8
+set shiftwidth=2
 set smarttab
-set softtabstop=0
+set softtabstop=2
 set shiftround
-set noexpandtab
+set expandtab
 set smartindent
 set copyindent
 "--- }}}
@@ -99,7 +179,7 @@ set ttimeoutlen=50
 "--- reading and writing files {{{
 set modelines=0
 set backup
-set backupdir=~/.vim/tmp/backup
+set backupdir=~/.vim/backup
 set autowrite
 set autoread
 "--- }}}
@@ -114,7 +194,8 @@ set wildmode=longest:full,list:full
 set wildignorecase
 set wildignore+=*.DS_Store
 set wildignore+=*.bmp,*.gif,*.jpg,*.png
-set wildignore+=*/.git/*,*/.hg/*,*/.svn/*
+set wildignore+=*.exe,*.dll,*.so,*.swp,*.zip
+set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/tmp/*
 set wildmenu
 set undofile
 set undodir=~/.vim/tmp/undo
@@ -125,7 +206,7 @@ set undodir=~/.vim/tmp/undo
 
 "--- running make and jumping to errors {{{
 if executable('ag')
-  set grepprg=ag\ --nogroup\ --nocolor
+	set grepprg=ag\ --nogroup\ --nocolor
 endif
 "--- }}}
 
@@ -138,130 +219,34 @@ set termencoding=utf-8
 "--- }}}
 
 "--- various {{{
+set gdefault
 set sessionoptions=blank,curdir,folds,help,tabpages,winpos
 "--- }}}
 
+
 "---- functions {{{
-function! DiffToggle()
-	if &l:diff == 0
-		diffthis
-	else
-		diffoff
-	endif
-endfunction
 "---- }}}
 
-"---- plugins {{{
-filetype off
-runtime macros/matchit.vim
-set rtp+=~/.vim/bundle/vundle
-call vundle#rc()
-
-Bundle 'gmarik/vundle'
-
-"------ tools {{{
-Bundle 'tpope/vim-abolish'
-Bundle 'mileszs/ack.vim'
-Bundle 'bling/vim-airline'
-Bundle 'kien/ctrlp.vim'
-Bundle 'Raimondi/delimitMate'
-Bundle 'tpope/vim-dispatch'
-Bundle 'terryma/vim-expand-region'
-Bundle 'sjl/gundo.vim'
-Bundle 'nathanaelkane/vim-indent-guides'
-" Bundle 'itchyny/lightline.vim'
-Bundle 'Valloric/ListToggle'
-Bundle 'scrooloose/nerdtree'
-Bundle 'tpope/vim-repeat'
-Bundle 'tpope/vim-sleuth'
-Bundle 'justinmk/vim-sneak'
-Bundle 'honza/vim-snippets'
-Bundle 'tpope/vim-surround'
-Bundle 'scrooloose/syntastic'
-Bundle 'godlygeek/tabular'
-Bundle 'majutsushi/tagbar'
-Bundle 'tomtom/tcomment_vim'
-Bundle 'kana/vim-textobj-indent'
-Bundle 'kana/vim-textobj-user'
-Bundle 'coderifous/textobj-word-column.vim'
-Bundle 'SirVer/ultisnips'
-Bundle 'tpope/vim-unimpaired'
-Bundle 'maxbrunsfeld/vim-yankstack'
-Bundle 'Valloric/YouCompleteMe'
-"------ }}}
-
-"------ css {{{
-Bundle 'hail2u/vim-css3-syntax'
-Bundle 'groenewege/vim-less'
-"------ }}}
-
-"------ html {{{
-Bundle 'othree/html5.vim'
-Bundle 'gregsexton/MatchTag'
-Bundle 'othree/xml.vim'
-"------ }}}
-
-"------ git {{{
-Bundle 'tpope/vim-fugitive'
-Bundle 'mhinz/vim-signify'
-""------- }}}
-
-"------ javascript {{{
-Bundle 'kchmck/vim-coffee-script'
-Bundle 'nono/vim-handlebars'
-Bundle 'digitaltoad/vim-jade'
-Bundle 'pangloss/vim-javascript'
-Bundle 'othree/javascript-libraries-syntax.vim'
-Bundle 'marijnh/tern_for_vim'
-"------ }}}
-
-"------ php {{{
-Bundle 'StanAngeloff/php.vim'
-Bundle 'shawncplus/phpcomplete.vim'
-"------ }}}
-
-"------ python {{{
-Bundle 'Glench/Vim-Jinja2-Syntax'
-"------ }}}
-
-"------ ruby {{{
-Bundle 'tpope/vim-endwise'
-Bundle 'nelstrom/vim-textobj-rubyblock'
-Bundle 'vim-ruby/vim-ruby'
-"------ }}}
-
-"------ rails {{{
-" Bundle 'tpope/vim-bundler'
-" Bundle 'tpope/vim-haml'
-" Bundle 'tpope/vim-rake'
-" Bundle 'tpope/vim-rails'
-"------ }}}
-
-"------ colors {{{
-Bundle 'chriskempson/base16-vim'
-"------ }}}
-
-filetype plugin indent on
-syntax enable
-"---- }}}
 
 "---- plugin settings {{{
 "------ ack {{{
 if executable('ag')
-  let g:ackprg = 'ag --nogroup --column'
+	let g:ackprg = 'ag --nogroup --column'
 endif
 "------ }}}
 
 "------ airline {{{
-let g:airline_theme="tomorrow"
+let g:airline_theme = 'tomorrow'
 "------ }}}
 
 "------ CtrlP {{{
-let g:ctrlp_persistent_input = 0
-
-if executable('ag')
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-endif
+" FIXME why does this mess up ctrlp fuzzy search?
+" if executable('ag')
+"   let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+" endif
+let g:ctrlp_custom_ignore = {
+			\ 'dir': '\v[\/](\.sass-cache|bower_components|node_modules)$',
+			\ }
 "------ }}}
 
 "------ delimitMate {{{
@@ -275,29 +260,19 @@ let g:indent_guides_start_level = 2
 "------ javascript {{{
 let g:javascript_enable_domhtmlcss = 1
 let g:javascript_ignore_javaScriptdoc = 1
-let g:used_javascript_libs = 'angularjs'
+"------ }}}
+
+"------ javascript-libraries-syntax {{{
+let g:used_javascript_libs = 'angularjs,jasmine,jquery,requirejs'
+"------ }}}
+
+"------ html-indent {{{
+let g:html_indent_inctags = 'head,body,main,tbody'
+let g:html_indent_script1 = 'inc'
+let g:html_indent_style1 = 'inc'
 "------ }}}
 
 "------ NERDTree {{{
-let NERDTreeAutoDeleteBuffer = 1
-let NERDTreeCasadeOpenSingleChildDir = 1
-let NERDTreeChDirMode = 2
-let NERDTreeHijackNetrw = 1
-let NERDTreeHighlightCursorline = 1
-let NERDTreeIgnore = ['\.DS_Store$','\.bundle$','\.git$']
-" let NERDTreeQuitOnOpen = 1
-let NERDTreeShowHidden = 1
-let NERDTreeWinSize = 30
-"------ }}}
-
-"------ rails.vim {{{
-" let g:rails_projections = {
-" 			\ 'app/uploaders/*_uploader.rb': {
-" 			\	'command': 'uploader',
-" 			\	'template': 'class %SUploader < CarrierWave::Uploader::Base\nend',
-" 			\	'keywords': 'process version'
-" 			\ }
-" 		\ }
 "------ }}}
 
 "------ surround {{{
@@ -305,46 +280,54 @@ let g:surround_indent = 1
 "------ }}}
 
 "------ Syntastic {{{
-let g:syntastic_check_on_open = 1
-let g:syntastic_enable_signs = 1
-let g:syntastic_error_symbol = '✗'
+let g:syntastic_auto_jump      = 1
+let g:syntastic_auto_loc_list  = 1
+let g:syntastic_check_on_open  = 0
+let g:syntastic_enable_signs   = 1
+let g:syntastic_error_symbol   = '✗'
 let g:syntastic_warning_symbol = '⚠'
+let g:syntastic_mode_map = {
+  			\ 'mode' : 'passive',
+  			\ 'active_filetypes' : ['javascript'],
+  			\ 'passive_filetypes' : []
+  			\ }
 let g:syntastic_html_tidy_ignore_errors = [
-	\ "trimming empty <i>",
-	\ "trimming empty <span>",
-	\ "<input> proprietary attribute \"autocomplete\"",
-	\ "proprietary attribute \"role\"",
-	\ "proprietary attribute \"hidden\"",
-	\ "proprietary attribute \"ng-"
-\ ]
+			\ 'trimming empty <i>',
+			\ 'trimming empty <span>',
+			\ '<input> proprietary attribute \"autocomplete\"',
+			\ 'proprietary attribute \"role\"',
+			\ 'proprietary attribute \"hidden\"',
+			\ 'proprietary attribute \"ng-',
+			\ '<svg> is not recognized!',
+			\ 'discarding unexpected <svg>',
+			\ 'discarding unexpected </svg>',
+			\ '<rect> is not recognized!',
+			\ 'discarding unexpected <rect>'
+			\ ]
 "------- }}}
 
 "------ Tagbar {{{
-let g:tagbar_autoclose = 1
-let g:tagbar_autofocus = 1
-let g:tagbar_autoshowtag = 1
+let g:tagbar_autoclose       = 1
+let g:tagbar_autofocus       = 1
+let g:tagbar_autoshowtag     = 1
 let g:tagbar_show_visibility = 1
-let g:tagbar_status_func = 'TagbarStatusFunc'
+let g:tagbar_type_javascript = {
+	\ 'ctagsbin' : 'jsctags'
+	\ }
 "------ }}}
 
 "------ UltiSnips {{{
-let g:UltiSnipsExpandTrigger = "<TAB>"
-let g:UltiSnipsJumpForwardTrigger = "<TAB>"
-let g:UltiSnipsJumpBackwardTrigger = "<S-TAB>"
-"------ }}}
-
-"------ yankstack {{{
-let g:yankstack_map_keys = 0
-" https://github.com/maxbrunsfeld/vim-yankstack#compatibility
-call yankstack#setup()
+let g:UltiSnipsExpandTrigger       = '<c-j>'
+let g:UltiSnipsJumpForwardTrigger  = '<c-j>'
+let g:UltiSnipsJumpBackwardTrigger = '<c-k>'
 "------ }}}
 
 "------ YouCompleteMe {{{
-let g:ycm_key_list_select_completion = ['<Down>']
-let g:ycm_key_list_previous_completion = ['<Up>']
-let g:ycm_seed_identifiers_with_syntax = 1
+let g:ycm_collect_identifiers_from_tags_files = 1
+let g:ycm_seed_identifiers_with_syntax        = 1
 "------ }}}
 "---- }}}
+
 
 "---- mappings {{{
 " up/down keys to be based on display lines, not physical lines
@@ -373,10 +356,6 @@ cnoremap Q q
 xnoremap > >gv
 vnoremap < <gv
 
-" use sane regexes
-nnoremap / /\v
-xnoremap / /\v
-
 " write file without correct permissions when opened
 cmap w!! %!sudo tee > /dev/null %
 
@@ -384,8 +363,26 @@ cmap w!! %!sudo tee > /dev/null %
 cmap <C-p> <C-R>=expand("%:p:h") . "/"<CR>
 
 " faster scrolling
-nnoremap <C-e> 3<C-e>
-nnoremap <C-y> 3<C-y>
+nnoremap <C-e> 5<C-e>
+nnoremap <C-y> 5<C-y>
+
+" use sane regex
+nnoremap / /\v
+nnoremap s/ s/\v
+nnoremap %s/ %s/\v
+cnoremap s/ s/\v
+cnoremap %s/ %s/\v
+vnoremap / /\v
+vnoremap %s/ %s/\v
+
+" keep search in center of window
+nnoremap <silent> n nzz
+nnoremap <silent> N Nzz
+nnoremap <silent> * *zz
+nnoremap <silent> # #zz
+nnoremap <silent> g* g*zz
+nnoremap <silent> g# g#zz
+
 
 "------ leaders {{{
 let mapleader=','
@@ -400,7 +397,7 @@ map <leader>ev :vsp %%
 map <leader>et :tabe %%
 
 " Auto-indent whole file
-nmap <leader>=  gg=G``
+nmap <leader>= gg=G``
 map <silent><leader>=f gg=G`` :delmarks z<CR>:echo "Reformatted."<CR>
 
 " autoindent pasted blocks
@@ -413,14 +410,26 @@ map <silent><leader>\ :%s/\s\+$//<CR>:let @/=''<CR>
 " toggle highlight search
 nmap <silent><leader>/ :set hlsearch! hlsearch?<CR>
 
-" toggle diff mode for current buffer
-noremap <silent><leader>dt :call DiffToggle()<CR>
+" reselect pasted text
+nnoremap <leader>v V`]
+
+" fast edit vimrc
+nnoremap <leader>ev <C-w><C-v><C-l>:e $MYVIMRC<CR>
+
+" close quick/location fix/list
+nnoremap <leader>q :ccl<CR>
+nnoremap <leader>l :lcl<CR>
 "------ }}}
 "---- }}}
+
 
 "---- plugin mappings {{{
 "------ Ack {{{
 nmap <leader>a :Ack!<space>
+"------ }}}
+
+"------ Dispatch {{{
+nmap <leader>d :Dispatch<CR>
 "------ }}}
 
 "------ Gundo {{{
@@ -434,12 +443,8 @@ map <leader>n :NERDTreeToggle<CR>
 "------ TagBar {{{
 map <leader>t :TagbarToggle<CR>
 "------ }}}
-
-"------ yankstack {{{
-nmap <leader>p <Plug>yankstack_substitute_older_paste
-nmap <leader>P <Plug>yankstack_substitute_newer_paste
-"------ }}}
 "---- }}}
+
 
 "---- autocmds {{{
 if has("autocmd")
@@ -462,14 +467,11 @@ if has("autocmd")
 		" set xml formatting command to xmllint
 		au FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
 
-		" add html as mobile erb subtype
-		au BufNewFile,BufRead *.mobile.erb let b:eruby_subtype = 'html'
-
 		" set custom indentation
-		au FileType scss,css,eruby,haml setlocal sts=2 sw=2
+		au FileType php,html setlocal sts=4 sw=4
 
 		" set tab completion on css-classes
-		au FileType scss,css,eruby,haml setlocal iskeyword+=-
+		au FileType scss,css,eruby,haml,html setlocal iskeyword+=-
 
 		" surround custom replacements
 		au FileType eruby let b:surround_45 = "<% \r %>"
@@ -487,8 +489,8 @@ if has("autocmd")
 		au InsertLeave * set nopaste
 
 		" only show linenumbers on current buffer
-		" au BufEnter * if !exists("b:NERDTreeType") | set number | endif
-		" au BufLeave * if !exists("b:NERDTreeType") | set nonumber | endif
+		au BufEnter * if !exists("b:NERDTreeType") | set number | endif
+		au BufLeave * if !exists("b:NERDTreeType") | set nonumber | endif
 
 		" show extra whitespace as red
 		au BufWinEnter * match ExtraWhitespace /\s\+$/
@@ -499,17 +501,17 @@ if has("autocmd")
 endif
 "---- }}}
 
+
 "---- gui {{{
-" let base16colorspace=256
-colorscheme base16-tomorrow
+colorscheme base16-eighties
 
 let &colorcolumn=81
 highlight ColorColumn ctermbg=10 guibg=#2c2d27
 
 highlight ExtraWhitespace ctermbg=196 guibg=red
 
-" highlight SyntasticErrorLine ctermbg=210 ctermfg=160
 highlight SyntasticErrorSign ctermbg=210 ctermfg=160
-" highlight SyntasticWarningLine ctermbg=227 ctermfg=166
 highlight SyntasticWarningSign ctermbg=227 ctermfg=166
+" highlight SyntasticWarningLine ctermbg=227 ctermfg=166
+" highlight SyntasticErrorLine ctermbg=210 ctermfg=160
 "---- }}}
