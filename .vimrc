@@ -1,3 +1,6 @@
+" Andrew Krawchyk
+" Options are organized similarly to the :options command
+"
 "--- important {{{
 set nocompatible
 "--- }}}
@@ -17,6 +20,8 @@ Plugin 'mileszs/ack.vim'
 Plugin 'bling/vim-airline'
 Plugin 'kien/ctrlp.vim'
 Plugin 'Raimondi/delimitMate'
+Plugin 'tpope/vim-dispatch'
+Plugin 'sjl/gundo.vim'
 Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'scrooloose/nerdtree'
 Plugin 'tpope/vim-repeat'
@@ -38,10 +43,10 @@ Plugin 'Valloric/YouCompleteMe'
 "------ css {{{
 Plugin 'hail2u/vim-css3-syntax'
 Plugin 'groenewege/vim-less'
+Plugin 'cakebaker/scss-syntax.vim'
 "------ }}}
 
 "------ html {{{
-Plugin 'vim-scripts/HTML-AutoCloseTag'
 Plugin 'othree/html5.vim'
 Plugin 'Valloric/MatchTagAlways'
 "------ }}}
@@ -63,6 +68,7 @@ Plugin 'marijnh/tern_for_vim'
 "------ }}}
 
 "------ python {{{
+Plugin 'klen/python-mode'
 "------ }}}
 
 "------ ruby {{{
@@ -97,9 +103,10 @@ set scrolloff=3
 set sidescrolloff=3
 set lazyredraw
 set list
-set listchars=tab:˒\ ,trail:·,extends:…,precedes:…
+set listchars=tab:˒\ ,trail:·,extends:…,precedes:…,nbsp:+
 set number
 set numberwidth=1
+set display+=lastline
 "--- }}}
 
 "--- syntax, highlighting and spelling {{{
@@ -121,6 +128,7 @@ set splitright
 "--- }}}
 
 "--- multiple tab pages {{{
+set tabpagemax=50
 "--- }}}
 
 "--- terminal {{{
@@ -137,6 +145,8 @@ set ttymouse=xterm2
 "--- }}}
 
 "--- messages and info {{{
+set ruler
+set showcmd
 set shortmess=aoOstTI
 set visualbell
 "--- }}}
@@ -147,17 +157,20 @@ set clipboard=unnamed
 
 "--- editing text {{{
 set backspace=indent,eol,start
+set complete-=i
 set completeopt=menuone
 set showmatch
+set nrformats-=octal
 "--- }}}
 
 "--- tabs and indenting {{{
 set tabstop=8
-set shiftwidth=2
+set shiftwidth=8
 set smarttab
-set softtabstop=2
+set softtabstop=0
 set shiftround
-set expandtab
+set noexpandtab
+set autoindent
 set smartindent
 set copyindent
 "--- }}}
@@ -182,6 +195,7 @@ set backup
 set backupdir=~/.vim/backup
 set autowrite
 set autoread
+set fileformats+=mac
 "--- }}}
 
 "--- the swap file {{{
@@ -189,13 +203,14 @@ set directory=~/.vim/tmp
 "--- }}}
 
 "--- command line editing {{{
-set history=1024
+set history=2048
 set wildmode=longest:full,list:full
 set wildignorecase
 set wildignore+=*.DS_Store
 set wildignore+=*.bmp,*.gif,*.jpg,*.png
 set wildignore+=*.exe,*.dll,*.so,*.swp,*.zip
 set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/tmp/*
+set wildignore+=*/.sass-cache/*,*/bower_components/*,*/node_modules/*
 set wildmenu
 set undofile
 set undodir=~/.vim/tmp/undo
@@ -220,7 +235,10 @@ set termencoding=utf-8
 
 "--- various {{{
 set gdefault
-set sessionoptions=blank,curdir,folds,help,tabpages,winpos
+set sessionoptions-=options
+if !empty(&viminfo)
+  set viminfo^=!
+endif
 "--- }}}
 
 
@@ -239,18 +257,14 @@ endif
 let g:airline_theme = 'tomorrow'
 "------ }}}
 
-"------ CtrlP {{{
-" FIXME why does this mess up ctrlp fuzzy search?
-" if executable('ag')
-"   let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-" endif
-let g:ctrlp_custom_ignore = {
-			\ 'dir': '\v[\/](\.sass-cache|bower_components|node_modules)$',
-			\ }
-"------ }}}
-
 "------ delimitMate {{{
 let g:delimitMate_expand_cr = 1
+"------ }}}
+
+"------ html-indent {{{
+let g:html_indent_inctags = 'head,body,main,tbody'
+let g:html_indent_script1 = 'inc'
+let g:html_indent_style1  = 'inc'
 "------ }}}
 
 "------ indent guides {{{
@@ -266,13 +280,19 @@ let g:javascript_ignore_javaScriptdoc = 1
 let g:used_javascript_libs = 'angularjs,jasmine,jquery,requirejs'
 "------ }}}
 
-"------ html-indent {{{
-let g:html_indent_inctags = 'head,body,main,tbody'
-let g:html_indent_script1 = 'inc'
-let g:html_indent_style1 = 'inc'
+"------ MatchTagAlways {{{
+let g:mta_filetypes = {
+			\ 'html'       : 1,
+			\ 'xhtml'      : 1,
+			\ 'xml'        : 1,
+			\ 'jinja'      : 1,
+			\ 'handlebars.html' : 1
+			\}
 "------ }}}
 
 "------ NERDTree {{{
+let g:NERDTreeChDirMode  = 2
+let g:NERDTreeQuitOnOpen = 1
 "------ }}}
 
 "------ surround {{{
@@ -287,10 +307,10 @@ let g:syntastic_enable_signs   = 1
 let g:syntastic_error_symbol   = '✗'
 let g:syntastic_warning_symbol = '⚠'
 let g:syntastic_mode_map = {
-  			\ 'mode' : 'passive',
-  			\ 'active_filetypes' : ['javascript'],
-  			\ 'passive_filetypes' : []
-  			\ }
+			\ 'mode' : 'passive',
+			\ 'active_filetypes' : ['javascript'],
+			\ 'passive_filetypes' : []
+			\ }
 let g:syntastic_html_tidy_ignore_errors = [
 			\ 'trimming empty <i>',
 			\ 'trimming empty <span>',
@@ -312,14 +332,14 @@ let g:tagbar_autofocus       = 1
 let g:tagbar_autoshowtag     = 1
 let g:tagbar_show_visibility = 1
 let g:tagbar_type_javascript = {
-	\ 'ctagsbin' : 'jsctags'
-	\ }
+			\ 'ctagsbin' : 'jsctags'
+			\ }
 "------ }}}
 
 "------ UltiSnips {{{
-let g:UltiSnipsExpandTrigger       = '<c-j>'
-let g:UltiSnipsJumpForwardTrigger  = '<c-j>'
-let g:UltiSnipsJumpBackwardTrigger = '<c-k>'
+let g:UltiSnipsExpandTrigger       = "<c-j>"
+let g:UltiSnipsJumpForwardTrigger  = "<c-j>"
+let g:UltiSnipsJumpBackwardTrigger = "<c-k>"
 "------ }}}
 
 "------ YouCompleteMe {{{
@@ -340,6 +360,7 @@ inoremap jk <Esc>
 " make undo and yank consistent
 nnoremap U <C-r>
 map Y y$
+inoremap <C-U> <C-G>u<C-U>
 
 " easier split navigating
 map <C-h> <C-w>h
@@ -370,8 +391,6 @@ nnoremap <C-y> 5<C-y>
 nnoremap / /\v
 nnoremap s/ s/\v
 nnoremap %s/ %s/\v
-cnoremap s/ s/\v
-cnoremap %s/ %s/\v
 vnoremap / /\v
 vnoremap %s/ %s/\v
 
@@ -468,7 +487,8 @@ if has("autocmd")
 		au FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
 
 		" set custom indentation
-		au FileType php,html setlocal sts=4 sw=4
+		au FileType html,php,handlebars.html,scss setlocal sts=4 sw=4 et
+		au FileType javascript setlocal sts=2 sw=2 et
 
 		" set tab completion on css-classes
 		au FileType scss,css,eruby,haml,html setlocal iskeyword+=-
@@ -480,6 +500,9 @@ if has("autocmd")
 		au FileType html,eruby let b:surround_100 = "<div>\r</div>"
 		au FileType html,eruby let b:surround_112 = "<p>\r</p>"
 		au FileType html,eruby let b:surround_115 = "<span>\r</span>"
+
+		" delimitmate custom matches
+		au FileType vim,html let b:delimitMate_matchpairs = "(:),[:],{:},<:>"
 	augroup END
 
 	augroup editing
@@ -501,12 +524,10 @@ if has("autocmd")
 endif
 "---- }}}
 
-
 "---- gui {{{
-colorscheme base16-eighties
-
-let &colorcolumn=81
-highlight ColorColumn ctermbg=10 guibg=#2c2d27
+colorscheme base16-ocean
+let &colorcolumn=80
+highlight ColorColumn ctermbg=10 guibg=yellow
 
 highlight ExtraWhitespace ctermbg=196 guibg=red
 
