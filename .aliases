@@ -1,18 +1,25 @@
-# suffix aliases
-alias -s css=vim
-alias -s html=vim
-alias -s js=vim
-alias -s rb=vim
-alias -s py=vim
-
 # global aliases
 alias -g v="vim"
 alias -g tko="tmux kill-server"
 
 alias vup-js="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant up js mngo builder"
 alias vup-php="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant up php msql"
+alias vup-py="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant up py msql builder"
+alias vup-html="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant up py builder"
 alias vdown-js="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant halt js mngo builder"
 alias vdown-php="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant halt php msql"
+alias vdown-py="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant halt py msql builder"
+alias vdown-html="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant halt py builder"
+
+# fasd
+alias a='fasd -a'        # any
+alias s='fasd -si'       # show / search / select
+alias d='fasd -d'        # directory
+alias f='fasd -f'        # file
+alias sd='fasd -sid'     # interactive directory selection
+alias sf='fasd -sif'     # interactive file selection
+alias z='fasd_cd -d'     # cd, same functionality as j in autojump
+alias zz='fasd_cd -d -i' # cd with interactive selection
 
 # osx utils
 # Get OS X Software Updates, and update installed Ruby gems, Homebrew, npm, and their installed packages
@@ -44,9 +51,3 @@ alias hide="defaults write com.apple.finder AppleShowAllFiles -bool false && kil
 # Hide/show all desktop icons (useful when presenting)
 alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
 alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
-
-alias startmysql="launchctl load /usr/local/opt/mysql/homebrew.mxcl.mysql.plist"
-alias stopmysql="launchctl unload /usr/local/opt/mysql/homebrew.mxcl.mysql.plist"
-
-# warp directory
-alias wd='. /Users/andrew/bin/wd/wd.sh'

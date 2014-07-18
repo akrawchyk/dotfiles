@@ -243,6 +243,20 @@ endif
 
 
 "---- functions {{{
+function! g:UltiSnips_Complete()
+    call UltiSnips#ExpandSnippet()
+    if g:ulti_expand_res == 0
+        if pumvisible()
+            return "\<C-n>"
+        else
+            call UltiSnips#JumpForwards()
+            if g:ulti_jump_forwards_res == 0
+               return "\<TAB>"
+            endif
+        endif
+    endif
+    return ""
+endfunction
 "---- }}}
 
 
@@ -300,9 +314,9 @@ let g:surround_indent = 1
 "------ }}}
 
 "------ Syntastic {{{
-let g:syntastic_auto_jump      = 1
-let g:syntastic_auto_loc_list  = 1
-let g:syntastic_check_on_open  = 0
+let g:syntastic_auto_jump      = 0
+let g:syntastic_auto_loc_list  = 0
+let g:syntastic_check_on_open  = 1
 let g:syntastic_enable_signs   = 1
 let g:syntastic_error_symbol   = '✗'
 let g:syntastic_warning_symbol = '⚠'
@@ -331,19 +345,17 @@ let g:tagbar_autoclose       = 1
 let g:tagbar_autofocus       = 1
 let g:tagbar_autoshowtag     = 1
 let g:tagbar_show_visibility = 1
-let g:tagbar_type_javascript = {
-			\ 'ctagsbin' : 'jsctags'
-			\ }
 "------ }}}
 
 "------ UltiSnips {{{
-let g:UltiSnipsExpandTrigger       = "<c-j>"
-let g:UltiSnipsJumpForwardTrigger  = "<c-j>"
-let g:UltiSnipsJumpBackwardTrigger = "<c-k>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsListSnippets="<c-e>"
 "------ }}}
 
 "------ YouCompleteMe {{{
 let g:ycm_collect_identifiers_from_tags_files = 1
+" let g:ycm_key_list_select_completion          = ['<C-n>', '<Down>']
+" let g:ycm_key_list_previous_completion        = ['<C-p>', '<Up>']
 let g:ycm_seed_identifiers_with_syntax        = 1
 "------ }}}
 "---- }}}
@@ -401,6 +413,21 @@ nnoremap <silent> * *zz
 nnoremap <silent> # #zz
 nnoremap <silent> g* g*zz
 nnoremap <silent> g# g#zz
+
+" apply macros with Q
+nnoremap Q @q
+vnoremap Q :norm @q<cr>
+
+" change tabs with shift
+noremap <S-l> gt
+noremap <S-h> gT
+
+" quit files with <leader>q
+noremap <leader>q :q<cr>
+
+" save files with <leader>s
+nnoremap <leader>s :w<cr>
+inoremap <leader>s <C-c>:w<cr>
 
 
 "------ leaders {{{
@@ -507,6 +534,8 @@ if has("autocmd")
 
 	augroup editing
 		au!
+
+		au BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
 
 		" exit paste mode when leaving insert mode
 		au InsertLeave * set nopaste
