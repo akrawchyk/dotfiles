@@ -21,6 +21,7 @@ Plugin 'bling/vim-airline'
 Plugin 'kien/ctrlp.vim'
 Plugin 'Raimondi/delimitMate'
 Plugin 'tpope/vim-dispatch'
+Plugin 'terryma/vim-expand-region'
 Plugin 'sjl/gundo.vim'
 Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'scrooloose/nerdtree'
@@ -348,14 +349,15 @@ let g:tagbar_show_visibility = 1
 "------ }}}
 
 "------ UltiSnips {{{
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsListSnippets="<c-e>"
+let g:UltiSnipsExpandTrigger       = "<tab>"
+let g:UltiSnipsJumpForwardTrigger  = "<tab>"
+let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+let g:UltiSnipsListSnippets        = "<c-e>"
+let g:UltiSnipsSnippetDirectories  = ["snips"]
 "------ }}}
 
 "------ YouCompleteMe {{{
 let g:ycm_collect_identifiers_from_tags_files = 1
-" let g:ycm_key_list_select_completion          = ['<C-n>', '<Down>']
-" let g:ycm_key_list_previous_completion        = ['<C-p>', '<Up>']
 let g:ycm_seed_identifiers_with_syntax        = 1
 "------ }}}
 "---- }}}
@@ -460,7 +462,7 @@ nmap <silent><leader>/ :set hlsearch! hlsearch?<CR>
 nnoremap <leader>v V`]
 
 " fast edit vimrc
-nnoremap <leader>ev <C-w><C-v><C-l>:e $MYVIMRC<CR>
+nnoremap <leader>evm <C-w><C-v><C-l>:e $MYVIMRC<CR>
 
 " close quick/location fix/list
 nnoremap <leader>q :ccl<CR>
@@ -535,7 +537,7 @@ if has("autocmd")
 	augroup editing
 		au!
 
-		au BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
+		au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
 
 		" exit paste mode when leaving insert mode
 		au InsertLeave * set nopaste
