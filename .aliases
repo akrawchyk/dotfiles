@@ -3,13 +3,42 @@ alias -g v="vim"
 alias -g tko="tmux kill-server"
 
 alias vup-js="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant up js mngo builder"
-alias vup-php="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant up php msql"
-alias vup-py="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant up py msql builder"
+alias vup-php="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant up php msql builder"
+alias vup-py="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant up py psql builder"
 alias vup-html="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant up py builder"
 alias vdown-js="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant halt js mngo builder"
-alias vdown-php="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant halt php msql"
-alias vdown-py="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant halt py msql builder"
+alias vdown-php="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant halt php msql builder"
+alias vdown-py="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant halt py psql builder"
 alias vdown-html="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant halt py builder"
+
+
+alias vbt="fab virtual:b tail"
+alias dbt="fab development:b tail"
+alias sbt="fab staging:b tail"
+
+alias vbs="fab virtual:b sub_shell"
+alias dbs="fab development:b sub_shell"
+alias sbs="fab staging:b sub_shell"
+
+alias vbr="fab virtual:b sub_reload_app"
+alias dbr="fab development:b sub_reload_app"
+alias sbr="fab staging:b sub_reload_app"
+
+alias vbrr="fab virtual:b rsync sub_reload_app"
+alias dbrr="fab development:b rsync sub_reload_app"
+alias sbpr="fab staging:b pull sub_reload_app"
+
+alias vbcs="fab virtual:b sub_collectstatic"
+alias dbcs="fab development:b sub_collectstatic"
+alias sbcs="fab staging:b sub_collectstatic"
+
+alias vbrmm="fab virtual:b rsync sub_make_and_get_migrations"
+alias dbrmm="fab development:b rsync sub_make_and_get_migrations"
+alias sbpmm="fab staging:b pull sub_make_and_get_migrations"
+
+alias vbmi="fab virtual:b sub_migrate"
+alias dbmi="fab development:b sub_migrate"
+alias sbmi="fab staging:b sub_migrate"
 
 # fasd
 alias a='fasd -a'        # any
