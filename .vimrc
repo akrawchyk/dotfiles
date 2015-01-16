@@ -30,6 +30,7 @@ Plugin 'terryma/vim-expand-region'
 Plugin 'tpope/vim-fugitive'
 Plugin 'sjl/gundo.vim'
 Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'fholgado/minibufexpl.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'tpope/vim-repeat'
 Plugin 'mhinz/vim-signify'
@@ -67,10 +68,6 @@ Plugin 'digitaltoad/vim-jade'
 Plugin 'pangloss/vim-javascript'
 Plugin 'othree/javascript-libraries-syntax.vim'
 Plugin 'marijnh/tern_for_vim'
-"------ }}}
-
-"------ python {{{
-Plugin 'klen/python-mode'
 "------ }}}
 
 "------ django {{{
@@ -115,10 +112,10 @@ set nocursorline
 set laststatus=2
 set equalalways
 set eadirection=both
-set winheight=5
-set winminheight=2
-set winwidth=5
-set winminwidth=5
+" set winheight=5
+" set winminheight=2
+" set winwidth=5
+" set winminwidth=5
 set hidden
 set splitbelow
 set splitright
@@ -291,6 +288,10 @@ let g:mta_filetypes = {
 			\}
 "------ }}}
 
+"------ minibufexpl {{{
+let g:miniBufExplBRSplit = 0
+"------ }}}
+
 "------ NERDTree {{{
 let g:NERDTreeChDirMode  = 2
 let g:NERDTreeQuitOnOpen = 1
@@ -304,10 +305,10 @@ let NERDTreeIgnore = [
 "------ }}}
 
 "------ Python-mode {{{
-let g:pymode_lint_comment_symbol = '»'
-let g:pymode_lint_todo_symbol = '⚠'
-let g:pymode_lint_error_symbol = '✗'
-let g:pymode_rope = 0
+" let g:pymode_lint_comment_symbol = ''
+" let g:pymode_lint_todo_symbol    = '⚠'
+" let g:pymode_lint_error_symbol   = '✗'
+" let g:pymode_rope = 0
 "------ }}}
 
 "------ surround {{{
@@ -321,11 +322,9 @@ let g:syntastic_check_on_open  = 1
 let g:syntastic_enable_signs   = 1
 let g:syntastic_error_symbol   = '✗'
 let g:syntastic_warning_symbol = '⚠'
-let g:syntastic_mode_map = {
-			\ 'mode' : 'active',
-			\ 'active_filetypes' : ['javascript'],
-			\ 'passive_filetypes' : ['python']
-			\ }
+let g:syntastic_style_error_symbol = '»'
+let g:syntastic_style_warning_symbol = '»'
+let g:syntastic_python_checkers = ['pylama']
 let g:syntastic_html_tidy_ignore_errors = [
 			\ 'trimming empty <i>',
 			\ 'trimming empty <span>',
@@ -425,17 +424,17 @@ vnoremap Q :norm @q<cr>
 noremap <S-l> gt
 noremap <S-h> gT
 
+
+"------ leaders {{{
+let mapleader=','
+let localmapleader='\'
+
 " quit files with <leader>q
 noremap <leader>q :q<cr>
 
 " save files with <leader>s
 nnoremap <leader>s :w<cr>
 inoremap <leader>s <C-c>:w<cr>
-
-
-"------ leaders {{{
-let mapleader=','
-let localmapleader='\'
 
 " Some helpers to edit mode
 " http://vimcasts.org/e/14
@@ -483,6 +482,10 @@ nmap <leader>d :Dispatch<CR>
 
 "------ Gundo {{{
 map <leader>u :GundoToggle<CR>
+"------ }}}
+
+"------ minibufexpl {{{
+map <leader>b :MBEToggle<CR>
 "------ }}}
 
 "------ NERDTree {{{
@@ -566,6 +569,6 @@ highlight ExtraWhitespace ctermbg=196 guibg=red
 
 highlight SyntasticErrorSign ctermbg=09 ctermfg=196
 highlight SyntasticWarningSign ctermbg=03 ctermfg=202
-" highlight SyntasticWarningLine ctermbg=227 ctermfg=166
-" highlight SyntasticErrorLine ctermbg=19 ctermfg=160
+highlight SyntasticStyleErrorSign ctermbg=19 ctermfg=246
+highlight SyntasticStyleWarningSign ctermbg=19 ctermfg=240
 "---- }}}
