@@ -23,7 +23,7 @@ Plugin 'chriskempson/base16-vim'
 "------ tools {{{
 Plugin 'rking/ag.vim'
 Plugin 'bling/vim-airline'
-Plugin 'kien/ctrlp.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'Raimondi/delimitMate'
 Plugin 'tpope/vim-dispatch'
 Plugin 'terryma/vim-expand-region'
@@ -32,9 +32,9 @@ Plugin 'sjl/gundo.vim'
 Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'fholgado/minibufexpl.vim'
 Plugin 'scrooloose/nerdtree'
+Plugin 'sheerun/vim-polyglot'
 Plugin 'tpope/vim-repeat'
 Plugin 'mhinz/vim-signify'
-Plugin 'justinmk/vim-sneak'
 Plugin 'honza/vim-snippets'
 Plugin 'tpope/vim-surround'
 Plugin 'scrooloose/syntastic'
@@ -50,27 +50,22 @@ Plugin 'tpope/vim-unimpaired'
 Plugin 'Valloric/YouCompleteMe'
 "------ }}}
 
-"------ css {{{
-Plugin 'hail2u/vim-css3-syntax'
-Plugin 'groenewege/vim-less'
-Plugin 'cakebaker/scss-syntax.vim'
-"------ }}}
-
 "------ html {{{
-Plugin 'othree/html5.vim'
 Plugin 'Valloric/MatchTagAlways'
 Plugin 'sukima/xmledit'
 "------ }}}
 
 "------ javascript {{{
-Plugin 'nono/vim-handlebars'
-Plugin 'digitaltoad/vim-jade'
-Plugin 'pangloss/vim-javascript'
 Plugin 'othree/javascript-libraries-syntax.vim'
 Plugin 'marijnh/tern_for_vim'
 "------ }}}
 
+"------ python {{{
+Plugin 'jmcantrell/vim-virtualenv'
+"------ }}}
+
 "------ django {{{
+Plugin 'mjbrownie/vim-htmldjango_omnicomplete'
 Plugin 'jmcomets/vim-pony'
 "------ }}}
 
@@ -112,10 +107,6 @@ set nocursorline
 set laststatus=2
 set equalalways
 set eadirection=both
-" set winheight=5
-" set winminheight=2
-" set winwidth=5
-" set winminwidth=5
 set hidden
 set splitbelow
 set splitright
@@ -204,7 +195,7 @@ set wildignore+=*.DS_Store,~*
 set wildignore+=*.bmp,*.gif,*.jpg,*.png
 set wildignore+=*.exe,*.dll,*.so,*.swp,*.zip,*.pyc
 set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/tmp/*
-set wildignore+=*/.sass-cache/*,*/bower_components/*,*/node_modules/*,*/bundle/*
+set wildignore+=*/.sass-cache/*,*/bower_components/*,*/node_modules/*
 set wildmenu
 set undofile
 set undodir=~/.vim/tmp/undo
@@ -265,6 +256,10 @@ let g:ctrlp_custom_ignore = {
 let g:delimitMate_expand_cr = 1
 "------ }}}
 
+"------ htmldjango_omnicomplete {{{
+let g:htmldjangocomplete_html_flavour = 'html5'
+"------ }}}
+
 "------ indent guides {{{
 let g:indent_guides_start_level = 2
 "------ }}}
@@ -275,16 +270,17 @@ let g:javascript_ignore_javaScriptdoc = 1
 "------ }}}
 
 "------ javascript-libraries-syntax {{{
-let g:used_javascript_libs = 'angularjs,jasmine,jquery,requirejs'
+let g:used_javascript_libs = 'angularjs,jasmine,jquery'
 "------ }}}
 
 "------ MatchTagAlways {{{
 let g:mta_filetypes = {
-			\ 'html'       : 1,
-			\ 'xhtml'      : 1,
-			\ 'xml'        : 1,
-			\ 'jinja'      : 1,
-			\ 'handlebars.html' : 1
+			\ 'html'            : 1,
+			\ 'xhtml'           : 1,
+			\ 'xml'             : 1,
+			\ 'jinja'           : 1,
+			\ 'handlebars.html' : 1,
+			\ 'htmldjango'      : 1
 			\}
 "------ }}}
 
@@ -295,20 +291,14 @@ let g:miniBufExplBRSplit = 0
 "------ NERDTree {{{
 let g:NERDTreeChDirMode  = 2
 let g:NERDTreeQuitOnOpen = 1
-let NERDTreeIgnore = [
-			\ '\.vim$', '\~$', '\.DS_Store$', '*\.exe', '*\.dll',
-			\ '*\.so', '*\.swp', '*\.zip' , '*\.pyc',
-			\ '*/\.git/*', '*/\.hg/*', '*/\.svn/*', '*/tmp/*',
-			\ '*/\.sass-cache/*',
-			\ '*.pyc'
+let g:NERDTreeIgnore = [
+			\ '\.vim$', '\~$', '\.DS_Store$', '\.exe$', '\.dll$',
+			\ '\.so$', '\.swp$', '\.zip$', '\.pyc$',
+			\ '\.bmp$', '\.gif$', '\.jpg$'. '\.png$',
+			\ '\.git$[[dir]]', '\.hg$[[dir]]', '\.svn$[[dir]]',
+			\ '\.sass-cache$[[dir]]', '(\.)?bundle$[[dir]]',
+			\ 'node_modules$[[dir]]', 'tmp$[[dir]]'
 			\]
-"------ }}}
-
-"------ Python-mode {{{
-" let g:pymode_lint_comment_symbol = ''
-" let g:pymode_lint_todo_symbol    = '⚠'
-" let g:pymode_lint_error_symbol   = '✗'
-" let g:pymode_rope = 0
 "------ }}}
 
 "------ surround {{{
@@ -358,7 +348,9 @@ let g:UltiSnipsSnippetDirectories  = ["snips"]
 "------ YouCompleteMe {{{
 let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_seed_identifiers_with_syntax        = 1
-let g:ycm_path_to_python_interpreter          = '/usr/bin/python'
+let g:ycm_complete_in_comments                = 1
+let g:ycm_complete_in_strings                 = 1
+let g:ycm_path_to_python_interpreter          = '/usr/local/bin/python'
 "------ }}}
 "---- }}}
 
@@ -428,13 +420,6 @@ noremap <S-h> gT
 "------ leaders {{{
 let mapleader=','
 let localmapleader='\'
-
-" quit files with <leader>q
-noremap <leader>q :q<cr>
-
-" save files with <leader>s
-nnoremap <leader>s :w<cr>
-inoremap <leader>s <C-c>:w<cr>
 
 " Some helpers to edit mode
 " http://vimcasts.org/e/14
@@ -520,27 +505,38 @@ if has("autocmd")
 		au FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
 
 		" set custom indentation
-		au FileType html,handlebars.html,css,scss,php setlocal sts=4 sw=4 et
+		au FileType html,handlebars.html,htmldjango,css,scss,php setlocal sts=4 sw=4 et
 		au FileType javascript setlocal sts=2 sw=2 et
 
 		" set tab completion on css-classes
 		au FileType scss,css,eruby,haml,html setlocal iskeyword+=-
 
 		" surround custom replacements
-		au FileType eruby let b:surround_45 = "<% \r %>"
-		au FileType eruby let b:surround_61 = "<%= \r %>"
-		au FileType eruby let b:surround_92 = "<%# \r %>"
-		au FileType html,eruby let b:surround_100 = "<div>\r</div>"
-		au FileType html,eruby let b:surround_112 = "<p>\r</p>"
-		au FileType html,eruby let b:surround_115 = "<span>\r</span>"
+		au FileType html,htmldjango let b:surround_{char2nr("d")} = "<div\1class: \r..*\r class=\"&\"\1>\r</div>"
+		au FileType html,htmldjango let b:surround_{char2nr("p")} = "<p\1class: \r..*\r class=\"&\"\1>\r</p>"
+		au FileType html,htmldjango let b:surround_{char2nr("s")} = "<span\1class: \r..*\r class=\"&\"\1>\r</span>"
+		au FileType htmldjango let b:surround_{char2nr("v")} = "{{ \r }}"
+		au FileType htmldjango let b:surround_{char2nr("{")} = "{{ \r }}"
+		au FileType htmldjango let b:surround_{char2nr("%")} = "{% \r %}"
+		au FileType htmldjango let b:surround_{char2nr("b")} = "{% block \1block name: \1 %}\r{% endblock \1\1 %}"
+		au FileType htmldjango let b:surround_{char2nr("i")} = "{% if \1condition: \1 %}\r{% endif %}"
+		au FileType htmldjango let b:surround_{char2nr("w")} = "{% with \1with: \1 %}\r{% endwith %}"
+		au FileType htmldjango let b:surround_{char2nr("f")} = "{% for \1for loop: \1 %}\r{% endfor %}"
+		au FileType htmldjango let b:surround_{char2nr("c")} = "{% comment %}\r{% endcomment %}"
 
 		" delimitmate custom matches
 		au FileType vim,html let b:delimitMate_matchpairs = "(:),[:],{:},<:>"
+
+		" django custom omnicomplete
+		au FileType htmldjango set omnifunc=htmldjangocomplete#CompleteDjango
+		au FileType htmldjango inoremap {% {% %}<left><left><left>
+		au FileType htmldjango inoremap {{ {{ }}<left><left><left>
 	augroup END
 
 	augroup editing
 		au!
 
+		" tabs to complete snippets
 		au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
 
 		" exit paste mode when leaving insert mode
