@@ -28,13 +28,12 @@ Plugin 'Raimondi/delimitMate'
 Plugin 'tpope/vim-dispatch'
 Plugin 'terryma/vim-expand-region'
 Plugin 'tpope/vim-fugitive'
+Plugin 'airblade/vim-gitgutter'
 Plugin 'sjl/gundo.vim'
 Plugin 'nathanaelkane/vim-indent-guides'
-Plugin 'fholgado/minibufexpl.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'sheerun/vim-polyglot'
 Plugin 'tpope/vim-repeat'
-Plugin 'mhinz/vim-signify'
 Plugin 'honza/vim-snippets'
 Plugin 'tpope/vim-surround'
 Plugin 'scrooloose/syntastic'
@@ -60,9 +59,17 @@ Plugin 'othree/javascript-libraries-syntax.vim'
 Plugin 'marijnh/tern_for_vim'
 "------ }}}
 
+"------ php {{{
+Plugin 'evidens/vim-twig'
+"------ }}}
+
 "------ python {{{
 Plugin 'jmcantrell/vim-virtualenv'
 "------ }}}
+
+"------ sass {{{
+Plugin 'cakebaker/scss-syntax.vim'
+"------}}
 
 "------ django {{{
 Plugin 'mjbrownie/vim-htmldjango_omnicomplete'
@@ -143,7 +150,7 @@ set clipboard=unnamed
 "--- editing text {{{
 set backspace=indent,eol,start
 set complete-=i
-set completeopt=menuone
+set completeopt=menu,menuone
 set showmatch
 set nrformats-=octal
 "--- }}}
@@ -284,10 +291,6 @@ let g:mta_filetypes = {
 			\}
 "------ }}}
 
-"------ minibufexpl {{{
-let g:miniBufExplBRSplit = 0
-"------ }}}
-
 "------ NERDTree {{{
 let g:NERDTreeChDirMode  = 2
 let g:NERDTreeQuitOnOpen = 1
@@ -419,7 +422,7 @@ noremap <S-h> gT
 
 "------ leaders {{{
 let mapleader=','
-let localmapleader='\'
+let maplocalleader='\\'
 
 " Some helpers to edit mode
 " http://vimcasts.org/e/14
@@ -469,10 +472,6 @@ nmap <leader>d :Dispatch<CR>
 map <leader>u :GundoToggle<CR>
 "------ }}}
 
-"------ minibufexpl {{{
-map <leader>b :MBEToggle<CR>
-"------ }}}
-
 "------ NERDTree {{{
 map <leader>n :NERDTreeToggle<CR>
 "------ }}}
@@ -505,11 +504,14 @@ if has("autocmd")
 		au FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
 
 		" set custom indentation
-		au FileType html,handlebars.html,htmldjango,css,scss,php setlocal sts=4 sw=4 et
+		au FileType html,handlebars.html,htmldjango,css,scss,php,twig setlocal sts=4 sw=4 et
 		au FileType javascript setlocal sts=2 sw=2 et
 
+		" set custom filetypes
+		au BufRead,BufNewFile *.scss set filetype=scss.css
+
 		" set tab completion on css-classes
-		au FileType scss,css,eruby,haml,html setlocal iskeyword+=-
+		au FileType scss,css,haml,html setlocal iskeyword+=-
 
 		" surround custom replacements
 		au FileType html,htmldjango let b:surround_{char2nr("d")} = "<div\1class: \r..*\r class=\"&\"\1>\r</div>"
