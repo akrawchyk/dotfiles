@@ -2,8 +2,7 @@
 
 ## Setup
 
-1a. `brew install git`
-1b. `apt-get install git`
+1. `apt-get install git`
 2. `git clone https://github.com/akrawchyk/dotfiles ./`
 3. `./dotfiles/bootstrap.sh`
 
