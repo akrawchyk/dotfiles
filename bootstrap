@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+
+# Ask for the administrator password upfront
+sudo -v
+
+# Keep-alive: update existing `sudo` time stamp until script has finished
+while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+
+# install build-essential, cmake, git, python-dev, tmux, vim, zsh
+sudo apt-get install -yqq build-essential cmake git python-dev tmux rxvt-unicode vim zsh
+
+# setup git
+# TODO consider committing git config
+git config --global user.email "akrawchyk@gmail.com"
+git config --global user.name "Andrew Krawchyk"
+
+# retrieve base-16, prezto
+git clone https://github.com/chriskempson/base16-shell.git $HOME/.config/base16-shell
+git clone --recursive https://github.com/akrawchyk/prezto.git $HOME/.zprezto
+
+# configure prezto
+for rcfile in $( find $HOME/.zprezto/runcoms/ -name "z*" ); do
+	ln -s $rcfile $HOME/.$( cut -d"/" -f6 $rcfile )
+done
+
+# FIXME these copy and symlink paths should be dynamic
+# configure tmux
+cp $HOME/Developer/dotfiles/.tmuxrc $HOME/
+
+# configure vim
+# TODO install YouCompleteMe
+cp $HOME/Developer/dotfiles/.vimrc $HOME/
+mkdir $HOME/.vim
+mkdir -p $HOME/.vim/tmp/undo
+mkdir $HOME/.vim/backup
+git clone https://github.com/gmarik/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim
+vim +PluginInstall +q
+
+# change shell to zsh
+chsh -s /bin/zsh
+
+
+#logout
+echo "Pleae logout.\n"
