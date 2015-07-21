@@ -7,8 +7,8 @@ sudo -v
 # Keep-alive: update existing `sudo` time stamp until script has finished
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
-# install build-essential, cmake, git, python-dev, tmux, vim, zsh
-sudo apt-get install -yqq build-essential cmake git python-dev tmux rxvt-unicode vim zsh
+# install dependencies
+sudo apt-get install -yqq build-essential cmake git python-dev python-pip tmux rxvt-unicode vim zsh
 
 # setup git
 # TODO consider committing git config
@@ -20,6 +20,7 @@ git clone https://github.com/chriskempson/base16-shell.git $HOME/.config/base16-
 git clone --recursive https://github.com/akrawchyk/prezto.git $HOME/.zprezto
 
 # configure prezto
+# FIXME
 for rcfile in $( find $HOME/.zprezto/runcoms/ -name "z*" ); do
 	ln -s $rcfile $HOME/.$( cut -d"/" -f6 $rcfile )
 done
@@ -42,4 +43,4 @@ chsh -s /bin/zsh
 
 
 #logout
-echo "Pleae logout.\n"
+echo "Please logout.\n"
