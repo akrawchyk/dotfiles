@@ -31,7 +31,6 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'sjl/gundo.vim'
 Plugin 'nathanaelkane/vim-indent-guides'
-Plugin 'scrooloose/nerdtree'
 Plugin 'sheerun/vim-polyglot'
 Plugin 'tpope/vim-repeat'
 Plugin 'honza/vim-snippets'
@@ -46,6 +45,7 @@ Plugin 'kana/vim-textobj-user'
 Plugin 'coderifous/textobj-word-column.vim'
 Plugin 'SirVer/ultisnips'
 Plugin 'tpope/vim-unimpaired'
+Plugin 'tpope/vim-vinegar'
 Plugin 'Valloric/YouCompleteMe'
 "------ }}}
 
@@ -202,7 +202,7 @@ set wildignore+=*.DS_Store,~*
 set wildignore+=*.bmp,*.gif,*.jpg,*.png
 set wildignore+=*.exe,*.dll,*.so,*.swp,*.zip,*.pyc
 set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/tmp/*
-set wildignore+=*/.sass-cache/*,*/bower_components/*,*/node_modules/*
+set wildignore+=*/.sass-cache/*,*/bower_components/*,*/node_modules/*,*/__pycache__/*,
 set wildmenu
 set undofile
 set undodir=~/.vim/tmp/undo
@@ -254,9 +254,9 @@ endfunction
 
 "---- plugin settings {{{
 "------ ctrlp.vim {{{
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/](dist|src\/bower_components)$',
-  \ }
+" let g:ctrlp_custom_ignore = {
+"   \ 'dir':  '\v[\/](dist|src\/bower_components)$',
+"   \ }
 "------ }}}
 
 "------ delimitMate {{{
@@ -289,19 +289,6 @@ let g:mta_filetypes = {
 			\ 'handlebars.html' : 1,
 			\ 'htmldjango'      : 1
 			\}
-"------ }}}
-
-"------ NERDTree {{{
-let g:NERDTreeChDirMode  = 2
-let g:NERDTreeQuitOnOpen = 1
-let g:NERDTreeIgnore = [
-			\ '\.vim$', '\~$', '\.DS_Store$', '\.exe$', '\.dll$',
-			\ '\.so$', '\.swp$', '\.zip$', '\.pyc$',
-			\ '\.bmp$', '\.gif$', '\.jpg$'. '\.png$',
-			\ '\.git$[[dir]]', '\.hg$[[dir]]', '\.svn$[[dir]]',
-			\ '\.sass-cache$[[dir]]', '(\.)?bundle$[[dir]]',
-			\ 'node_modules$[[dir]]', 'tmp$[[dir]]'
-			\]
 "------ }}}
 
 "------ surround {{{
@@ -472,10 +459,6 @@ nmap <leader>d :Dispatch<CR>
 map <leader>u :GundoToggle<CR>
 "------ }}}
 
-"------ NERDTree {{{
-map <leader>n :NERDTreeToggle<CR>
-"------ }}}
-
 "------ TagBar {{{
 map <leader>t :TagbarToggle<CR>
 "------ }}}
@@ -489,9 +472,6 @@ if has("autocmd")
 
 		" autosource vimrc on write
 		au BufWritePost .vimrc source $MYVIMRC
-
-		" open NERDTree automatically if no files are specified
-		au VimEnter * if !argc() | NERDTree | endif
 	augroup END
 
 	augroup filetypes
@@ -545,8 +525,8 @@ if has("autocmd")
 		au InsertLeave * set nopaste
 
 		" only show linenumbers on current buffer
-		au BufEnter * if !exists("b:NERDTreeType") | set number | endif
-		au BufLeave * if !exists("b:NERDTreeType") | set nonumber | endif
+		au BufEnter * set number
+		au BufLeave * set nonumber
 
 		" show extra whitespace as red
 		au BufWinEnter * match ExtraWhitespace /\s\+$/
