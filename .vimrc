@@ -45,7 +45,6 @@ Plugin 'kana/vim-textobj-user'
 Plugin 'coderifous/textobj-word-column.vim'
 Plugin 'SirVer/ultisnips'
 Plugin 'tpope/vim-unimpaired'
-Plugin 'tpope/vim-vinegar'
 Plugin 'Valloric/YouCompleteMe'
 "------ }}}
 
@@ -285,7 +284,6 @@ let g:mta_filetypes = {
 			\ 'html'            : 1,
 			\ 'xhtml'           : 1,
 			\ 'xml'             : 1,
-			\ 'jinja'           : 1,
 			\ 'handlebars.html' : 1,
 			\ 'htmldjango'      : 1
 			\}
@@ -489,6 +487,7 @@ if has("autocmd")
 
 		" set custom filetypes
 		au BufRead,BufNewFile *.scss set filetype=scss.css
+		" au FileType htmldjango set filetype=htmldjango
 
 		" set tab completion on css-classes
 		au FileType scss,css,haml,html setlocal iskeyword+=-
