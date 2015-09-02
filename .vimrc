@@ -7,79 +7,77 @@ set nocompatible
 
 
 "---- plugins {{{
-filetype off
-syntax off
+if empty(glob('~/.vim/autoload/plug.vim'))
+	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+				\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	autocmd VimEnter * PlugInstall
+endif
+
 runtime macros/matchit.vim
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
 
-Plugin 'gmarik/Vundle.vim'
-
+call plug#begin()
 
 "------ colors {{{
-Plugin 'chriskempson/base16-vim'
+Plug 'chriskempson/base16-vim'
 "------ }}}
 
 "------ tools {{{
-Plugin 'rking/ag.vim'
-Plugin 'bling/vim-airline'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'Raimondi/delimitMate'
-Plugin 'tpope/vim-dispatch'
-Plugin 'terryma/vim-expand-region'
-Plugin 'tpope/vim-fugitive'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'sjl/gundo.vim'
-Plugin 'nathanaelkane/vim-indent-guides'
-Plugin 'scrooloose/nerdtree'
-Plugin 'sheerun/vim-polyglot'
-Plugin 'tpope/vim-repeat'
-Plugin 'honza/vim-snippets'
-Plugin 'tpope/vim-surround'
-Plugin 'scrooloose/syntastic'
-Plugin 'godlygeek/tabular'
-Plugin 'majutsushi/tagbar'
-Plugin 'wellle/targets.vim'
-Plugin 'tomtom/tcomment_vim'
-Plugin 'kana/vim-textobj-indent'
-Plugin 'kana/vim-textobj-user'
-Plugin 'coderifous/textobj-word-column.vim'
-Plugin 'SirVer/ultisnips'
-Plugin 'tpope/vim-unimpaired'
-Plugin 'Valloric/YouCompleteMe'
+Plug 'tpope/vim-abolish'
+Plug 'mileszs/ack.vim'
+Plug 'bling/vim-airline'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'Raimondi/delimitMate'
+Plug 'tpope/vim-dispatch'
+Plug 'terryma/vim-expand-region'
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
+Plug 'sjl/gundo.vim'
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'sheerun/vim-polyglot'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-rsi'
+Plug 'tpope/vim-surround'
+Plug 'scrooloose/syntastic'
+Plug 'godlygeek/tabular'
+Plug 'majutsushi/tagbar'
+Plug 'wellle/targets.vim'
+Plug 'tomtom/tcomment_vim'
+Plug 'kana/vim-textobj-user' | Plug 'kana/vim-textobj-indent' | Plug 'coderifous/textobj-word-column.vim'
+Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+Plug 'tpope/vim-unimpaired'
+Plug 'Valloric/YouCompleteMe', { 'do': 'chmod +x ./install.py; python ./install.py' }
 "------ }}}
 
 "------ html {{{
-Plugin 'Valloric/MatchTagAlways'
-Plugin 'sukima/xmledit'
+Plug 'Valloric/MatchTagAlways'
+Plug 'sukima/xmledit'
 "------ }}}
 
 "------ javascript {{{
-Plugin 'othree/javascript-libraries-syntax.vim'
-Plugin 'marijnh/tern_for_vim'
+Plug 'othree/javascript-libraries-syntax.vim'
+Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
 "------ }}}
 
 "------ php {{{
-Plugin 'evidens/vim-twig'
+Plug 'evidens/vim-twig'
 "------ }}}
 
 "------ python {{{
-Plugin 'jmcantrell/vim-virtualenv'
+Plug 'jmcantrell/vim-virtualenv'
 "------ }}}
 
 "------ sass {{{
-Plugin 'cakebaker/scss-syntax.vim'
+Plug 'cakebaker/scss-syntax.vim'
 "------}}
 
 "------ django {{{
-Plugin 'mjbrownie/vim-htmldjango_omnicomplete'
-Plugin 'jmcomets/vim-pony'
+Plug 'mjbrownie/django-template-textobjects'
+Plug 'mjbrownie/vim-htmldjango_omnicomplete'
+Plug 'jmcomets/vim-pony'
 "------ }}}
 
-
-call vundle#end()
-filetype plugin indent on
-syntax on
+call plug#end()
 "---- }}}
 
 
@@ -202,7 +200,7 @@ set wildignore+=*.DS_Store,~*
 set wildignore+=*.bmp,*.gif,*.jpg,*.png
 set wildignore+=*.exe,*.dll,*.so,*.swp,*.zip,*.pyc
 set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/tmp/*
-set wildignore+=*/.sass-cache/*,*/bower_components/*,*/node_modules/*
+set wildignore+=*/.sass-cache/*,*/bower_components/*,*/node_modules/*,*/__pycache__/*,
 set wildmenu
 set undofile
 set undodir=~/.vim/tmp/undo
@@ -212,9 +210,6 @@ set undodir=~/.vim/tmp/undo
 "--- }}}
 
 "--- running make and jumping to errors {{{
-if executable('ag')
-	set grepprg=ag\ --nogroup\ --nocolor
-endif
 "--- }}}
 
 "--- language specific {{{
@@ -229,34 +224,43 @@ set termencoding=utf-8
 set gdefault
 set sessionoptions-=options
 if !empty(&viminfo)
-  set viminfo^=!
+	set viminfo^=!
 endif
 "--- }}}
 
 
 "---- functions {{{
 function! g:UltiSnips_Complete()
-    call UltiSnips#ExpandSnippet()
-    if g:ulti_expand_res == 0
-        if pumvisible()
-            return "\<C-n>"
-        else
-            call UltiSnips#JumpForwards()
-            if g:ulti_jump_forwards_res == 0
-               return "\<TAB>"
-            endif
-        endif
-    endif
-    return ""
+	call UltiSnips#ExpandSnippet()
+	if g:ulti_expand_res == 0
+		if pumvisible()
+			return "\<C-n>"
+		else
+			call UltiSnips#JumpForwards()
+			if g:ulti_jump_forwards_res == 0
+				return "\<TAB>"
+			endif
+		endif
+	endif
+	return ""
 endfunction
 "---- }}}
 
 
 "---- plugin settings {{{
+
+"------ ack {{{
+if executable('ag')
+	  let g:ackprg = 'ag --vimgrep'
+endif
+let g:ack_autofold_results = 1
+let g:ack_use_dispatch = 1
+"------ }}}
+
 "------ ctrlp.vim {{{
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/](dist|src\/bower_components)$',
-  \ }
+" let g:ctrlp_custom_ignore = {
+"   \ 'dir':  '\v[\/](dist|src\/bower_components)$',
+"   \ }
 "------ }}}
 
 "------ delimitMate {{{
@@ -285,23 +289,9 @@ let g:mta_filetypes = {
 			\ 'html'            : 1,
 			\ 'xhtml'           : 1,
 			\ 'xml'             : 1,
-			\ 'jinja'           : 1,
 			\ 'handlebars.html' : 1,
 			\ 'htmldjango'      : 1
 			\}
-"------ }}}
-
-"------ NERDTree {{{
-let g:NERDTreeChDirMode  = 2
-let g:NERDTreeQuitOnOpen = 1
-let g:NERDTreeIgnore = [
-			\ '\.vim$', '\~$', '\.DS_Store$', '\.exe$', '\.dll$',
-			\ '\.so$', '\.swp$', '\.zip$', '\.pyc$',
-			\ '\.bmp$', '\.gif$', '\.jpg$'. '\.png$',
-			\ '\.git$[[dir]]', '\.hg$[[dir]]', '\.svn$[[dir]]',
-			\ '\.sass-cache$[[dir]]', '(\.)?bundle$[[dir]]',
-			\ 'node_modules$[[dir]]', 'tmp$[[dir]]'
-			\]
 "------ }}}
 
 "------ surround {{{
@@ -354,6 +344,10 @@ let g:ycm_seed_identifiers_with_syntax        = 1
 let g:ycm_complete_in_comments                = 1
 let g:ycm_complete_in_strings                 = 1
 let g:ycm_path_to_python_interpreter          = '/usr/local/bin/python'
+"------ }}}
+
+"------ xmledit {{{
+let g:xmledit_enable_html = 1
 "------ }}}
 "---- }}}
 
@@ -422,7 +416,7 @@ noremap <S-h> gT
 
 "------ leaders {{{
 let mapleader=','
-let maplocalleader='\\'
+let maplocalleader='\'
 
 " Some helpers to edit mode
 " http://vimcasts.org/e/14
@@ -460,8 +454,8 @@ nnoremap <leader>l :lcl<CR>
 
 
 "---- plugin mappings {{{
-"------ Ag {{{
-nmap <leader>a :Ag!<space>
+"------ Ack {{{
+nmap <leader>a :Ack!<space>
 "------ }}}
 
 "------ Dispatch {{{
@@ -470,10 +464,6 @@ nmap <leader>d :Dispatch<CR>
 
 "------ Gundo {{{
 map <leader>u :GundoToggle<CR>
-"------ }}}
-
-"------ NERDTree {{{
-map <leader>n :NERDTreeToggle<CR>
 "------ }}}
 
 "------ TagBar {{{
@@ -489,9 +479,6 @@ if has("autocmd")
 
 		" autosource vimrc on write
 		au BufWritePost .vimrc source $MYVIMRC
-
-		" open NERDTree automatically if no files are specified
-		au VimEnter * if !argc() | NERDTree | endif
 	augroup END
 
 	augroup filetypes
@@ -505,10 +492,11 @@ if has("autocmd")
 
 		" set custom indentation
 		au FileType html,handlebars.html,htmldjango,css,scss,php,twig setlocal sts=4 sw=4 et
-		au FileType javascript setlocal sts=2 sw=2 et
+		au FileType javascript,yaml setlocal sts=2 sw=2 et
 
-		" set custom filetypes
+		" set custom filetypes for syntax and snippets
 		au BufRead,BufNewFile *.scss set filetype=scss.css
+		au FileType htmldjango set filetype=htmldjango.html
 
 		" set tab completion on css-classes
 		au FileType scss,css,haml,html setlocal iskeyword+=-
@@ -545,8 +533,8 @@ if has("autocmd")
 		au InsertLeave * set nopaste
 
 		" only show linenumbers on current buffer
-		au BufEnter * if !exists("b:NERDTreeType") | set number | endif
-		au BufLeave * if !exists("b:NERDTreeType") | set nonumber | endif
+		au BufEnter * set number
+		au BufLeave * set nonumber
 
 		" show extra whitespace as red
 		au BufWinEnter * match ExtraWhitespace /\s\+$/
