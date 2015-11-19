@@ -2,9 +2,9 @@
 
 ## Setup
 
-1. `apt-get install git`
-2. `git clone https://github.com/akrawchyk/dotfiles ./`
-3. `./dotfiles/bootstrap.sh`
+1. `# apt-get install git`
+2. `$ git clone https://github.com/akrawchyk/dotfiles ./ && cd dotfiles`
+3. `$ ./bootstrap.sh`
 
 ## Details
 
@@ -13,8 +13,8 @@
 * Base16
 * build-essential
 * Cmake
+* Node.js
 * Tmux
-* Urxvt
 * Vim
 * ZSH
 
