@@ -8,36 +8,45 @@ sudo -v
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 # install dependencies
-sudo apt-get install -yqq build-essential cmake git python-dev python-pip tmux vim zsh
+sudo apt-get install -yqq build-essential cmake git mercurial python-dev python-pip \
+	tmux vim zsh
+
+# setup node
+curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
+sudo apt-get install -y nodejs
+npm install -g npm eslint_d
 
 # setup git
-# TODO consider committing git config
-git config --global user.email "akrawchyk@gmail.com"
-git config --global user.name "Andrew Krawchyk"
+cp ./.gitconfig $HOME/
+cp ./.gitignore $HOME/.gitignore_global
 
 # retrieve base-16, prezto, tpm
 git clone https://github.com/chriskempson/base16-shell.git $HOME/.config/base16-shell
 git clone --recursive https://github.com/akrawchyk/prezto.git $HOME/.zprezto
 git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm
 
-# configure prezto
-# FIXME
-for rcfile in $( find $HOME/.zprezto/runcoms/ -name "z*" ); do
-	ln -s $rcfile $HOME/.$( cut -d"/" -f6 $rcfile )
-done
+# setup aliases
+cp ./.aliases $HOME/
 
-# configure tmux
+# setup functions
+cp ./.functions $HOME/
+
+# setup tmux
 cp ./.tmux.conf $HOME/
 $HOME/.tmux/plugins/tpm/bin/install_plugins
 
-# configure vim
+# setup vim
 cp ./.vimrc $HOME/
 mkdir $HOME/.vim
 mkdir -p $HOME/.vim/tmp/undo
 mkdir $HOME/.vim/backup
 vim +PlugInstall +q
 
-# change shell to zsh
+# setup prezto
+# FIXME does not work in bash
+# for rcfile in $( find $HOME/.zprezto/runcoms/ -name "z*" ); do
+# 	ln -s $rcfile $HOME/.$( cut -d"/" -f6 $rcfile )
+# done
 chsh -s /bin/zsh
 
 

@@ -1,0 +1,9 @@
+*~
+.Trash-*
+
+.hg/
+.hgignore
+.hgsigs
+.hgsub
+.hgsubstate
+.hgtags

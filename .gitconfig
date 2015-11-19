@@ -1,0 +1,9 @@
+[user]
+	email = akrawchyk@gmail.com
+	name = Andrew Krawchyk
+[core]
+	excludesfile = /home/andrew/.gitignore_global
+	autocrlf = input
+	whitespace = trailing-space,space-before-tab,indent-with-non-tab
+[push]
+	default = simple
