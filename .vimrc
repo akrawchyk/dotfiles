@@ -30,13 +30,13 @@ Plug 'Raimondi/delimitMate'
 Plug 'tpope/vim-dispatch'
 Plug 'terryma/vim-expand-region'
 Plug 'tpope/vim-fugitive'
-Plug 'airblade/vim-gitgutter'
 Plug 'sjl/gundo.vim'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rsi'
+Plug 'mhinz/vim-signify'
 Plug 'tpope/vim-surround'
 Plug 'scrooloose/syntastic'
 Plug 'godlygeek/tabular'
@@ -46,6 +46,8 @@ Plug 'tomtom/tcomment_vim'
 Plug 'kana/vim-textobj-user' | Plug 'kana/vim-textobj-indent' | Plug 'coderifous/textobj-word-column.vim'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'tpope/vim-unimpaired'
+Plug 'benmills/vimux'
+Plug 'tpope/vim-vinegar'
 Plug 'Valloric/YouCompleteMe', { 'do': 'chmod +x ./install.py; python ./install.py' }
 "------ }}}
 
@@ -72,6 +74,7 @@ Plug 'cakebaker/scss-syntax.vim'
 "------}}
 
 "------ django {{{
+Plug 'Glench/Vim-Jinja2-Syntax'
 Plug 'mjbrownie/django-template-textobjects'
 Plug 'mjbrownie/vim-htmldjango_omnicomplete'
 Plug 'jmcomets/vim-pony'
@@ -294,6 +297,10 @@ let g:mta_filetypes = {
 			\}
 "------ }}}
 
+"------ netrw {{{
+" let g:netrw_liststyle = 3
+"------ }}}
+
 "------ surround {{{
 let g:surround_indent = 1
 "------ }}}
@@ -307,6 +314,8 @@ let g:syntastic_error_symbol   = '✗'
 let g:syntastic_warning_symbol = '⚠'
 let g:syntastic_style_error_symbol = '»'
 let g:syntastic_style_warning_symbol = '»'
+let g:syntastic_javascript_eslint_exec = 'eslint_d'
+let g:syntastic_javascript_checkers = ['eslint']
 let g:syntastic_python_checkers = ['pylama']
 let g:syntastic_html_tidy_ignore_errors = [
 			\ 'trimming empty <i>',
@@ -496,7 +505,8 @@ if has("autocmd")
 
 		" set custom filetypes for syntax and snippets
 		au BufRead,BufNewFile *.scss set filetype=scss.css
-		au FileType htmldjango set filetype=htmldjango.html
+		au FileType jinja set filetype=jinja.htmldjango
+		au BufRead,BufNewFile *.jsm set filetype=javascript
 
 		" set tab completion on css-classes
 		au FileType scss,css,haml,html setlocal iskeyword+=-
