@@ -199,11 +199,7 @@ set directory=~/.vim/tmp
 set history=2048
 set wildmode=longest:full,list:full
 set wildignorecase
-set wildignore+=*.DS_Store,~*
-set wildignore+=*.bmp,*.gif,*.jpg,*.png
-set wildignore+=*.exe,*.dll,*.so,*.swp,*.zip,*.pyc
-set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/tmp/*
-set wildignore+=*/.sass-cache/*,*/bower_components/*,*/node_modules/*,*/__pycache__/*,
+set wildignore+=*.DS_Store,~*,*.exe,*.dll,*.so,*.swp,*.zip,*.pyc
 set wildmenu
 set undofile
 set undodir=~/.vim/tmp/undo
@@ -261,9 +257,28 @@ let g:ack_use_dispatch = 1
 "------ }}}
 
 "------ ctrlp.vim {{{
-" let g:ctrlp_custom_ignore = {
-"   \ 'dir':  '\v[\/](dist|src\/bower_components)$',
-"   \ }
+let g:ctrlp_custom_ignore = {
+			\ 'dir':  '\v[\/]\.(git|hg|svn)$',
+			\ 'file': '\v\.(exe|so|dll)$'
+			\ }
+
+let g:ctrlp_clear_cache_on_exit = 1
+let g:ctrlp_show_hidden = 1
+" https://github.com/ctrlpvim/ctrlp.vim/wiki/ctrlp-configration
+let g:ctrlp_user_command = {
+			\ 'types': {
+			\ 1: ['.git', 'cd %s && git ls-files'],
+			\ 2: ['.hg', 'hg --cwd %s locate -I .'],
+			\ },
+			\ 'fallback': 'ag %s -i --nocolor --nogroup --hidden
+			\ --ignore out
+			\ --ignore .git
+			\ --ignore .svn
+			\ --ignore .hg
+			\ --ignore .DS_Store
+			\ --ignore "**/*.pyc"
+			\ -g ""'
+			\ }
 "------ }}}
 
 "------ delimitMate {{{
@@ -317,6 +332,7 @@ let g:syntastic_style_warning_symbol = '»'
 let g:syntastic_javascript_eslint_exec = 'eslint_d'
 let g:syntastic_javascript_checkers = ['eslint']
 let g:syntastic_python_checkers = ['pylama']
+" let g:syntastic_python_pylama_exec = '/home/andrew/.local/bin/pylama'
 let g:syntastic_html_tidy_ignore_errors = [
 			\ 'trimming empty <i>',
 			\ 'trimming empty <span>',
@@ -352,7 +368,7 @@ let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_seed_identifiers_with_syntax        = 1
 let g:ycm_complete_in_comments                = 1
 let g:ycm_complete_in_strings                 = 1
-let g:ycm_path_to_python_interpreter          = '/usr/local/bin/python'
+" let g:ycm_path_to_python_interpreter          = '/usr/local/bin/python'
 "------ }}}
 
 "------ xmledit {{{
