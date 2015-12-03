@@ -23,3 +23,7 @@
 * Tmux
 * Prezto
 * Vundle
+
+## TODO
+
+* git extras - https://github.com/tj/git-extras
