@@ -27,3 +27,11 @@
 ## TODO
 
 * git extras - https://github.com/tj/git-extras
+
+### Tips
+
+* Generating SSH Keys
+
+```
+$ ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa_<usage>_$(date +%Y-%m-%d) -C "<usage> key for <owner>"
+```

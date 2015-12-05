@@ -7,3 +7,5 @@
 .hgsub
 .hgsubstate
 .hgtags
+
+*.log
