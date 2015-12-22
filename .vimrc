@@ -267,7 +267,7 @@ let g:ctrlp_show_hidden = 1
 " https://github.com/ctrlpvim/ctrlp.vim/wiki/ctrlp-configration
 let g:ctrlp_user_command = {
 			\ 'types': {
-			\ 1: ['.git', 'cd %s && git ls-files'],
+			\ 1: ['.git', 'cd %s && git ls-files -c -o -x node_modules'],
 			\ 2: ['.hg', 'hg --cwd %s locate -I .'],
 			\ },
 			\ 'fallback': 'ag %s -i --nocolor --nogroup --hidden
@@ -276,6 +276,7 @@ let g:ctrlp_user_command = {
 			\ --ignore .svn
 			\ --ignore .hg
 			\ --ignore .DS_Store
+			\ --ignore node_modules
 			\ --ignore "**/*.pyc"
 			\ -g ""'
 			\ }

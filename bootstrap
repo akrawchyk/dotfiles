@@ -8,8 +8,8 @@ sudo -v
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 # install dependencies
-sudo apt-get install -yqq build-essential cmake git mercurial python-dev python-pip \
-	tmux vim zsh
+sudo apt-get install -yqq build-essential cmake git git-extras mercurial \
+	python-dev python-pip silversearcher-ag tmux vim zsh
 
 # setup node
 curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
