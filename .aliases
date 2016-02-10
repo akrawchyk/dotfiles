@@ -2,44 +2,6 @@
 alias -g v="vim"
 alias -g tko="tmux kill-server"
 
-alias vup-js="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant up js mngo builder"
-alias vup-php="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant up php msql builder"
-alias vup-py="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant up py psql builder"
-alias vup-html="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant up py builder"
-alias vdown-js="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant halt js mngo builder"
-alias vdown-php="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant halt php msql builder"
-alias vdown-py="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant halt py psql builder"
-alias vdown-html="VAGRANT_CWD=$HOME/Projects/isl-cloud vagrant halt py builder"
-
-
-alias vbt="fab virtual:b tail"
-alias dbt="fab development:b tail"
-alias sbt="fab staging:b tail"
-
-alias vbs="fab virtual:b sub_shell"
-alias dbs="fab development:b sub_shell"
-alias sbs="fab staging:b sub_shell"
-
-alias vbr="fab virtual:b sub_reload_app"
-alias dbr="fab development:b sub_reload_app"
-alias sbr="fab staging:b sub_reload_app"
-
-alias vbrr="fab virtual:b rsync sub_reload_app"
-alias dbrr="fab development:b rsync sub_reload_app"
-alias sbpr="fab staging:b pull sub_reload_app"
-
-alias vbcs="fab virtual:b sub_collectstatic"
-alias dbcs="fab development:b sub_collectstatic"
-alias sbcs="fab staging:b sub_collectstatic"
-
-alias vbrmm="fab virtual:b rsync sub_make_and_get_migrations"
-alias dbrmm="fab development:b rsync sub_make_and_get_migrations"
-alias sbpmm="fab staging:b pull sub_make_and_get_migrations"
-
-alias vbmi="fab virtual:b sub_migrate"
-alias dbmi="fab development:b sub_migrate"
-alias sbmi="fab staging:b sub_migrate"
-
 # fasd
 alias a='fasd -a'        # any
 alias s='fasd -si'       # show / search / select
@@ -49,34 +11,3 @@ alias sd='fasd -sid'     # interactive directory selection
 alias sf='fasd -sif'     # interactive file selection
 alias z='fasd_cd -d'     # cd, same functionality as j in autojump
 alias zz='fasd_cd -d -i' # cd with interactive selection
-
-# osx utils
-# Get OS X Software Updates, and update installed Ruby gems, Homebrew, npm, and their installed packages
-alias update="sudo softwareupdate -i -a; brew update; brew upgrade; brew cleanup; npm update npm -g; npm update -g; gem update"
-
-# Flush Directory Service cache
-alias flush="dscacheutil -flushcache && killall -HUP mDNSResponder"
-
-# Clean up LaunchServices to remove duplicates in the “Open With” menu
-alias lscleanup="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user && killall Finder"
-
-# IP addresses
-alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
-
-# OS X has no `md5sum`, so use `md5` as a fallback
-command -v md5sum > /dev/null || alias md5sum="md5"
-
-# OS X has no `sha1sum`, so use `shasum` as a fallback
-command -v sha1sum > /dev/null || alias sha1sum="shasum"
-
-# Empty the Trash on all mounted volumes and the main HDD
-# Also, clear Apple’s System Logs to improve shell startup speed
-alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash; sudo rm -rfv /private/var/log/asl/*.asl"
-
-# Show/hide hidden files in Finder
-alias show="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
-alias hide="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
-
-# Hide/show all desktop icons (useful when presenting)
-alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
-alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
