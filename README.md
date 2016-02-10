@@ -24,6 +24,56 @@
 * Prezto
 * Vundle
 
+### OSX
+
+#### Brew
+
+* ack
+* coreutils
+* dnsmasq
+* fasd
+* git
+* git-extras
+* heroku-toolbelt
+* mercurial
+* node
+* python
+* reattach-to-user-namespace
+* redis
+* terminal-notifier
+* the_silver_searcher
+* tmux
+* vim
+* watchman
+* wget
+* zsh
+
+#### Cask
+
+* adobe-creative-cloud* adobe-creative-cloud
+* android-file-transfer
+* dropbox
+* firefox
+* firefoxdeveloperedition
+* flux
+* font-fira-mono
+* google-chrome
+* google-chrome-canary
+* google-hangouts
+* iterm2
+* karabiner
+* keepassx
+* macdown
+* seil
+* slack
+* spectacle
+* spotify
+* the-unarchiver
+* vagrant
+* virtualbox
+* vmware-fusion7
+* xquartz
+
 ## TODO
 
 * git extras - https://github.com/tj/git-extras

@@ -24,11 +24,10 @@ Plug 'chriskempson/base16-vim'
 "------ tools {{{
 Plug 'tpope/vim-abolish'
 Plug 'mileszs/ack.vim'
-Plug 'bling/vim-airline'
+Plug 'bling/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'Raimondi/delimitMate'
 Plug 'tpope/vim-dispatch'
-Plug 'terryma/vim-expand-region'
 Plug 'tpope/vim-fugitive'
 Plug 'sjl/gundo.vim'
 Plug 'nathanaelkane/vim-indent-guides'
@@ -59,10 +58,6 @@ Plug 'sukima/xmledit'
 "------ javascript {{{
 Plug 'othree/javascript-libraries-syntax.vim'
 Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
-"------ }}}
-
-"------ php {{{
-Plug 'evidens/vim-twig'
 "------ }}}
 
 "------ python {{{
@@ -256,18 +251,21 @@ let g:ack_autofold_results = 1
 let g:ack_use_dispatch = 1
 "------ }}}
 
-"------ ctrlp.vim {{{
-let g:ctrlp_custom_ignore = {
-			\ 'dir':  '\v[\/]\.(git|hg|svn)$',
-			\ 'file': '\v\.(exe|so|dll)$'
-			\ }
+"------ airline {{{
+let g:airline_theme='base16color'
+"------ }}}
 
+"------ ctrlp.vim {{{
+" let g:ctrlp_custom_ignore = {
+" 			\ 'dir':  '\v[\/]\.(git|hg|svn)$',
+" 			\ 'file': '\v\.(exe|so|dll|pyc)$'
+" 			\ }
 let g:ctrlp_clear_cache_on_exit = 1
 let g:ctrlp_show_hidden = 1
 " https://github.com/ctrlpvim/ctrlp.vim/wiki/ctrlp-configration
 let g:ctrlp_user_command = {
 			\ 'types': {
-			\ 1: ['.git', 'cd %s && git ls-files -c -o -x node_modules'],
+			\ 1: ['.git', 'cd %s && git ls-files -c -o --exclude-standard'],
 			\ 2: ['.hg', 'hg --cwd %s locate -I .'],
 			\ },
 			\ 'fallback': 'ag %s -i --nocolor --nogroup --hidden
@@ -311,10 +309,6 @@ let g:mta_filetypes = {
 			\ 'handlebars.html' : 1,
 			\ 'htmldjango'      : 1
 			\}
-"------ }}}
-
-"------ netrw {{{
-" let g:netrw_liststyle = 3
 "------ }}}
 
 "------ surround {{{
@@ -369,7 +363,7 @@ let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_seed_identifiers_with_syntax        = 1
 let g:ycm_complete_in_comments                = 1
 let g:ycm_complete_in_strings                 = 1
-" let g:ycm_path_to_python_interpreter          = '/usr/local/bin/python'
+let g:ycm_path_to_python_interpreter          = '/usr/local/bin/python'
 "------ }}}
 
 "------ xmledit {{{
