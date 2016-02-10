@@ -1,15 +1,23 @@
 [user]
 	email = akrawchyk@gmail.com
 	name = Andrew Krawchyk
+[apply]
+	whitespace = fix
 [core]
-	excludesfile = /home/andrew/.gitignore_global
+	excludesfile = $HOME/.gitignore
 	autocrlf = input
 	whitespace = trailing-space,space-before-tab,indent-with-non-tab
 	safecrlf = true
+	trustctime = false
 [push]
 	default = simple
 [diff]
+	renames = copies
 	tool = vimdiff
+[help]
+	autocorrect = 1
+[merge]
+	log = true
 [mergetool "fugitive"]
 	cmd = vim -f -c \"Gdiff\" \"$MERGED\" -c \"wincmd =\"
 	trustExitCode = false
@@ -26,4 +34,4 @@
 [url "git://gist.github.com/"]
 	insteadOf = "gist:"
 [url "ssh://git@github.com/"]
-        insteadOf = "https://github.com/"
+	insteadOf = "https://github.com/"
