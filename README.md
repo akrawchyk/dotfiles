@@ -22,24 +22,29 @@
 
 * Tmux
 * Prezto
-* Vundle
+* Vim Plug
 
 ### OSX
 
 #### Brew
 
 * ack
+* bfg
+* cmake
 * coreutils
 * dnsmasq
 * fasd
 * git
 * git-extras
+* gnu-tar
 * heroku-toolbelt
 * mercurial
 * node
+* openssl
 * python
 * reattach-to-user-namespace
 * redis
+* sqlite
 * terminal-notifier
 * the_silver_searcher
 * tmux
@@ -50,24 +55,40 @@
 
 #### Cask
 
-* adobe-creative-cloud* adobe-creative-cloud
+* adobe-creative-cloud
 * android-file-transfer
+* dockertoolbox
 * dropbox
 * firefox
 * firefoxdeveloperedition
 * flux
+* font-anonymous-pro
+* font-cousine
+* font-droid-sans-mono
 * font-fira-mono
+* font-inconsolata
+* font-meslo-lg
+* font-profontx
+* font-source-code-pro
+* font-terminus
+* font-ubuntu
 * google-chrome
 * google-chrome-canary
 * google-hangouts
 * iterm2
+* java
 * karabiner
 * keepassx
+* licecap
 * macdown
+* nvalt
+* obs
 * seil
+* sketch
 * slack
 * spectacle
 * spotify
+* steam
 * the-unarchiver
 * vagrant
 * virtualbox
@@ -84,4 +105,10 @@
 
 ```
 $ ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa_<usage>_$(date +%Y-%m-%d) -C "<usage> key for <owner>"
+```
+
+* System-level ad blocking
+
+```
+https://github.com/StevenBlack/hosts
 ```
