@@ -48,7 +48,7 @@ Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'tpope/vim-unimpaired'
 Plug 'benmills/vimux'
 Plug 'tpope/vim-vinegar'
-Plug 'Valloric/YouCompleteMe', { 'do': 'chmod +x ./install.py; python ./install.py' }
+Plug 'Valloric/YouCompleteMe', { 'do': 'chmod +x ./install.py; python ./install.py --tern-completer' }
 "------ }}}
 
 "------ html {{{
@@ -58,10 +58,11 @@ Plug 'sukima/xmledit'
 
 "------ javascript {{{
 Plug 'othree/javascript-libraries-syntax.vim'
-Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
+" Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
 "------ }}}
 
 "------ python {{{
+Plug 'tweekmonster/braceless.vim'
 Plug 'jmcantrell/vim-virtualenv'
 "------ }}}
 
@@ -512,29 +513,31 @@ if has("autocmd")
 		au FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
 
 		" set custom indentation
-		au FileType html,handlebars.html,htmldjango,css,scss,php,twig setlocal sts=4 sw=4 et
+		au FileType html,jinja,css,scss,php,twig setlocal sts=4 sw=4 et
 		au FileType javascript,yaml setlocal sts=2 sw=2 et
 
 		" set custom filetypes for syntax and snippets
 		au BufRead,BufNewFile *.scss set filetype=scss.css
 		au FileType jinja set filetype=jinja.htmldjango
+		au FileType htmldjango set filetype=jinja.htmldjango
 		au BufRead,BufNewFile *.jsm set filetype=javascript
+		au FileType python BracelessEnable +indent +fold-inner
 
 		" set tab completion on css-classes
 		au FileType scss,css,haml,html setlocal iskeyword+=-
 
 		" surround custom replacements
-		au FileType html,htmldjango let b:surround_{char2nr("d")} = "<div\1class: \r..*\r class=\"&\"\1>\r</div>"
-		au FileType html,htmldjango let b:surround_{char2nr("p")} = "<p\1class: \r..*\r class=\"&\"\1>\r</p>"
-		au FileType html,htmldjango let b:surround_{char2nr("s")} = "<span\1class: \r..*\r class=\"&\"\1>\r</span>"
-		au FileType htmldjango let b:surround_{char2nr("v")} = "{{ \r }}"
-		au FileType htmldjango let b:surround_{char2nr("{")} = "{{ \r }}"
-		au FileType htmldjango let b:surround_{char2nr("%")} = "{% \r %}"
-		au FileType htmldjango let b:surround_{char2nr("b")} = "{% block \1block name: \1 %}\r{% endblock \1\1 %}"
-		au FileType htmldjango let b:surround_{char2nr("i")} = "{% if \1condition: \1 %}\r{% endif %}"
-		au FileType htmldjango let b:surround_{char2nr("w")} = "{% with \1with: \1 %}\r{% endwith %}"
-		au FileType htmldjango let b:surround_{char2nr("f")} = "{% for \1for loop: \1 %}\r{% endfor %}"
-		au FileType htmldjango let b:surround_{char2nr("c")} = "{% comment %}\r{% endcomment %}"
+		au FileType html,jinja let b:surround_{char2nr("d")} = "<div\1class: \r..*\r class=\"&\"\1>\r</div>"
+		au FileType html,jinja let b:surround_{char2nr("p")} = "<p\1class: \r..*\r class=\"&\"\1>\r</p>"
+		au FileType html,jinja let b:surround_{char2nr("s")} = "<span\1class: \r..*\r class=\"&\"\1>\r</span>"
+		au FileType jinja let b:surround_{char2nr("v")} = "{{ \r }}"
+		au FileType jinja let b:surround_{char2nr("{")} = "{{ \r }}"
+		au FileType jinja let b:surround_{char2nr("%")} = "{% \r %}"
+		au FileType jinja let b:surround_{char2nr("b")} = "{% block \1block name: \1 %}\r{% endblock \1\1 %}"
+		au FileType jinja let b:surround_{char2nr("i")} = "{% if \1condition: \1 %}\r{% endif %}"
+		au FileType jinja let b:surround_{char2nr("w")} = "{% with \1with: \1 %}\r{% endwith %}"
+		au FileType jinja let b:surround_{char2nr("f")} = "{% for \1for loop: \1 %}\r{% endfor %}"
+		au FileType jinja let b:surround_{char2nr("c")} = "{% comment %}\r{% endcomment %}"
 
 		" delimitmate custom matches
 		au FileType vim,html let b:delimitMate_matchpairs = "(:),[:],{:},<:>"

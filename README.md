@@ -32,12 +32,14 @@
 * bfg
 * cmake
 * coreutils
+* ctags
 * dnsmasq
 * fasd
 * git
 * git-extras
 * gnu-tar
 * heroku-toolbelt
+* imagemagick
 * mercurial
 * node
 * openssl
@@ -87,6 +89,7 @@
 * sketch
 * slack
 * spectacle
+* spotifree
 * spotify
 * steam
 * the-unarchiver
