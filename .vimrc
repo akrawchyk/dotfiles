@@ -5,7 +5,6 @@
 set nocompatible
 "--- }}}
 
-
 "---- plugins {{{
 if empty(glob('~/.vim/autoload/plug.vim'))
 	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -13,7 +12,9 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 	autocmd VimEnter * PlugInstall
 endif
 
-runtime macros/matchit.vim
+if !exists('g:loaded_matchit')
+  runtime macros/matchit.vim
+endif
 
 call plug#begin()
 
@@ -22,16 +23,10 @@ Plug 'chriskempson/base16-vim'
 "------ }}}
 
 "------ tools {{{
-Plug 'tpope/vim-abolish'
-Plug 'mileszs/ack.vim'
-Plug 'bling/vim-airline' | Plug 'vim-airline/vim-airline-themes'
+Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'Raimondi/delimitMate'
-Plug 'tpope/vim-dispatch'
-Plug 'tpope/vim-fugitive'
-Plug 'sjl/gundo.vim'
-Plug 'nathanaelkane/vim-indent-guides'
-Plug 'terryma/vim-multiple-cursors'
+Plug 'mhinz/vim-grepper'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rsi'
@@ -39,14 +34,8 @@ Plug 'mhinz/vim-signify'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'tpope/vim-surround'
 Plug 'scrooloose/syntastic'
-Plug 'godlygeek/tabular'
-Plug 'majutsushi/tagbar'
-Plug 'wellle/targets.vim'
 Plug 'tomtom/tcomment_vim'
-Plug 'kana/vim-textobj-user' | Plug 'kana/vim-textobj-indent' | Plug 'coderifous/textobj-word-column.vim'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-Plug 'tpope/vim-unimpaired'
-Plug 'benmills/vimux'
 Plug 'tpope/vim-vinegar'
 Plug 'Valloric/YouCompleteMe', { 'do': 'chmod +x ./install.py; python ./install.py --tern-completer' }
 "------ }}}
@@ -58,87 +47,69 @@ Plug 'sukima/xmledit'
 
 "------ javascript {{{
 Plug 'othree/javascript-libraries-syntax.vim'
-" Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
-"------ }}}
-
-"------ python {{{
-Plug 'tweekmonster/braceless.vim'
-Plug 'jmcantrell/vim-virtualenv'
 "------ }}}
 
 "------ sass {{{
 Plug 'cakebaker/scss-syntax.vim'
 "------}}
 
-"------ django {{{
-Plug 'Glench/Vim-Jinja2-Syntax'
-Plug 'mjbrownie/django-template-textobjects'
-Plug 'mjbrownie/vim-htmldjango_omnicomplete'
-Plug 'jmcomets/vim-pony'
-"------ }}}
-
 call plug#end()
 "---- }}}
 
 
 "--- moving around, searching and patterns {{{
-set incsearch
-set ignorecase
-set smartcase
+set incsearch " show match for partly typed search command
+set wrapscan " search commands wrap around the end of the buffer
 "--- }}}
 
 "--- tags {{{
-set tags=tags;
 "--- }}}
 
 "--- displaying text {{{
-set nowrap
-set scrolloff=3
-set sidescrolloff=3
-set lazyredraw
-set list
-set listchars=tab:˒\ ,trail:·,extends:…,precedes:…,nbsp:+
-set number
-set numberwidth=1
-set display+=lastline
+set display=lastline " include lastline to show the last line even if it doesn't fit
+set lazyredraw " don't redraw while executing macros
+set list " show <Tab> as ^I and end-of-line as $
+if has('multi_byte') && &encoding ==# 'utf-8'
+        " list of strings used for list mode
+	let &listchars = 'tab:˒ ,trail:·,extends:…,precedes:…,nbsp:+'
+else
+	let &listchars = 'tab:> ,extends:>,precedes:<,nbsp:.'
+endif
+set nowrap " long lines wrap
 "--- }}}
 
 "--- syntax, highlighting and spelling {{{
 set background=dark
-set nocursorline
+set cursorline " highlight the screen line of the cursor
+set synmaxcol=200 " maximum column to look for syntax items
 "--- }}}
 
 "--- multiple windows {{{
-set laststatus=2
-set equalalways
-set eadirection=both
-set hidden
-set splitbelow
-set splitright
+set hidden " don't unload a buffer when no longer shown in a window
+set laststatus=2 " 0, 1 or 2; when to use a status line for the last window
+set splitbelow " a new window is put below the current one
+set splitright " a new window is put right of the current one
 "--- }}}
 
 "--- multiple tab pages {{{
-set tabpagemax=50
 "--- }}}
 
 "--- terminal {{{
-set ttyfast
-set scrolljump=3
+set ttyfast " terminal connection is fast
 set t_Co=256
 "--- }}}
 
 "--- using the mouse {{{
-set ttymouse=xterm2
 "--- }}}
 
 "--- printing {{{
 "--- }}}
 
 "--- messages and info {{{
-set ruler
-set showcmd
-set shortmess=aoOstTI
-set visualbell
+set report=0 " threshold for reporting number of changed lines
+set showcmd " show (partial) command keys in the status line
+set shortmess=aoOstTI " list of flags to make messages shorter"
+set showmode " display the current mode in the status line
 "--- }}}
 
 "--- selecting text {{{
@@ -146,60 +117,39 @@ set clipboard=unnamed
 "--- }}}
 
 "--- editing text {{{
-set backspace=indent,eol,start
-set complete-=i
-set completeopt=menu,menuone
-set showmatch
-set nrformats-=octal
+set backspace=indent,eol,start " specifies what <BS>, CTRL-W, etc. can do in Insert mode
+set complete-=i " specifies how Insert mode completion works for CTRL-N and CTRL-P
+set completeopt=menu,menuone " whether to use a popup menu for Insert mode completion
 "--- }}}
 
 "--- tabs and indenting {{{
-set tabstop=8
-set shiftwidth=8
-set smarttab
-set softtabstop=0
-set shiftround
-set noexpandtab
-set autoindent
-set smartindent
-set copyindent
+set autoindent " automatically set the indent of a new line
+set noexpandtab " expand <Tab> to spaces in Insert mode
 "--- }}}
 
 "--- folding {{{
-set nofoldenable
-set foldlevelstart=2
-set foldmethod=syntax
 "--- }}}
 
 "--- diff mode {{{
 "--- }}}
 
 "--- mapping {{{
-set ttimeout
-set ttimeoutlen=50
 "--- }}}
 
 "--- reading and writing files {{{
-set modelines=0
-set backup
-set backupdir=~/.vim/backup
-set autowrite
-set autoread
-set fileformats+=mac
+set backup " keep a backup after overwriting a file
+set backupdir=$HOME/.vim/tmp/backup/ " list of directories to put backup files in
+set backupext=.bak " file name extension for the backup file
 "--- }}}
 
 "--- the swap file {{{
-set directory=~/.vim/tmp
+set directory=$HOME/.vim/tmp/swap/ " list of directories for the swap file
+set updatecount=100 " number of characters typed to cause a swap file update
 "--- }}}
 
 "--- command line editing {{{
-set history=2048
-set wildmode=longest:full,list:full
-set wildignorecase
-set wildignore+=*.DS_Store,~*,*.exe,*.dll,*.so,*.swp,*.zip,*.pyc
-set wildmenu
-set undofile
-set undodir=~/.vim/tmp/undo
+set undofile " automatically save and restore undo history
+set undodir=$HOME/.vim/tmp/undo/ " list of directories for undo files
 "--- }}}
 
 "--- executing external commands {{{
@@ -217,11 +167,7 @@ set termencoding=utf-8
 "--- }}}
 
 "--- various {{{
-set gdefault
-set sessionoptions-=options
-if !empty(&viminfo)
-	set viminfo^=!
-endif
+set viminfo='100,n$HOME/.vim/tmp/viminfo " list that specifies what to write in the viminfo file
 "--- }}}
 
 
@@ -245,23 +191,11 @@ endfunction
 
 "---- plugin settings {{{
 
-"------ ack {{{
-if executable('ag')
-	  let g:ackprg = 'ag --vimgrep'
-endif
-let g:ack_autofold_results = 1
-let g:ack_use_dispatch = 1
-"------ }}}
-
 "------ airline {{{
 let g:airline_theme='base16color'
 "------ }}}
 
 "------ ctrlp.vim {{{
-" let g:ctrlp_custom_ignore = {
-" 			\ 'dir':  '\v[\/]\.(git|hg|svn)$',
-" 			\ 'file': '\v\.(exe|so|dll|pyc)$'
-" 			\ }
 let g:ctrlp_clear_cache_on_exit = 1
 let g:ctrlp_show_hidden = 1
 " https://github.com/ctrlpvim/ctrlp.vim/wiki/ctrlp-configration
@@ -286,21 +220,8 @@ let g:ctrlp_user_command = {
 let g:delimitMate_expand_cr = 1
 "------ }}}
 
-"------ htmldjango_omnicomplete {{{
-let g:htmldjangocomplete_html_flavour = 'html5'
-"------ }}}
-
-"------ indent guides {{{
-let g:indent_guides_start_level = 2
-"------ }}}
-
-"------ javascript {{{
-let g:javascript_enable_domhtmlcss = 1
-let g:javascript_ignore_javaScriptdoc = 1
-"------ }}}
-
 "------ javascript-libraries-syntax {{{
-let g:used_javascript_libs = 'angularjs,jasmine,jquery'
+let g:used_javascript_libs = 'jasmine,jquery'
 "------ }}}
 
 "------ MatchTagAlways {{{
@@ -308,8 +229,7 @@ let g:mta_filetypes = {
 			\ 'html'            : 1,
 			\ 'xhtml'           : 1,
 			\ 'xml'             : 1,
-			\ 'handlebars.html' : 1,
-			\ 'htmldjango'      : 1
+			\ 'jinja'           : 1
 			\}
 "------ }}}
 
@@ -322,35 +242,22 @@ let g:syntastic_auto_jump      = 0
 let g:syntastic_auto_loc_list  = 0
 let g:syntastic_check_on_open  = 1
 let g:syntastic_enable_signs   = 1
-let g:syntastic_error_symbol   = '✗'
-let g:syntastic_warning_symbol = '⚠'
-let g:syntastic_style_error_symbol = '»'
-let g:syntastic_style_warning_symbol = '»'
+if has('multi_byte') && &encoding ==# 'utf-8'
+	let g:syntastic_error_symbol   = '✗'
+	let g:syntastic_warning_symbol = '⚠'
+	let g:syntastic_style_error_symbol = '»'
+	let g:syntastic_style_warning_symbol = '»'
+else
+	let g:syntastic_error_symbol   = 'E'
+	let g:syntastic_warning_symbol = 'W'
+	let g:syntastic_style_error_symbol = 'S'
+	let g:syntastic_style_warning_symbol = 's'
+endif
 let g:syntastic_javascript_eslint_exec = 'eslint_d'
 let g:syntastic_javascript_checkers = ['eslint']
 let g:syntastic_python_checkers = ['pylama']
 " let g:syntastic_python_pylama_exec = '/home/andrew/.local/bin/pylama'
-let g:syntastic_html_tidy_ignore_errors = [
-			\ 'trimming empty <i>',
-			\ 'trimming empty <span>',
-			\ '<input> proprietary attribute \"autocomplete\"',
-			\ 'proprietary attribute \"role\"',
-			\ 'proprietary attribute \"hidden\"',
-			\ 'proprietary attribute \"ng-',
-			\ '<svg> is not recognized!',
-			\ 'discarding unexpected <svg>',
-			\ 'discarding unexpected </svg>',
-			\ '<rect> is not recognized!',
-			\ 'discarding unexpected <rect>'
-			\ ]
 "------- }}}
-
-"------ Tagbar {{{
-let g:tagbar_autoclose       = 1
-let g:tagbar_autofocus       = 1
-let g:tagbar_autoshowtag     = 1
-let g:tagbar_show_visibility = 1
-"------ }}}
 
 "------ UltiSnips {{{
 let g:UltiSnipsExpandTrigger       = "<tab>"
@@ -371,6 +278,11 @@ let g:ycm_path_to_python_interpreter          = '/usr/local/bin/python'
 "------ xmledit {{{
 let g:xmledit_enable_html = 1
 "------ }}}
+"---- }}}
+
+"---- commands {{{
+command! -nargs=* -complete=file GG Grepper -tool git -query <args>
+command! -nargs=* Ag Grepper -noprompt -tool ag -grepprg ag --vimgrep <args>
 "---- }}}
 
 
@@ -400,7 +312,7 @@ cnoremap Q q
 
 " indenting keeps original selection in visual
 xnoremap > >gv
-vnoremap < <gv
+xnoremap < <gv
 
 " write file without correct permissions when opened
 cmap w!! %!sudo tee > /dev/null %
@@ -416,8 +328,8 @@ nnoremap <C-y> 5<C-y>
 nnoremap / /\v
 nnoremap s/ s/\v
 nnoremap %s/ %s/\v
-vnoremap / /\v
-vnoremap %s/ %s/\v
+xnoremap / /\v
+xnoremap %s/ %s/\v
 
 " keep search in center of window
 nnoremap <silent> n nzz
@@ -429,7 +341,7 @@ nnoremap <silent> g# g#zz
 
 " apply macros with Q
 nnoremap Q @q
-vnoremap Q :norm @q<cr>
+xnoremap Q :norm @q<cr>
 
 " change tabs with shift
 noremap <S-l> gt
@@ -471,25 +383,13 @@ nnoremap <leader>evm <C-w><C-v><C-l>:e $MYVIMRC<CR>
 " close quick/location fix/list
 nnoremap <leader>q :ccl<CR>
 nnoremap <leader>l :lcl<CR>
-"------ }}}
-"---- }}}
 
+" easy paste mode
+nnoremap <silent><leader>p :set paste<CR>
 
-"---- plugin mappings {{{
-"------ Ack {{{
-nmap <leader>a :Ack!<space>
-"------ }}}
-
-"------ Dispatch {{{
-nmap <leader>d :Dispatch<CR>
-"------ }}}
-
-"------ Gundo {{{
-map <leader>u :GundoToggle<CR>
-"------ }}}
-
-"------ TagBar {{{
-map <leader>t :TagbarToggle<CR>
+" grepper on motions or visual selection
+nmap gs <plug>(GrepperOperator)
+xmap gs <plug>(GrepperOperator)
 "------ }}}
 "---- }}}
 
@@ -506,46 +406,25 @@ if has("autocmd")
 	augroup filetypes
 		au!
 
-		" fix html indenting
-		au FileType html setlocal indentkeys-=*<Return>
-
 		" set xml formatting command to xmllint
 		au FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
 
 		" set custom indentation
-		au FileType html,jinja,css,scss,php,twig setlocal sts=4 sw=4 et
+		au FileType html,jinja,css,scss setlocal sts=4 sw=4 et
 		au FileType javascript,yaml setlocal sts=2 sw=2 et
 
 		" set custom filetypes for syntax and snippets
 		au BufRead,BufNewFile *.scss set filetype=scss.css
-		au FileType jinja set filetype=jinja.htmldjango
-		au FileType htmldjango set filetype=jinja.htmldjango
 		au BufRead,BufNewFile *.jsm set filetype=javascript
-		au FileType python BracelessEnable +indent +fold-inner
 
 		" set tab completion on css-classes
-		au FileType scss,css,haml,html setlocal iskeyword+=-
-
-		" surround custom replacements
-		au FileType html,jinja let b:surround_{char2nr("d")} = "<div\1class: \r..*\r class=\"&\"\1>\r</div>"
-		au FileType html,jinja let b:surround_{char2nr("p")} = "<p\1class: \r..*\r class=\"&\"\1>\r</p>"
-		au FileType html,jinja let b:surround_{char2nr("s")} = "<span\1class: \r..*\r class=\"&\"\1>\r</span>"
-		au FileType jinja let b:surround_{char2nr("v")} = "{{ \r }}"
-		au FileType jinja let b:surround_{char2nr("{")} = "{{ \r }}"
-		au FileType jinja let b:surround_{char2nr("%")} = "{% \r %}"
-		au FileType jinja let b:surround_{char2nr("b")} = "{% block \1block name: \1 %}\r{% endblock \1\1 %}"
-		au FileType jinja let b:surround_{char2nr("i")} = "{% if \1condition: \1 %}\r{% endif %}"
-		au FileType jinja let b:surround_{char2nr("w")} = "{% with \1with: \1 %}\r{% endwith %}"
-		au FileType jinja let b:surround_{char2nr("f")} = "{% for \1for loop: \1 %}\r{% endfor %}"
-		au FileType jinja let b:surround_{char2nr("c")} = "{% comment %}\r{% endcomment %}"
+		au FileType scss,css,html setlocal iskeyword+=-
 
 		" delimitmate custom matches
 		au FileType vim,html let b:delimitMate_matchpairs = "(:),[:],{:},<:>"
 
-		" django custom omnicomplete
-		au FileType htmldjango set omnifunc=htmldjangocomplete#CompleteDjango
-		au FileType htmldjango inoremap {% {% %}<left><left><left>
-		au FileType htmldjango inoremap {{ {{ }}<left><left><left>
+		" custom matchit pairs b:match_words
+		autocmd FileType python let b:match_words = '\<if\>:\<elif\>:\<else\>'
 	augroup END
 
 	augroup editing
@@ -566,6 +445,12 @@ if has("autocmd")
 		au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 		au InsertLeave * match ExtraWhitespace /\s\+$/
 		au BufWinLeave * call clearmatches()
+
+		" smart show cursorline
+		autocmd WinEnter    * set cursorline
+		autocmd WinLeave    * set nocursorline
+		autocmd InsertEnter * set nocursorline
+		autocmd InsertLeave * set cursorline
 	augroup END
 endif
 "---- }}}

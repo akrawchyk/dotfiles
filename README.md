@@ -48,6 +48,7 @@
 * redis
 * sqlite
 * terminal-notifier
+* tidy-html5
 * the_silver_searcher
 * tmux
 * vim
