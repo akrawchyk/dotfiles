@@ -27,6 +27,7 @@ Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'Raimondi/delimitMate'
 Plug 'mhinz/vim-grepper'
+Plug 'terryma/vim-multiple-cursors'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rsi'
@@ -36,6 +37,7 @@ Plug 'tpope/vim-surround'
 Plug 'scrooloose/syntastic'
 Plug 'tomtom/tcomment_vim'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-vinegar'
 Plug 'Valloric/YouCompleteMe', { 'do': 'chmod +x ./install.py; python ./install.py --tern-completer' }
 "------ }}}
@@ -59,6 +61,8 @@ call plug#end()
 
 "--- moving around, searching and patterns {{{
 set incsearch " show match for partly typed search command
+set ignorecase " ignore case in search patterns
+set smartcase " override the 'ignorecase' option if the search pattern contains uppercase characters
 set wrapscan " search commands wrap around the end of the buffer
 "--- }}}
 
