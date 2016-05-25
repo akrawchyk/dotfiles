@@ -171,6 +171,7 @@ set termencoding=utf-8
 "--- }}}
 
 "--- various {{{
+set gd " use the 'g' flag for :substitute
 set viminfo='100,n$HOME/.vim/tmp/viminfo " list that specifies what to write in the viminfo file
 "--- }}}
 
@@ -247,10 +248,10 @@ let g:syntastic_auto_loc_list  = 0
 let g:syntastic_check_on_open  = 1
 let g:syntastic_enable_signs   = 1
 if has('multi_byte') && &encoding ==# 'utf-8'
-	let g:syntastic_error_symbol   = '✗'
-	let g:syntastic_warning_symbol = '⚠'
-	let g:syntastic_style_error_symbol = '»'
-	let g:syntastic_style_warning_symbol = '»'
+	let g:syntastic_error_symbol   = '💥'
+	let g:syntastic_warning_symbol = '💣'
+	let g:syntastic_style_error_symbol = '💩💩'
+	let g:syntastic_style_warning_symbol = '💩'
 else
 	let g:syntastic_error_symbol   = 'E'
 	let g:syntastic_warning_symbol = 'W'
