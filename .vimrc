@@ -26,6 +26,7 @@ Plug 'chriskempson/base16-vim'
 Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'Raimondi/delimitMate'
+Plug 'junegunn/vim-emoji'
 Plug 'mhinz/vim-grepper'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'sheerun/vim-polyglot'
@@ -247,20 +248,25 @@ let g:syntastic_auto_jump      = 0
 let g:syntastic_auto_loc_list  = 0
 let g:syntastic_check_on_open  = 1
 let g:syntastic_enable_signs   = 1
-if has('multi_byte') && &encoding ==# 'utf-8'
-	let g:syntastic_error_symbol   = '💥'
-	let g:syntastic_warning_symbol = '💣'
-	let g:syntastic_style_error_symbol = '💩💩'
-	let g:syntastic_style_warning_symbol = '💩'
+if emoji#available()
+	let g:syntastic_error_symbol         = emoji#for('boom')
+	let g:syntastic_warning_symbol       = emoji#for('bomb')
+	let g:syntastic_style_error_symbol   = emoji#for('poop') + emoji#for('poop')
+	let g:syntastic_style_warning_symbol = emoji#for('poop')
+elseif has('multi_byte') && &encoding ==# 'utf-8'
+	let g:syntastic_error_symbol         = '✗'
+	let g:syntastic_warning_symbol       = '⚠'
+	let g:syntastic_style_error_symbol   = '»»'
+	let g:syntastic_style_warning_symbol = '»'
 else
-	let g:syntastic_error_symbol   = 'E'
-	let g:syntastic_warning_symbol = 'W'
-	let g:syntastic_style_error_symbol = 'S'
+	let g:syntastic_error_symbol         = 'E'
+	let g:syntastic_warning_symbol       = 'W'
+	let g:syntastic_style_error_symbol   = 'S'
 	let g:syntastic_style_warning_symbol = 's'
 endif
 let g:syntastic_javascript_eslint_exec = 'eslint_d'
-let g:syntastic_javascript_checkers = ['eslint']
-let g:syntastic_python_checkers = ['pylama']
+let g:syntastic_javascript_checkers    = ['eslint']
+let g:syntastic_python_checkers        = ['pylama']
 " let g:syntastic_python_pylama_exec = '/home/andrew/.local/bin/pylama'
 "------- }}}
 
@@ -286,7 +292,9 @@ let g:xmledit_enable_html = 1
 "---- }}}
 
 "---- commands {{{
+" search all git tracked text files for a string
 command! -nargs=* -complete=file GG Grepper -tool git -query <args>
+" search all text files for a string
 command! -nargs=* Ag Grepper -noprompt -tool ag -grepprg ag --vimgrep <args>
 "---- }}}
 
