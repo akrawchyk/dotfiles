@@ -403,6 +403,13 @@ nnoremap <silent><leader>p :set paste<CR>
 " grepper on motions or visual selection
 nmap gs <plug>(GrepperOperator)
 xmap gs <plug>(GrepperOperator)
+
+" YouCompleteMe Tern commands
+noremap <leader>tD :YcmCompleter GetDoc<CR>
+noremap <leader>tt :YcmCompleter GetType<CR>
+noremap <leader>td :YcmCompleter GoToDefinition<CR>
+noremap <leader>tr :YcmCompleter GoToReferences<CR>
+noremap <leader>tR :YcmCompleter RefactorRename 
 "------ }}}
 "---- }}}
 

@@ -97,6 +97,7 @@
 * medis
 * nvalt
 * obs
+* owasp-zap
 * postico
 * postman
 * qlstephen
