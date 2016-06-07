@@ -29,8 +29,11 @@
 #### Brew
 
 * ack
+* android-sdk
 * bfg
+* chromedriver
 * cmake
+* cookiecutter
 * coreutils
 * ctags
 * dnsmasq
@@ -42,13 +45,16 @@
 * imagemagick
 * mercurial
 * node
+* nvm
 * openssl
 * python
 * reattach-to-user-namespace
 * redis
 * sqlite
 * terminal-notifier
+* tidy-html5
 * the_silver_searcher
+* tree
 * tmux
 * vim
 * watchman
@@ -57,6 +63,7 @@
 
 #### Cask
 
+* adobe-air
 * adobe-creative-cloud
 * android-file-transfer
 * dockertoolbox
@@ -70,32 +77,46 @@
 * font-fira-mono
 * font-inconsolata
 * font-meslo-lg
+* font-nova-mono
 * font-profontx
+* font-roboto-mono
 * font-source-code-pro
 * font-terminus
 * font-ubuntu
+* font-vt323
 * google-chrome
 * google-chrome-canary
 * google-hangouts
 * iterm2
+* jadengeller-helium
 * java
 * karabiner
 * keepassx
 * licecap
 * macdown
+* medis
 * nvalt
 * obs
+* owasp-zap
+* postico
+* postman
+* qlstephen
+* screenhero
 * seil
 * sketch
+* sketch-toolbox
 * slack
 * spectacle
 * spotifree
 * spotify
 * steam
+* steelseries-engine
+* steelseries-exactmouse-tool
 * the-unarchiver
 * vagrant
 * virtualbox
-* vmware-fusion7
+* vlc
+* wireshark
 * xquartz
 
 ## TODO
