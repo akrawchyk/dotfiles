@@ -6,7 +6,7 @@
 [core]
 	excludesfile = $HOME/.gitignore
 	autocrlf = input
-	whitespace = trailing-space,space-before-tab,indent-with-non-tab
+	whitespace = trailing-space,space-before-tab
 	safecrlf = true
 	trustctime = false
 [push]
@@ -18,6 +18,7 @@
 	autocorrect = 1
 [merge]
 	log = true
+	tool = fugitive
 [mergetool "fugitive"]
 	cmd = vim -f -c \"Gdiff\" \"$MERGED\" -c \"wincmd =\"
 	trustExitCode = false

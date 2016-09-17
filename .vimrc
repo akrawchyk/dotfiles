@@ -54,7 +54,7 @@ Plug 'othree/javascript-libraries-syntax.vim'
 
 "------ sass {{{
 Plug 'cakebaker/scss-syntax.vim'
-"------}}
+"------ }}}
 
 call plug#end()
 "---- }}}
@@ -101,7 +101,6 @@ set splitright " a new window is put right of the current one
 
 "--- terminal {{{
 set ttyfast " terminal connection is fast
-set t_Co=256
 "--- }}}
 
 "--- using the mouse {{{
@@ -111,6 +110,7 @@ set t_Co=256
 "--- }}}
 
 "--- messages and info {{{
+set ruler " show cursor position below each window
 set report=0 " threshold for reporting number of changed lines
 set showcmd " show (partial) command keys in the status line
 set shortmess=aoOstTI " list of flags to make messages shorter"
@@ -125,14 +125,18 @@ set clipboard=unnamed
 set backspace=indent,eol,start " specifies what <BS>, CTRL-W, etc. can do in Insert mode
 set complete-=i " specifies how Insert mode completion works for CTRL-N and CTRL-P
 set completeopt=menu,menuone " whether to use a popup menu for Insert mode completion
+set undofile " automatically save and restore undo history
+set undodir=$HOME/.vim/tmp/undo/ " list of directories for undo files
 "--- }}}
 
 "--- tabs and indenting {{{
 set autoindent " automatically set the indent of a new line
-set noexpandtab " expand <Tab> to spaces in Insert mode
+set shiftround " round to 'shiftwidth' for '<<' and '>>'
 "--- }}}
 
 "--- folding {{{
+set foldmethod=marker " folding type: 'manual', 'indent', 'expr', 'marker' or 'syntax'
+set foldopen+=jump " specifies for which commands a fold will be opened
 "--- }}}
 
 "--- diff mode {{{
@@ -153,8 +157,9 @@ set updatecount=100 " number of characters typed to cause a swap file update
 "--- }}}
 
 "--- command line editing {{{
-set undofile " automatically save and restore undo history
-set undodir=$HOME/.vim/tmp/undo/ " list of directories for undo files
+set wildmode=longest:full,full
+set wildignore+=tags,*.pyc
+set wildmenu " command-line completion shows a list of matches
 "--- }}}
 
 "--- executing external commands {{{
@@ -172,8 +177,12 @@ set termencoding=utf-8
 "--- }}}
 
 "--- various {{{
-set gd " use the 'g' flag for :substitute
+set gdefault " use the 'g' flag for :substitute
 set viminfo='100,n$HOME/.vim/tmp/viminfo " list that specifies what to write in the viminfo file
+"--- }}}
+
+"--- term {{{
+set t_Co=256 " number of colors
 "--- }}}
 
 
@@ -211,7 +220,7 @@ let g:ctrlp_user_command = {
 			\ 2: ['.hg', 'hg --cwd %s locate -I .'],
 			\ },
 			\ 'fallback': 'ag %s -i --nocolor --nogroup --hidden
-			\ --ignore out
+			\ --ignore tag
 			\ --ignore .git
 			\ --ignore .svn
 			\ --ignore .hg
@@ -227,7 +236,7 @@ let g:delimitMate_expand_cr = 1
 "------ }}}
 
 "------ javascript-libraries-syntax {{{
-let g:used_javascript_libs = 'jasmine,jquery'
+let g:used_javascript_libs = 'jquery,underscore,backbone'
 "------ }}}
 
 "------ MatchTagAlways {{{
@@ -237,6 +246,10 @@ let g:mta_filetypes = {
 			\ 'xml'             : 1,
 			\ 'jinja'           : 1
 			\}
+"------ }}}
+
+"------ netrw {{{
+" let g:netrw_list_hide = '.*\.pyc$'
 "------ }}}
 
 "------ surround {{{
@@ -360,6 +373,9 @@ xnoremap Q :norm @q<cr>
 noremap <S-l> gt
 noremap <S-h> gT
 
+" jump to last edited file with BS
+nnoremap <BS> <C-^>
+
 
 "------ leaders {{{
 let mapleader=','
@@ -430,8 +446,8 @@ if has("autocmd")
 		au FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
 
 		" set custom indentation
-		au FileType html,jinja,css,scss setlocal sts=4 sw=4 et
-		au FileType javascript,yaml setlocal sts=2 sw=2 et
+		au FileType html,htmldjango,jinja,css,scss setlocal sts=4 sw=4 et
+		au FileType javascript,json,yaml setlocal sts=2 sw=2 et
 
 		" set custom filetypes for syntax and snippets
 		au BufRead,BufNewFile *.scss set filetype=scss.css
