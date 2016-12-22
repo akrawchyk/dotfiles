@@ -42,11 +42,6 @@ mkdir -p $HOME/.vim/tmp/undo
 mkdir $HOME/.vim/backup
 vim +PlugInstall +q
 
-# setup prezto
-# FIXME does not work in bash
-# for rcfile in $( find $HOME/.zprezto/runcoms/ -name "z*" ); do
-# 	ln -s $rcfile $HOME/.$( cut -d"/" -f6 $rcfile )
-# done
 chsh -s /bin/zsh
 
 

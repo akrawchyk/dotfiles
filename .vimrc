@@ -9,7 +9,7 @@ set nocompatible
 if empty(glob('~/.vim/autoload/plug.vim'))
 	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
 				\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-	autocmd VimEnter * PlugInstall
+	au VimEnter * PlugInstall
 endif
 
 if !exists('g:loaded_matchit')
@@ -23,11 +23,12 @@ Plug 'chriskempson/base16-vim'
 "------ }}}
 
 "------ tools {{{
+Plug 'tpope/vim-abolish'
 Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'Raimondi/delimitMate'
 Plug 'junegunn/vim-emoji'
-Plug 'mhinz/vim-grepper'
+Plug 'tpope/vim-fugitive'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-repeat'
@@ -65,6 +66,9 @@ set incsearch " show match for partly typed search command
 set ignorecase " ignore case in search patterns
 set smartcase " override the 'ignorecase' option if the search pattern contains uppercase characters
 set wrapscan " search commands wrap around the end of the buffer
+if executable('ag')
+	set grepprg=ag\ --nogroup\ --nocolor
+endif
 "--- }}}
 
 "--- tags {{{
@@ -113,7 +117,7 @@ set ttyfast " terminal connection is fast
 set ruler " show cursor position below each window
 set report=0 " threshold for reporting number of changed lines
 set showcmd " show (partial) command keys in the status line
-set shortmess=aoOstTI " list of flags to make messages shorter"
+set shortmess=aoOtI " list of flags to make messages shorter"
 set showmode " display the current mode in the status line
 "--- }}}
 
@@ -149,6 +153,7 @@ set foldopen+=jump " specifies for which commands a fold will be opened
 set backup " keep a backup after overwriting a file
 set backupdir=$HOME/.vim/tmp/backup/ " list of directories to put backup files in
 set backupext=.bak " file name extension for the backup file
+set autoread " automatically read a file when it was modified outside of Vim
 "--- }}}
 
 "--- the swap file {{{
@@ -213,22 +218,10 @@ let g:airline_theme='base16color'
 "------ ctrlp.vim {{{
 let g:ctrlp_clear_cache_on_exit = 1
 let g:ctrlp_show_hidden = 1
-" https://github.com/ctrlpvim/ctrlp.vim/wiki/ctrlp-configration
-let g:ctrlp_user_command = {
-			\ 'types': {
-			\ 1: ['.git', 'cd %s && git ls-files -c -o --exclude-standard'],
-			\ 2: ['.hg', 'hg --cwd %s locate -I .'],
-			\ },
-			\ 'fallback': 'ag %s -i --nocolor --nogroup --hidden
-			\ --ignore tag
-			\ --ignore .git
-			\ --ignore .svn
-			\ --ignore .hg
-			\ --ignore .DS_Store
-			\ --ignore node_modules
-			\ --ignore "**/*.pyc"
-			\ -g ""'
-			\ }
+if executable('ag')
+	let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+	let g:ctrlp_use_caching = 0
+endif
 "------ }}}
 
 "------ delimitMate {{{
@@ -279,8 +272,7 @@ else
 endif
 let g:syntastic_javascript_eslint_exec = 'eslint_d'
 let g:syntastic_javascript_checkers    = ['eslint']
-let g:syntastic_python_checkers        = ['pylama']
-" let g:syntastic_python_pylama_exec = '/home/andrew/.local/bin/pylama'
+let g:syntastic_python_checkers        = ['flake8']
 "------- }}}
 
 "------ UltiSnips {{{
@@ -302,13 +294,6 @@ let g:ycm_path_to_python_interpreter          = '/usr/local/bin/python'
 "------ xmledit {{{
 let g:xmledit_enable_html = 1
 "------ }}}
-"---- }}}
-
-"---- commands {{{
-" search all git tracked text files for a string
-command! -nargs=* -complete=file GG Grepper -tool git -query <args>
-" search all text files for a string
-command! -nargs=* Ag Grepper -noprompt -tool ag -grepprg ag --vimgrep <args>
 "---- }}}
 
 
@@ -376,6 +361,12 @@ noremap <S-h> gT
 " jump to last edited file with BS
 nnoremap <BS> <C-^>
 
+" bind K to grep word under cursor
+nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
+
+" bind \ (backward slash) to grep shortcut
+command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
+
 
 "------ leaders {{{
 let mapleader=','
@@ -416,16 +407,15 @@ nnoremap <leader>l :lcl<CR>
 " easy paste mode
 nnoremap <silent><leader>p :set paste<CR>
 
-" grepper on motions or visual selection
-nmap gs <plug>(GrepperOperator)
-xmap gs <plug>(GrepperOperator)
-
 " YouCompleteMe Tern commands
 noremap <leader>tD :YcmCompleter GetDoc<CR>
 noremap <leader>tt :YcmCompleter GetType<CR>
 noremap <leader>td :YcmCompleter GoToDefinition<CR>
 noremap <leader>tr :YcmCompleter GoToReferences<CR>
-noremap <leader>tR :YcmCompleter RefactorRename 
+noremap <leader>tR :YcmCompleter RefactorRename<SPACE>
+
+" search for arbitrary input
+nnoremap \ :Ag<SPACE>
 "------ }}}
 "---- }}}
 
@@ -437,6 +427,7 @@ if has("autocmd")
 
 		" autosource vimrc on write
 		au BufWritePost .vimrc source $MYVIMRC
+
 	augroup END
 
 	augroup filetypes
@@ -448,6 +439,7 @@ if has("autocmd")
 		" set custom indentation
 		au FileType html,htmldjango,jinja,css,scss setlocal sts=4 sw=4 et
 		au FileType javascript,json,yaml setlocal sts=2 sw=2 et
+		au FileType htmldjango set filetype=htmldjango.html
 
 		" set custom filetypes for syntax and snippets
 		au BufRead,BufNewFile *.scss set filetype=scss.css
@@ -460,7 +452,10 @@ if has("autocmd")
 		au FileType vim,html let b:delimitMate_matchpairs = "(:),[:],{:},<:>"
 
 		" custom matchit pairs b:match_words
-		autocmd FileType python let b:match_words = '\<if\>:\<elif\>:\<else\>'
+		au FileType python let b:match_words = '\<if\>:\<elif\>:\<else\>'
+
+		" quickfix full width bottom
+		au FileType qf wincmd J
 	augroup END
 
 	augroup editing
@@ -483,17 +478,22 @@ if has("autocmd")
 		au BufWinLeave * call clearmatches()
 
 		" smart show cursorline
-		autocmd WinEnter    * set cursorline
-		autocmd WinLeave    * set nocursorline
-		autocmd InsertEnter * set nocursorline
-		autocmd InsertLeave * set cursorline
+		au WinEnter    * set cursorline
+		au WinLeave    * set nocursorline
+		au InsertEnter * set nocursorline
+		au InsertLeave * set cursorline
+
+		" open quickfix after grep
+		au QuickFixCmdPost *grep* cwindow
 	augroup END
 endif
 "---- }}}
 
 "---- gui {{{
-let base16colorspace=256
-colorscheme base16-eighties
+if filereadable(expand("~/.vimrc_background"))
+  let base16colorspace=256
+  source ~/.vimrc_background
+endif
 let &colorcolumn=80
 highlight ColorColumn ctermbg=18 guibg=gray
 
