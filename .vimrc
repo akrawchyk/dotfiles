@@ -1,6 +1,12 @@
 " Andrew Krawchyk
 " Options are organized similarly to the :options command
 "
+
+if filewritable('.') && !filewritable('~/.vim/tmp')
+  silent execute '!mkdir $HOME/.vim/tmp'
+endif
+
+
 "--- important {{{
 set nocompatible
 "--- }}}
@@ -13,7 +19,7 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 if !exists('g:loaded_matchit')
-  runtime macros/matchit.vim
+	runtime macros/matchit.vim
 endif
 
 call plug#begin()
@@ -25,11 +31,13 @@ Plug 'chriskempson/base16-vim'
 "------ tools {{{
 Plug 'tpope/vim-abolish'
 Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
+Plug 'chrisbra/csv.vim'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'Raimondi/delimitMate'
+Plug 'justinmk/vim-dirvish'
 Plug 'junegunn/vim-emoji'
 Plug 'tpope/vim-fugitive'
-Plug 'terryma/vim-multiple-cursors'
+Plug 'tommcdo/vim-lion'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rsi'
@@ -60,7 +68,6 @@ Plug 'cakebaker/scss-syntax.vim'
 call plug#end()
 "---- }}}
 
-
 "--- moving around, searching and patterns {{{
 set incsearch " show match for partly typed search command
 set ignorecase " ignore case in search patterns
@@ -79,7 +86,7 @@ set display=lastline " include lastline to show the last line even if it doesn't
 set lazyredraw " don't redraw while executing macros
 set list " show <Tab> as ^I and end-of-line as $
 if has('multi_byte') && &encoding ==# 'utf-8'
-        " list of strings used for list mode
+	" list of strings used for list mode
 	let &listchars = 'tab:˒ ,trail:·,extends:…,precedes:…,nbsp:+'
 else
 	let &listchars = 'tab:> ,extends:>,precedes:<,nbsp:.'
@@ -91,6 +98,9 @@ set nowrap " long lines wrap
 set background=dark
 set cursorline " highlight the screen line of the cursor
 set synmaxcol=200 " maximum column to look for syntax items
+if has('termguicolors')
+	set termguicolors
+endif
 "--- }}}
 
 "--- multiple windows {{{
@@ -130,7 +140,7 @@ set backspace=indent,eol,start " specifies what <BS>, CTRL-W, etc. can do in Ins
 set complete-=i " specifies how Insert mode completion works for CTRL-N and CTRL-P
 set completeopt=menu,menuone " whether to use a popup menu for Insert mode completion
 set undofile " automatically save and restore undo history
-set undodir=$HOME/.vim/tmp/undo/ " list of directories for undo files
+set undodir^=$HOME/.vim/tmp// " list of directories for undo files
 "--- }}}
 
 "--- tabs and indenting {{{
@@ -151,13 +161,13 @@ set foldopen+=jump " specifies for which commands a fold will be opened
 
 "--- reading and writing files {{{
 set backup " keep a backup after overwriting a file
-set backupdir=$HOME/.vim/tmp/backup/ " list of directories to put backup files in
+set backupdir^=$HOME/.vim/tmp// " list of directories to put backup files in
 set backupext=.bak " file name extension for the backup file
 set autoread " automatically read a file when it was modified outside of Vim
 "--- }}}
 
 "--- the swap file {{{
-set directory=$HOME/.vim/tmp/swap/ " list of directories for the swap file
+set directory^=$HOME/.vim/tmp// " list of directories for the swap file
 set updatecount=100 " number of characters typed to cause a swap file update
 "--- }}}
 
@@ -191,28 +201,37 @@ set t_Co=256 " number of colors
 "--- }}}
 
 
-"---- functions {{{
-function! g:UltiSnips_Complete()
-	call UltiSnips#ExpandSnippet()
-	if g:ulti_expand_res == 0
-		if pumvisible()
-			return "\<C-n>"
-		else
-			call UltiSnips#JumpForwards()
-			if g:ulti_jump_forwards_res == 0
-				return "\<TAB>"
-			endif
-		endif
-	endif
-	return ""
-endfunction
-"---- }}}
-
-
 "---- plugin settings {{{
 
 "------ airline {{{
-let g:airline_theme='base16color'
+let g:airline_theme     = 'base16color'
+
+" see https://github.com/vim-airline/vim-airline/blob/a2431f2adb23a003abdfe5294861bbd69de52e52/doc/airline.txt#L176
+if !exists('g:airline_symbols')
+	let g:airline_symbols = {}
+endif
+
+" unicode symbols
+let g:airline_left_sep = '»'
+let g:airline_left_sep = '▶'
+let g:airline_right_sep = '«'
+let g:airline_right_sep = '◀'
+let g:airline_symbols.crypt = '🔒'
+let g:airline_symbols.linenr = '␊'
+let g:airline_symbols.linenr = '␤'
+let g:airline_symbols.linenr = '¶'
+let g:airline_symbols.maxlinenr = '☰'
+let g:airline_symbols.maxlinenr = ''
+let g:airline_symbols.branch = '⎇'
+let g:airline_symbols.paste = 'ρ'
+let g:airline_symbols.paste = 'Þ'
+let g:airline_symbols.paste = '∥'
+let g:airline_symbols.spell = 'Ꞩ'
+let g:airline_symbols.notexists = '∄'
+let g:airline_symbols.whitespace = 'Ξ'
+
+" see https://github.com/vim-airline/vim-airline/blob/a2431f2adb23a003abdfe5294861bbd69de52e52/doc/airline.txt#L252
+let g:airline#parts#ffenc#skip_expected_string = 'utf-8[unix]'
 "------ }}}
 
 "------ ctrlp.vim {{{
@@ -239,10 +258,6 @@ let g:mta_filetypes = {
 			\ 'xml'             : 1,
 			\ 'jinja'           : 1
 			\}
-"------ }}}
-
-"------ netrw {{{
-" let g:netrw_list_hide = '.*\.pyc$'
 "------ }}}
 
 "------ surround {{{
@@ -276,14 +291,14 @@ let g:syntastic_python_checkers        = ['flake8']
 "------- }}}
 
 "------ UltiSnips {{{
-let g:UltiSnipsExpandTrigger       = "<tab>"
-let g:UltiSnipsJumpForwardTrigger  = "<tab>"
-let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
-let g:UltiSnipsListSnippets        = "<c-e>"
-let g:UltiSnipsSnippetDirectories  = ["snips"]
+let g:UltiSnipsExpandTrigger       = '<Tab>'
+let g:UltiSnipsJumpForwardTrigger  = '<C-j>'
+let g:UltiSnipsJumpBackwardTrigger = '<C-k>'
 "------ }}}
 
 "------ YouCompleteMe {{{
+let g:ycm_key_list_select_completion          = ['<C-n>']
+let g:ycm_key_list_previous_completion        = ['<C-p>']
 let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_seed_identifiers_with_syntax        = 1
 let g:ycm_complete_in_comments                = 1
@@ -366,6 +381,10 @@ nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 
 " bind \ (backward slash) to grep shortcut
 command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
+
+" move forward and backward in the quickfix list
+nmap <silent> <C-N> :cn<CR>zv
+" nmap <silent> <C-P> :cp<CR>zv
 
 
 "------ leaders {{{
@@ -461,9 +480,6 @@ if has("autocmd")
 	augroup editing
 		au!
 
-		" tabs to complete snippets
-		au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
-
 		" exit paste mode when leaving insert mode
 		au InsertLeave * set nopaste
 
@@ -490,15 +506,23 @@ endif
 "---- }}}
 
 "---- gui {{{
-if filereadable(expand("~/.vimrc_background"))
-  let base16colorspace=256
-  source ~/.vimrc_background
+" set Vim-specific sequences for RGB colors
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+
+" same thing, but with escape sequences instead of literals
+" set t_8f=[38;2;%lu;%lu;%lum
+" set t_8b=[48;2;%lu;%lu;%lum
+
+if !exists('g:colors_name') || g:colors_name != 'base16-eighties'
+	" let base16colorspace=256
+	colorscheme base16-eighties
 endif
+
 let &colorcolumn=80
-highlight ColorColumn ctermbg=18 guibg=gray
 
+highlight ColorColumn ctermbg=236 guibg=gray18
 highlight ExtraWhitespace ctermbg=196 guibg=red
-
 highlight SyntasticErrorSign ctermbg=09 ctermfg=196
 highlight SyntasticWarningSign ctermbg=03 ctermfg=202
 highlight SyntasticStyleErrorSign ctermbg=19 ctermfg=246
