@@ -1,129 +1,39 @@
-# Dotfiles
+# Akrawchyk's Dotfiles
 
-## Setup
+# Usage
 
-1. `# apt-get install git`
-2. `$ git clone https://github.com/akrawchyk/dotfiles ./ && cd dotfiles`
-3. `$ ./bootstrap.sh`
+Install [stow](https://www.gnu.org/software/stow/) (pick one).
 
-## Details
+```
+# Debian
 
-### Installs
+sudo apt-get install stow
 
-* Base16
-* build-essential
-* Cmake
-* Node.js
-* Tmux
-* Vim
-* ZSH
+# MacOS
 
-### Configures
+brew install stow
+```
 
-* Tmux
-* Prezto
-* Vim Plug
+Then selectively stow what you need
 
-### OSX
+```
+cd dotfiles
+stow --target=$HOME -S zsh ssh git hg alacritty
 
-#### Brew
+# MacOS
 
-* ack
-* android-sdk
-* bfg
-* chromedriver
-* cmake
-* cookiecutter
-* coreutils
-* ctags
-* dnsmasq
-* fasd
-* git
-* git-extras
-* gnu-tar
-* heroku-toolbelt
-* imagemagick
-* mercurial
-* node
-* nvm
-* openssl
-* python
-* reattach-to-user-namespace
-* redis
-* sqlite
-* terminal-notifier
-* tidy-html5
-* the_silver_searcher
-* tree
-* tmux
-* vim
-* watchman
-* wget
-* zsh
+stow --target=$HOME -S macos
 
-#### Cask
+# Tmux+Vim
 
-* adobe-air
-* adobe-creative-cloud
-* android-file-transfer
-* dockertoolbox
-* dropbox
-* firefox
-* firefoxdeveloperedition
-* flux
-* font-anonymous-pro
-* font-cousine
-* font-droid-sans-mono
-* font-fira-mono
-* font-inconsolata
-* font-meslo-lg
-* font-nova-mono
-* font-profontx
-* font-roboto-mono
-* font-source-code-pro
-* font-terminus
-* font-ubuntu
-* font-vt323
-* google-chrome
-* google-chrome-canary
-* google-hangouts
-* iterm2
-* jadengeller-helium
-* java
-* karabiner
-* keepassx
-* licecap
-* macdown
-* medis
-* nvalt
-* obs
-* owasp-zap
-* postico
-* postman
-* qlstephen
-* screenhero
-* seil
-* sketch
-* sketch-toolbox
-* slack
-* spectacle
-* spotifree
-* spotify
-* steam
-* steelseries-engine
-* steelseries-exactmouse-tool
-* the-unarchiver
-* vagrant
-* virtualbox
-* vlc
-* wireshark
-* xquartz
+stow --target=$HOME -S tmux vim
 
-## TODO
+# JS
 
-* git extras - https://github.com/tj/git-extras
+stow --target=$HOME -S js
+```
 
-### Tips
+# Tips
 
 * Generating SSH Keys
 
