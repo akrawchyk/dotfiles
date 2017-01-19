@@ -1,8 +1,39 @@
 # Akrawchyk's Dotfiles
 
+# Usage
 
+Install [stow](https://www.gnu.org/software/stow/) (pick one).
 
-## Tips
+```
+# Debian
+
+sudo apt-get install stow
+
+# MacOS
+
+brew install stow
+```
+
+Then selectively stow what you need
+
+```
+cd dotfiles
+stow --target=$HOME -S zsh ssh git hg alacritty
+
+# MacOS
+
+stow --target=$HOME -S macos
+
+# Tmux+Vim
+
+stow --target=$HOME -S tmux vim
+
+# JS
+
+stow --target=$HOME -S js
+```
+
+# Tips
 
 * Generating SSH Keys
 
