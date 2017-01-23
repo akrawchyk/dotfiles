@@ -475,6 +475,9 @@ if has("autocmd")
 
 		" quickfix full width bottom
 		au FileType qf wincmd J
+
+		" hide pyc files in dirvish
+		autocmd FileType dirvish silent keeppatterns g@\v/[^\/]+.pyc/?$@d
 	augroup END
 
 	augroup editing
