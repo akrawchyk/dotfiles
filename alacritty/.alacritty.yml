@@ -14,23 +14,17 @@ draw_bold_text_with_bright_colors: true
 
 # Font configuration (changes require restart)
 font:
-  # The normal (roman) font face to use.
   normal:
-    family: Inconsolata
-    # Style can be specified to pick a specific face.
-    # style: Regular
+    family: mononoki
+    style: Regular
 
-  # The bold font face
   bold:
-    family: Inconsolata
-    # Style can be specified to pick a specific face.
-    # style: Bold
+    family: mononoki
+    style: Bold
 
-  # The italic font face
   italic:
-    family: Inconsolata
-    # Style can be specified to pick a specific face.
-    # style: Italic
+    family: mononoki
+    style: Italic
 
   # Point size of the font
   size: 12.0
@@ -40,8 +34,17 @@ font:
     x: 0.0
     y: 0.0
 
+  # OS X only: use thin stroke font rendering. Thin strokes are suitable
+  # for retina displays, but for non-retina you probably want this set to
+  # false.
+  use_thin_strokes: false
+
 # Should display the render timer
 render_timer: false
+
+# Use custom cursor colors. If true, display the cursor in the cursor.foreground
+# and cursor.background colors, otherwise invert the colors of the cursor.
+custom_cursor_colors: false
 
 # Colors (Base16 Eighties)
 colors:
@@ -49,6 +52,9 @@ colors:
   primary:
     background: '0x2d2d2d'
     foreground: '0xd3d0c8'
+  cursor:
+    background: '0xffffff'
+    foreground: '0x000000'
 
   # Normal colors
   normal:
@@ -71,64 +77,6 @@ colors:
     magenta: '0xcc99cc'
     cyan:    '0x66cccc'
     white:   '0xf2f0ec'
-
-# Colors (Tomorrow Night Bright)
-# colors:
-#   # Default colors
-#   primary:
-#     background: '0x000000'
-#     foreground: '0xeaeaea'
-#
-#   # Normal colors
-#   normal:
-#     black:   '0x000000'
-#     red:     '0xd54e53'
-#     green:   '0xb9ca4a'
-#     yellow:  '0xe6c547'
-#     blue:    '0x7aa6da'
-#     magenta: '0xc397d8'
-#     cyan:    '0x70c0ba'
-#     white:   '0x424242'
-#
-#   # Bright colors
-#   bright:
-#     black:   '0x666666'
-#     red:     '0xff3334'
-#     green:   '0x9ec400'
-#     yellow:  '0xe7c547'
-#     blue:    '0x7aa6da'
-#     magenta: '0xb77ee0'
-#     cyan:    '0x54ced6'
-#     white:   '0x2a2a2a'
-
-# Colors (Solarized Dark)
-# colors:
-#   # Default colors
-#   primary:
-#     background: '0x002b36'
-#     foreground: '0x839496'
-#
-#   # Normal colors
-#   normal:
-#     black:   '0x073642'
-#     red:     '0xdc322f'
-#     green:   '0x859900'
-#     yellow:  '0xb58900'
-#     blue:    '0x268bd2'
-#     magenta: '0xd33682'
-#     cyan:    '0x2aa198'
-#     white:   '0xeee8d5'
-#
-#   # Bright colors
-#   bright:
-#     black:   '0x002b36'
-#     red:     '0xcb4b16'
-#     green:   '0x586e75'
-#     yellow:  '0x657b83'
-#     blue:    '0x839496'
-#     magenta: '0x6c71c4'
-#     cyan:    '0x93a1a1'
-#     white:   '0xfdf6e3'
 
 # Key bindings
 #
@@ -225,4 +173,5 @@ mouse_bindings:
 # Shell
 #
 # You can set this to a path to your favorite shell, e.g. /bin/fish
-shell: /usr/local/bin/zsh
+shell:
+  program: /usr/local/bin/zsh
