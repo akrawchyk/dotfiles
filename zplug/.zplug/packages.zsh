@@ -11,3 +11,14 @@ zplug "frmendes/geometry", as:theme
 zplug "tomsquest/nvm-auto-use.zsh"
 zplug "unixorn/tumult.plugin.zsh"
 zplug "supercrabtree/k"
+
+fasd_cache="$HOME/.fasd-init-zsh"
+zplug "clvv/fasd", \
+	as:command, \
+	use:fasd, \
+	hook-build:"./fasd --init auto >| \"$fasd_cache\"; fi"
+
+zplug load
+
+source "$fasd_cache"
+unset fasd_cache

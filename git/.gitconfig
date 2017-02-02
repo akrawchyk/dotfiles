@@ -4,7 +4,7 @@
 [apply]
 	whitespace = fix
 [core]
-	excludesfile = $HOME/.gitignore
+	excludesfile = $HOME/.gitignore_global
 	autocrlf = input
 	whitespace = trailing-space,space-before-tab
 	safecrlf = true
@@ -36,5 +36,7 @@
 	insteadOf = "gist:"
 [url "ssh://git@github.com/"]
 	insteadOf = "https://github.com/"
+[url "https://github.com/zsh-users/prezto.git"]
+  insteadOf = https://github.com/sorin-ionescu/prezto.git
 [credential]
 	helper = osxkeychain

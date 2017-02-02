@@ -34,7 +34,6 @@ Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'chrisbra/csv.vim'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'Raimondi/delimitMate'
-Plug 'justinmk/vim-dirvish'
 Plug 'junegunn/vim-emoji'
 Plug 'tpope/vim-fugitive'
 Plug 'tommcdo/vim-lion'
@@ -229,6 +228,15 @@ let g:airline_symbols.paste = '∥'
 let g:airline_symbols.spell = 'Ꞩ'
 let g:airline_symbols.notexists = '∄'
 let g:airline_symbols.whitespace = 'Ξ'
+
+" powerline symbols
+let g:airline_left_sep = ''
+let g:airline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
+let g:airline_symbols.branch = ''
+let g:airline_symbols.readonly = ''
+let g:airline_symbols.linenr = ''
 
 " see https://github.com/vim-airline/vim-airline/blob/a2431f2adb23a003abdfe5294861bbd69de52e52/doc/airline.txt#L252
 let g:airline#parts#ffenc#skip_expected_string = 'utf-8[unix]'
@@ -475,9 +483,6 @@ if has("autocmd")
 
 		" quickfix full width bottom
 		au FileType qf wincmd J
-
-		" hide pyc files in dirvish
-		autocmd FileType dirvish silent keeppatterns g@\v/[^\/]+.pyc/?$@d
 	augroup END
 
 	augroup editing

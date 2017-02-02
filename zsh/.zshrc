@@ -4,7 +4,6 @@
 
 if [[ -f ~/.zplug/init.zsh ]]; then
 	source ~/.zplug/init.zsh
-	zplug load
 fi
 
 #
