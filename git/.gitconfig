@@ -4,11 +4,11 @@
 [apply]
 	whitespace = fix
 [core]
-	excludesfile = $HOME/.gitignore_global
 	autocrlf = input
 	whitespace = trailing-space,space-before-tab
 	safecrlf = true
 	trustctime = false
+	excludesfile = ~/.gitignore_global
 [push]
 	default = simple
 [diff]
