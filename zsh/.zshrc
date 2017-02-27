@@ -118,3 +118,33 @@ zstyle ':completion:*:*:kill:*' insert-ids single
 #         tmux attach-session -t "$ID" # if available attach to it
 #     fi
 # fi
+
+#
+# nvm
+#
+
+source "$HOME/.nvm/nvm.sh"
+
+# auto use .nvmrc
+autoload -U add-zsh-hook
+load-nvmrc() {
+  if [[ -f .nvmrc && -r .nvmrc ]]; then
+    nvm use
+  fi
+}
+add-zsh-hook chpwd load-nvmrc
+
+#
+# pyenv
+#
+
+export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+path=("$HOME/.pyenv/bin" $path)
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+
+#
+# rustup
+#
+
+path=("$HOME/.cargo/bin" $path)

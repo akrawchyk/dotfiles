@@ -30,7 +30,9 @@ Plug 'chriskempson/base16-vim'
 
 "------ tools {{{
 Plug 'tpope/vim-abolish'
+Plug 'w0rp/ale'
 Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
+Plug 'Chiel92/vim-autoformat'
 Plug 'chrisbra/csv.vim'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'Raimondi/delimitMate'
@@ -43,7 +45,7 @@ Plug 'tpope/vim-rsi'
 Plug 'mhinz/vim-signify'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'tpope/vim-surround'
-Plug 'scrooloose/syntastic'
+" Plug 'scrooloose/syntastic'
 Plug 'tomtom/tcomment_vim'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'tpope/vim-unimpaired'
@@ -60,8 +62,9 @@ Plug 'sukima/xmledit'
 Plug 'othree/javascript-libraries-syntax.vim'
 "------ }}}
 
-"------ sass {{{
+"------ css {{{
 Plug 'cakebaker/scss-syntax.vim'
+Plug 'kewah/vim-stylefmt'
 "------ }}}
 
 call plug#end()
@@ -242,6 +245,24 @@ let g:airline_symbols.linenr = ''
 let g:airline#parts#ffenc#skip_expected_string = 'utf-8[unix]'
 "------ }}}
 
+"------ ale {{{
+if emoji#available()
+	let g:ale_sign_error         = emoji#for('boom')
+	let g:ale_sign_warning       = emoji#for('bomb')
+elseif has('multi_byte') && &encoding ==# 'utf-8'
+	let g:ale_sign_error         = '✗'
+	let g:ale_sign_warning       = '⚠'
+else
+	let g:ale_sign_error         = 'E'
+	let g:ale_sign_warning       = 'W'
+endif
+"------ }}}
+
+"------ autoformatter {{{
+let g:formatters_javascript = ['standard']
+let g:formatter_yapf_style = 'pep8'
+"------ }}}
+
 "------ ctrlp.vim {{{
 let g:ctrlp_clear_cache_on_exit = 1
 let g:ctrlp_show_hidden = 1
@@ -273,29 +294,29 @@ let g:surround_indent = 1
 "------ }}}
 
 "------ Syntastic {{{
-let g:syntastic_auto_jump      = 0
-let g:syntastic_auto_loc_list  = 0
-let g:syntastic_check_on_open  = 1
-let g:syntastic_enable_signs   = 1
-if emoji#available()
-	let g:syntastic_error_symbol         = emoji#for('boom')
-	let g:syntastic_warning_symbol       = emoji#for('bomb')
-	let g:syntastic_style_error_symbol   = emoji#for('poop') + emoji#for('poop')
-	let g:syntastic_style_warning_symbol = emoji#for('poop')
-elseif has('multi_byte') && &encoding ==# 'utf-8'
-	let g:syntastic_error_symbol         = '✗'
-	let g:syntastic_warning_symbol       = '⚠'
-	let g:syntastic_style_error_symbol   = '»»'
-	let g:syntastic_style_warning_symbol = '»'
-else
-	let g:syntastic_error_symbol         = 'E'
-	let g:syntastic_warning_symbol       = 'W'
-	let g:syntastic_style_error_symbol   = 'S'
-	let g:syntastic_style_warning_symbol = 's'
-endif
-let g:syntastic_javascript_eslint_exec = 'eslint_d'
-let g:syntastic_javascript_checkers    = ['eslint']
-let g:syntastic_python_checkers        = ['flake8']
+" let g:syntastic_auto_jump      = 0
+" let g:syntastic_auto_loc_list  = 0
+" let g:syntastic_check_on_open  = 1
+" let g:syntastic_enable_signs   = 1
+" if emoji#available()
+" 	let g:syntastic_error_symbol         = emoji#for('boom')
+" 	let g:syntastic_warning_symbol       = emoji#for('bomb')
+" 	let g:syntastic_style_error_symbol   = emoji#for('poop') + emoji#for('poop')
+" 	let g:syntastic_style_warning_symbol = emoji#for('poop')
+" elseif has('multi_byte') && &encoding ==# 'utf-8'
+" 	let g:syntastic_error_symbol         = '✗'
+" 	let g:syntastic_warning_symbol       = '⚠'
+" 	let g:syntastic_style_error_symbol   = '»»'
+" 	let g:syntastic_style_warning_symbol = '»'
+" else
+" 	let g:syntastic_error_symbol         = 'E'
+" 	let g:syntastic_warning_symbol       = 'W'
+" 	let g:syntastic_style_error_symbol   = 'S'
+" 	let g:syntastic_style_warning_symbol = 's'
+" endif
+" let g:syntastic_javascript_eslint_exec = 'eslint_d'
+" let g:syntastic_javascript_checkers    = ['eslint']
+" let g:syntastic_python_checkers        = ['flake8']
 "------- }}}
 
 "------ UltiSnips {{{
@@ -330,7 +351,7 @@ inoremap jk <Esc>
 
 " make undo and yank consistent
 nnoremap U <C-r>
-map Y y$
+noremap Y y$
 inoremap <C-U> <C-G>u<C-U>
 
 " easier split navigating
@@ -390,9 +411,12 @@ nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 " bind \ (backward slash) to grep shortcut
 command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
 
-" move forward and backward in the quickfix list
-nmap <silent> <C-N> :cn<CR>zv
+" move forward and backward (fixme) in the quickfix list
+nnoremap <silent> <C-N> :cn<CR>zv
 " nmap <silent> <C-P> :cp<CR>zv
+
+" autoformat file
+noremap <F3> :Autoformat<CR>
 
 
 "------ leaders {{{
@@ -402,24 +426,24 @@ let maplocalleader='\'
 " Some helpers to edit mode
 " http://vimcasts.org/e/14
 cnoremap %% <C-R>=expand('%:h').'/'<CR>
-map <leader>ew :e %%
-map <leader>es :sp %%
-map <leader>ev :vsp %%
-map <leader>et :tabe %%
+noremap <leader>ew :e %%
+noremap <leader>es :sp %%
+noremap <leader>ev :vsp %%
+noremap <leader>et :tabe %%
 
 " Auto-indent whole file
-nmap <leader>= gg=G``
-map <silent><leader>=f gg=G`` :delmarks z<CR>:echo "Reformatted."<CR>
+nnoremap <leader>= gg=G``
+noremap <silent><leader>=f gg=G`` :delmarks z<CR>:echo "Reformatted."<CR>
 
 " autoindent pasted blocks
 nnoremap <leader>[p p`[v`]=
 nnoremap <leader>]p P`]v`[=
 
 " clean trailing whitespace
-map <silent><leader>\ :%s/\s\+$//<CR>:let @/=''<CR>
+noremap <silent><leader>\ :%s/\s\+$//<CR>:let @/=''<CR>
 
 " toggle highlight search
-nmap <silent><leader>/ :set hlsearch! hlsearch?<CR>
+nnoremap <silent><leader>/ :set hlsearch! hlsearch?<CR>
 
 " reselect pasted text
 nnoremap <leader>v V`]
