@@ -3,7 +3,7 @@
 "
 
 if filewritable('.') && !filewritable('~/.vim/tmp')
-  silent execute '!mkdir $HOME/.vim/tmp'
+	silent execute '!mkdir -p $HOME/.vim/tmp'
 endif
 
 
@@ -246,21 +246,25 @@ let g:airline#parts#ffenc#skip_expected_string = 'utf-8[unix]'
 "------ }}}
 
 "------ ale {{{
+let g:ale_javascript_eslint_use_global = 1
+let g:ale_javascript_standard_use_global = 1
+" let g:ale_linters = {
+" 			\ 'javascript': ['eslint']
+" 			\}
 if emoji#available()
-	let g:ale_sign_error         = emoji#for('boom')
-	let g:ale_sign_warning       = emoji#for('bomb')
+	let g:ale_sign_error   = emoji#for('boom')
+	let g:ale_sign_warning = emoji#for('bomb')
 elseif has('multi_byte') && &encoding ==# 'utf-8'
-	let g:ale_sign_error         = '✗'
-	let g:ale_sign_warning       = '⚠'
+	let g:ale_sign_error   = '✗'
+	let g:ale_sign_warning = '⚠'
 else
-	let g:ale_sign_error         = 'E'
-	let g:ale_sign_warning       = 'W'
+	let g:ale_sign_error   = 'E'
+	let g:ale_sign_warning = 'W'
 endif
 "------ }}}
 
-"------ autoformatter {{{
-let g:formatters_javascript = ['standard']
-let g:formatter_yapf_style = 'pep8'
+"------ autoformat {{{
+let g:autoformat_verbosemode = 1
 "------ }}}
 
 "------ ctrlp.vim {{{
