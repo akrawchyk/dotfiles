@@ -9,7 +9,7 @@ zplug "zsh-users/zsh-autosuggestions"
 zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-history-substring-search"
 zplug "modules/git", from:prezto
-zplug "frmendes/geometry", as:theme
+zplug "nojhan/liquidprompt"
 zplug "unixorn/tumult.plugin.zsh"
 zplug "supercrabtree/k"
 
