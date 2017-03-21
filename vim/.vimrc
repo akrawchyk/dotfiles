@@ -248,15 +248,15 @@ let g:airline#parts#ffenc#skip_expected_string = 'utf-8[unix]'
 "------ ale {{{
 let g:ale_javascript_eslint_use_global = 1
 let g:ale_javascript_standard_use_global = 1
-" let g:ale_linters = {
-" 			\ 'javascript': ['eslint']
-" 			\}
+let g:ale_linters = {
+			\ 'javascript': ['eslint']
+			\}
 if emoji#available()
 	let g:ale_sign_error   = emoji#for('boom')
 	let g:ale_sign_warning = emoji#for('bomb')
 elseif has('multi_byte') && &encoding ==# 'utf-8'
-	let g:ale_sign_error   = '✗'
-	let g:ale_sign_warning = '⚠'
+	let g:ale_sign_error   = '‼'
+	let g:ale_sign_warning = '!'
 else
 	let g:ale_sign_error   = 'E'
 	let g:ale_sign_warning = 'W'
