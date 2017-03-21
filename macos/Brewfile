@@ -1,7 +1,10 @@
+awscli
+chromedriver
 cmake
 cookiecutter
 coreutils
 fasd
+forego
 git
 git-extras
 gnu-tar
@@ -13,6 +16,7 @@ mercurial
 node
 nvm
 openssl
+phantomjs
 postgresql
 pyenv
 pyenv-virtualenv
