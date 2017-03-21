@@ -38,6 +38,12 @@ stow --target=$HOME -S js
 * Generating SSH Keys
 
 ```
+$ ssh-keygen -o -a 100 -t ed25519
+```
+
+old:
+
+```
 $ ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa_<usage>_$(date +%Y-%m-%d) -C "<usage> key for <owner>"
 ```
 
