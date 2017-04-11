@@ -324,6 +324,7 @@ let g:surround_indent = 1
 "------- }}}
 
 "------ UltiSnips {{{
+let g:UltiSnipsSnippetsDir         = '~/.vim/UltiSnips'
 let g:UltiSnipsExpandTrigger       = '<Tab>'
 let g:UltiSnipsJumpForwardTrigger  = '<C-j>'
 let g:UltiSnipsJumpBackwardTrigger = '<C-k>'
@@ -493,7 +494,7 @@ if has("autocmd")
 
 		" set custom indentation
 		au FileType html,htmldjango,jinja,css,scss setlocal sts=4 sw=4 et
-		au FileType javascript,json,yaml setlocal sts=2 sw=2 et
+		au FileType javascript,json,yaml,vue setlocal sts=2 sw=2 et
 		au FileType htmldjango set filetype=htmldjango.html
 
 		" set custom filetypes for syntax and snippets
