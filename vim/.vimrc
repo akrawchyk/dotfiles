@@ -297,32 +297,6 @@ let g:mta_filetypes = {
 let g:surround_indent = 1
 "------ }}}
 
-"------ Syntastic {{{
-" let g:syntastic_auto_jump      = 0
-" let g:syntastic_auto_loc_list  = 0
-" let g:syntastic_check_on_open  = 1
-" let g:syntastic_enable_signs   = 1
-" if emoji#available()
-" 	let g:syntastic_error_symbol         = emoji#for('boom')
-" 	let g:syntastic_warning_symbol       = emoji#for('bomb')
-" 	let g:syntastic_style_error_symbol   = emoji#for('poop') + emoji#for('poop')
-" 	let g:syntastic_style_warning_symbol = emoji#for('poop')
-" elseif has('multi_byte') && &encoding ==# 'utf-8'
-" 	let g:syntastic_error_symbol         = '✗'
-" 	let g:syntastic_warning_symbol       = '⚠'
-" 	let g:syntastic_style_error_symbol   = '»»'
-" 	let g:syntastic_style_warning_symbol = '»'
-" else
-" 	let g:syntastic_error_symbol         = 'E'
-" 	let g:syntastic_warning_symbol       = 'W'
-" 	let g:syntastic_style_error_symbol   = 'S'
-" 	let g:syntastic_style_warning_symbol = 's'
-" endif
-" let g:syntastic_javascript_eslint_exec = 'eslint_d'
-" let g:syntastic_javascript_checkers    = ['eslint']
-" let g:syntastic_python_checkers        = ['flake8']
-"------- }}}
-
 "------ UltiSnips {{{
 let g:UltiSnipsSnippetsDir         = '~/.vim/UltiSnips'
 let g:UltiSnipsExpandTrigger       = '<Tab>'
