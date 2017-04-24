@@ -1,6 +1,3 @@
-# use zsh-users prezto fork
-export _ZPLUG_PREZTO="zsh-users/prezto"
-
 zplug "zplug/zplug", hook-build:"zplug --self-manage"
 
 zplug "~/.zsh", from:local, use:'aliases.zsh'
