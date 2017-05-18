@@ -5,3 +5,8 @@ Desktop.ini
 Thumbs.db
 .Spotlight-V100
 .Trashes
+
+# vim
+vim/.vim/autoload/plug.vim
+vim/.vim/plugged/
+vim/.vim/tmp/
