@@ -45,7 +45,7 @@ Plug 'tpope/vim-rsi'
 Plug 'mhinz/vim-signify'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'tpope/vim-surround'
-" Plug 'scrooloose/syntastic'
+Plug 'majutsushi/tagbar'
 Plug 'tomtom/tcomment_vim'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'tpope/vim-unimpaired'
@@ -446,6 +446,9 @@ noremap <leader>tR :YcmCompleter RefactorRename<SPACE>
 
 " search for arbitrary input
 nnoremap \ :Ag<SPACE>
+
+" toggle tagbar
+nnoremap <leader>t :TagbarToggle<CR>
 "------ }}}
 "---- }}}
 
