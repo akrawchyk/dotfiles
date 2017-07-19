@@ -28,6 +28,7 @@ cdpath=(
 # Set the list of directories that Zsh searches for programs.
 path=(
   /usr/local/{bin,sbin}
+  $HOME/bin
   $path
 )
 
@@ -45,3 +46,27 @@ export LESS='-F -g -i -M -R -S -w -X -z-4'
 if (( $#commands[(i)lesspipe(|.sh)] )); then
   export LESSOPEN="| /usr/bin/env $commands[(i)lesspipe(|.sh)] %s 2>&-"
 fi
+
+#
+# qt5 https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit#homebrew
+#
+
+export PATH="$(brew --prefix qt@5.5)/bin:$PATH"
+
+#
+# mysql@5.6
+#
+
+export PATH="/usr/local/opt/mysql@5.6/bin:$PATH"
+
+#
+# nvm
+#
+
+export NVM_DIR="$HOME/.nvm"
+
+#
+# android
+#
+
+export ANDROID_SDK_ROOT=/usr/local/share/android-sdk

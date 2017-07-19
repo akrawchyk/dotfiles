@@ -32,10 +32,10 @@ Plug 'chriskempson/base16-vim'
 Plug 'tpope/vim-abolish'
 Plug 'w0rp/ale'
 Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
-Plug 'Chiel92/vim-autoformat'
 Plug 'chrisbra/csv.vim'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'Raimondi/delimitMate'
+Plug 'editorconfig/editorconfig-vim'
 Plug 'junegunn/vim-emoji'
 Plug 'tpope/vim-fugitive'
 Plug 'tommcdo/vim-lion'
@@ -62,9 +62,10 @@ Plug 'sukima/xmledit'
 Plug 'othree/javascript-libraries-syntax.vim'
 "------ }}}
 
-"------ css {{{
-Plug 'cakebaker/scss-syntax.vim'
-Plug 'kewah/vim-stylefmt'
+"------ ruby {{{
+Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-rails'
+Plug 'vim-ruby/vim-ruby'
 "------ }}}
 
 call plug#end()
@@ -243,14 +244,27 @@ let g:airline_symbols.linenr = ''
 
 " see https://github.com/vim-airline/vim-airline/blob/a2431f2adb23a003abdfe5294861bbd69de52e52/doc/airline.txt#L252
 let g:airline#parts#ffenc#skip_expected_string = 'utf-8[unix]'
+
+" see https://github.com/w0rp/ale#5iv-how-can-i-show-errors-or-warnings-in-my-statusline
+let g:airline#extensions#ale#enabled = 1
 "------ }}}
 
 "------ ale {{{
-let g:ale_javascript_eslint_use_global = 1
-let g:ale_javascript_standard_use_global = 1
+let g:ale_open_list = 0
 let g:ale_linters = {
 			\ 'javascript': ['eslint']
 			\}
+let g:ale_fixers = {
+			\ 'javascript': ['prettier', 'eslint'],
+			\ 'css': ['prettier'],
+			\ 'scss': ['prettier'],
+			\ 'ruby': ['rubocop']
+			\}
+let g:ale_javascript_eslint_use_global = 1
+let g:ale_javascript_prettier_use_global = 1
+" let g:ale_javascript_prettier_options = '--config ~/.prettierrc'
+let g:ale_javascript_prettier_options = '--single-quote --no-semi'
+
 if emoji#available()
 	let g:ale_sign_error   = emoji#for('boom')
 	let g:ale_sign_warning = emoji#for('bomb')
@@ -261,10 +275,6 @@ else
 	let g:ale_sign_error   = 'E'
 	let g:ale_sign_warning = 'W'
 endif
-"------ }}}
-
-"------ autoformat {{{
-let g:autoformat_verbosemode = 1
 "------ }}}
 
 "------ ctrlp.vim {{{
@@ -280,8 +290,13 @@ endif
 let g:delimitMate_expand_cr = 1
 "------ }}}
 
+"------ editorconfig {{{
+" https://github.com/editorconfig/editorconfig-vim#recommended-options
+let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
+"------ }}}
+
 "------ javascript-libraries-syntax {{{
-let g:used_javascript_libs = 'jquery,underscore,backbone'
+let g:used_javascript_libs = 'jquery,underscore,angularjs,angularuirouter'
 "------ }}}
 
 "------ MatchTagAlways {{{
@@ -394,8 +409,8 @@ command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
 nnoremap <silent> <C-N> :cn<CR>zv
 " nmap <silent> <C-P> :cp<CR>zv
 
-" autoformat file
-noremap <F3> :Autoformat<CR>
+" fixing problems with ALE
+nmap <F8> <Plug>(ale_fix)
 
 
 "------ leaders {{{
@@ -469,17 +484,12 @@ if has("autocmd")
 		" set xml formatting command to xmllint
 		au FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
 
-		" set custom indentation
-		au FileType html,htmldjango,jinja,css,scss setlocal sts=4 sw=4 et
-		au FileType javascript,json,yaml,vue setlocal sts=2 sw=2 et
-		au FileType htmldjango set filetype=htmldjango.html
-
 		" set custom filetypes for syntax and snippets
-		au BufRead,BufNewFile *.scss set filetype=scss.css
-		au BufRead,BufNewFile *.jsm set filetype=javascript
+		" au BufRead,BufNewFile *.scss set filetype=scss.css
+		" au BufRead,BufNewFile *.jsm set filetype=javascript
 
 		" set tab completion on css-classes
-		au FileType scss,css,html setlocal iskeyword+=-
+		au FileType scss,css,html,haml setlocal iskeyword+=-
 
 		" delimitmate custom matches
 		au FileType vim,html let b:delimitMate_matchpairs = "(:),[:],{:},<:>"
@@ -489,6 +499,9 @@ if has("autocmd")
 
 		" quickfix full width bottom
 		au FileType qf wincmd J
+
+		" https://github.com/vim-ruby/vim-ruby/wiki/VimRubySupport#compiler-plugins
+		au FileType ruby compiler ruby
 	augroup END
 
 	augroup editing
@@ -529,7 +542,7 @@ let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 " set t_8b=[48;2;%lu;%lu;%lum
 
 if !exists('g:colors_name') || g:colors_name != 'base16-eighties'
-	" let base16colorspace=256
+	let base16colorspace=256
 	colorscheme base16-eighties
 endif
 
@@ -537,8 +550,6 @@ let &colorcolumn=80
 
 highlight ColorColumn ctermbg=236 guibg=gray18
 highlight ExtraWhitespace ctermbg=196 guibg=red
-highlight SyntasticErrorSign ctermbg=09 ctermfg=196
-highlight SyntasticWarningSign ctermbg=03 ctermfg=202
-highlight SyntasticStyleErrorSign ctermbg=19 ctermfg=246
-highlight SyntasticStyleWarningSign ctermbg=19 ctermfg=240
+highlight ALEErrorSign ctermbg=09 ctermfg=196
+highlight ALEWarningSign ctermbg=03 ctermfg=202
 "---- }}}
