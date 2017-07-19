@@ -123,7 +123,7 @@ fi
 # nvm
 #
 
-source "$HOME/.nvm/nvm.sh"
+source "$NVM_DIR/nvm.sh"
 
 # auto use .nvmrc
 autoload -U add-zsh-hook
@@ -135,16 +135,28 @@ load-nvmrc() {
 add-zsh-hook chpwd load-nvmrc
 
 #
+# chruby
+#
+# TODO
+
+#
 # pyenv
 #
 
-export PYENV_VIRTUALENV_DISABLE_PROMPT=1
-path=("$HOME/.pyenv/bin" $path)
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+# export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+# path=("$HOME/.pyenv/bin" $path)
+# eval "$(pyenv init -)"
+# eval "$(pyenv virtualenv-init -)"
 
 #
 # rustup
 #
 
 path=("$HOME/.cargo/bin" $path)
+
+#
+# base16-shell
+#
+
+BASE16_SHELL=$HOME/.config/base16-shell/
+[ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
