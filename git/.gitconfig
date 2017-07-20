@@ -1,5 +1,5 @@
 [user]
-	email = akrawchyk@gmail.com
+	email = akrawchyk@optoro.com
 	name = Andrew Krawchyk
 [apply]
 	whitespace = fix
@@ -10,7 +10,7 @@
 	trustctime = false
 	excludesfile = ~/.gitignore_global
 [push]
-	default = simple
+	default = current
 [diff]
 	renames = copies
 	tool = vimdiff
@@ -28,13 +28,17 @@
 	pushInsteadOf = "git://github.com/"
 [url "git://github.com/"]
 	insteadOf = "github:"
+[url "ssh://git@github.com"]
+	insteadOf = "https://github.com/"
 [url "git@gist.github.com:"]
 	insteadOf = "gst:"
 	pushInsteadOf = "gist:"
 	pushInsteadOf = "git://gist.github.com/"
 [url "git://gist.github.com/"]
 	insteadOf = "gist:"
-[url "ssh://git@github.com/"]
-	insteadOf = "https://github.com/"
 [credential]
 	helper = osxkeychain
+[color "diff"]
+	whitespace = red reverse
+[color]
+	ui = true
