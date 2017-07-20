@@ -2,10 +2,10 @@
 " Options are organized similarly to the :options command
 "
 
+" create expected directories
 if filewritable('.') && !filewritable('~/.vim/tmp')
 	silent execute '!mkdir -p $HOME/.vim/tmp'
 endif
-
 
 "--- important {{{
 set nocompatible
@@ -18,9 +18,7 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 	au VimEnter * PlugInstall
 endif
 
-if !exists('g:loaded_matchit')
-	runtime macros/matchit.vim
-endif
+packadd! matchit
 
 call plug#begin()
 
@@ -64,7 +62,7 @@ Plug 'othree/javascript-libraries-syntax.vim'
 
 "------ ruby {{{
 Plug 'tpope/vim-endwise'
-Plug 'tpope/vim-rails'
+" Plug 'tpope/vim-rails'
 Plug 'vim-ruby/vim-ruby'
 "------ }}}
 
@@ -301,10 +299,10 @@ let g:used_javascript_libs = 'jquery,underscore,angularjs,angularuirouter'
 
 "------ MatchTagAlways {{{
 let g:mta_filetypes = {
-			\ 'html'            : 1,
-			\ 'xhtml'           : 1,
-			\ 'xml'             : 1,
-			\ 'jinja'           : 1
+			\ 'html': 1,
+			\ 'xhtml': 1,
+			\ 'xml': 1,
+			\ 'jinja': 1
 			\}
 "------ }}}
 
@@ -475,7 +473,6 @@ if has("autocmd")
 
 		" autosource vimrc on write
 		au BufWritePost .vimrc source $MYVIMRC
-
 	augroup END
 
 	augroup filetypes
@@ -483,10 +480,6 @@ if has("autocmd")
 
 		" set xml formatting command to xmllint
 		au FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
-
-		" set custom filetypes for syntax and snippets
-		" au BufRead,BufNewFile *.scss set filetype=scss.css
-		" au BufRead,BufNewFile *.jsm set filetype=javascript
 
 		" set tab completion on css-classes
 		au FileType scss,css,html,haml setlocal iskeyword+=-
@@ -546,9 +539,9 @@ if !exists('g:colors_name') || g:colors_name != 'base16-eighties'
 	colorscheme base16-eighties
 endif
 
-let &colorcolumn=80
+" let &colorcolumn=80
 
-highlight ColorColumn ctermbg=236 guibg=gray18
+" highlight ColorColumn ctermbg=236 guibg=gray18
 highlight ExtraWhitespace ctermbg=196 guibg=red
 highlight ALEErrorSign ctermbg=09 ctermfg=196
 highlight ALEWarningSign ctermbg=03 ctermfg=202
