@@ -35,13 +35,6 @@ setopt HIST_VERIFY               # Do not execute immediately upon history expan
 setopt HIST_BEEP                 # Beep when accessing non-existent history.
 
 #
-# History substring search
-#
-
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
-
-#
 # Directory
 #
 
@@ -160,3 +153,16 @@ path=("$HOME/.cargo/bin" $path)
 
 BASE16_SHELL=$HOME/.config/base16-shell/
 [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
+
+#
+# spaceship
+#
+
+spaceship_vi_mode_disable
+
+#
+# History substring search
+#
+
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down

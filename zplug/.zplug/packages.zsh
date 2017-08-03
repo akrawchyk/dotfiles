@@ -9,7 +9,8 @@ zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-history-substring-search"
 zplug "modules/git", from:prezto
 zplug "modules/ruby", from:prezto
-zplug "nojhan/liquidprompt"
+# zplug "nojhan/liquidprompt"
+zplug "denysdovhan/spaceship-zsh-theme", use:spaceship.zsh, as:theme
 zplug "unixorn/tumult.plugin.zsh"
 zplug "supercrabtree/k"
 

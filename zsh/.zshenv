@@ -9,7 +9,7 @@ export LESS='-F -g -i -M -R -S -w -X -z-4'
 
 # disable analytics
 if (( $+commands[brew] )); then
-	export HOMEBREW_NO_ANALYTICS=1
+  export HOMEBREW_NO_ANALYTICS=1
 fi
 
 #
@@ -57,7 +57,7 @@ export PATH="$(brew --prefix qt@5.5)/bin:$PATH"
 # mysql@5.6
 #
 
-export PATH="/usr/local/opt/mysql@5.6/bin:$PATH"
+export PATH="$(brew --prefix mysql@5.6)/bin:$PATH"
 
 #
 # nvm
@@ -70,3 +70,17 @@ export NVM_DIR="$HOME/.nvm"
 #
 
 export ANDROID_SDK_ROOT=/usr/local/share/android-sdk
+
+#
+# spaceship
+#
+
+export SPACESHIP_PROMPT_PREFIXES_SHOW=false
+export SPACESHIP_DOCKER_SHOW=false
+export SPACESHIP_PACKAGE_SHOW=false
+
+#
+# zsh-autosuggestions
+#
+
+export ZSH_AUTOSUGGEST_USE_ASYNC=true

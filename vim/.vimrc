@@ -4,7 +4,7 @@
 
 " create expected directories
 if filewritable('.') && !filewritable('~/.vim/tmp')
-	silent execute '!mkdir -p $HOME/.vim/tmp'
+  silent execute '!mkdir -p $HOME/.vim/tmp'
 endif
 
 "--- important {{{
@@ -13,9 +13,9 @@ set nocompatible
 
 "---- plugins {{{
 if empty(glob('~/.vim/autoload/plug.vim'))
-	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-				\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-	au VimEnter * PlugInstall
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  au VimEnter * PlugInstall
 endif
 
 packadd! matchit
@@ -75,7 +75,7 @@ set ignorecase " ignore case in search patterns
 set smartcase " override the 'ignorecase' option if the search pattern contains uppercase characters
 set wrapscan " search commands wrap around the end of the buffer
 if executable('ag')
-	set grepprg=ag\ --nogroup\ --nocolor
+  set grepprg=ag\ --nogroup\ --nocolor
 endif
 "--- }}}
 
@@ -87,10 +87,10 @@ set display=lastline " include lastline to show the last line even if it doesn't
 set lazyredraw " don't redraw while executing macros
 set list " show <Tab> as ^I and end-of-line as $
 if has('multi_byte') && &encoding ==# 'utf-8'
-	" list of strings used for list mode
-	let &listchars = 'tab:˒ ,trail:·,extends:…,precedes:…,nbsp:+'
+  " list of strings used for list mode
+  let &listchars = 'tab:˒ ,trail:·,extends:…,precedes:…,nbsp:+'
 else
-	let &listchars = 'tab:> ,extends:>,precedes:<,nbsp:.'
+  let &listchars = 'tab:> ,extends:>,precedes:<,nbsp:.'
 endif
 set nowrap " long lines wrap
 "--- }}}
@@ -100,7 +100,7 @@ set background=dark
 set cursorline " highlight the screen line of the cursor
 set synmaxcol=200 " maximum column to look for syntax items
 if has('termguicolors')
-	set termguicolors
+  set termguicolors
 endif
 "--- }}}
 
@@ -209,7 +209,7 @@ let g:airline_theme     = 'base16color'
 
 " see https://github.com/vim-airline/vim-airline/blob/a2431f2adb23a003abdfe5294861bbd69de52e52/doc/airline.txt#L176
 if !exists('g:airline_symbols')
-	let g:airline_symbols = {}
+  let g:airline_symbols = {}
 endif
 
 " unicode symbols
@@ -250,37 +250,44 @@ let g:airline#extensions#ale#enabled = 1
 "------ ale {{{
 let g:ale_open_list = 0
 let g:ale_linters = {
-			\ 'javascript': ['eslint']
-			\}
+      \ 'javascript': ['eslint']
+      \}
 let g:ale_fixers = {
-			\ 'javascript': ['prettier', 'eslint'],
-			\ 'css': ['prettier'],
-			\ 'scss': ['prettier'],
-			\ 'ruby': ['rubocop']
-			\}
+      \ 'javascript': ['prettier', 'eslint'],
+      \ 'css': ['prettier'],
+      \ 'scss': ['prettier'],
+      \ 'ruby': ['rubocop']
+      \}
 let g:ale_javascript_eslint_use_global = 1
 let g:ale_javascript_prettier_use_global = 1
 " let g:ale_javascript_prettier_options = '--config ~/.prettierrc'
 let g:ale_javascript_prettier_options = '--single-quote --no-semi'
 
 if emoji#available()
-	let g:ale_sign_error   = emoji#for('boom')
-	let g:ale_sign_warning = emoji#for('bomb')
+  let g:ale_sign_error   = emoji#for('boom')
+  let g:ale_sign_warning = emoji#for('bomb')
 elseif has('multi_byte') && &encoding ==# 'utf-8'
-	let g:ale_sign_error   = '‼'
-	let g:ale_sign_warning = '!'
+  let g:ale_sign_error   = '‼'
+  let g:ale_sign_warning = '!'
 else
-	let g:ale_sign_error   = 'E'
-	let g:ale_sign_warning = 'W'
+  let g:ale_sign_error   = 'E'
+  let g:ale_sign_warning = 'W'
 endif
 "------ }}}
 
 "------ ctrlp.vim {{{
 let g:ctrlp_clear_cache_on_exit = 1
 let g:ctrlp_show_hidden = 1
+let g:ctrlp_user_command = {
+      \ 'types': {
+      \ 1: ['.git', 'cd %s && git ls-files --others --cached --exclude-standard'],
+      \ 2: ['.hg', 'hg --cwd %s locate -I .'],
+      \ },
+      \ 'fallback': 'find %s -type f'
+      \ }
 if executable('ag')
-	let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-	let g:ctrlp_use_caching = 0
+  let g:ctrlp_user_command['fallback'] = 'ag %s -l --nocolor -g ""'
+  let g:ctrlp_use_caching = 0
 endif
 "------ }}}
 
@@ -299,11 +306,11 @@ let g:used_javascript_libs = 'jquery,underscore,angularjs,angularuirouter'
 
 "------ MatchTagAlways {{{
 let g:mta_filetypes = {
-			\ 'html': 1,
-			\ 'xhtml': 1,
-			\ 'xml': 1,
-			\ 'jinja': 1
-			\}
+      \ 'html': 1,
+      \ 'xhtml': 1,
+      \ 'xml': 1,
+      \ 'jinja': 1
+      \}
 "------ }}}
 
 "------ surround {{{
@@ -324,7 +331,7 @@ let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_seed_identifiers_with_syntax        = 1
 let g:ycm_complete_in_comments                = 1
 let g:ycm_complete_in_strings                 = 1
-let g:ycm_path_to_python_interpreter          = '/usr/local/bin/python'
+" let g:ycm_path_to_python_interpreter          = '/usr/local/bin/python'
 "------ }}}
 
 "------ xmledit {{{
@@ -468,60 +475,60 @@ nnoremap <leader>t :TagbarToggle<CR>
 
 "---- autocmds {{{
 if has("autocmd")
-	augroup vim
-		au!
+  augroup vim
+    au!
 
-		" autosource vimrc on write
-		au BufWritePost .vimrc source $MYVIMRC
-	augroup END
+    " autosource vimrc on write
+    au BufWritePost .vimrc source $MYVIMRC
+  augroup END
 
-	augroup filetypes
-		au!
+  augroup filetypes
+    au!
 
-		" set xml formatting command to xmllint
-		au FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
+    " set xml formatting command to xmllint
+    au FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
 
-		" set tab completion on css-classes
-		au FileType scss,css,html,haml setlocal iskeyword+=-
+    " set tab completion on css-classes
+    au FileType scss,css,html,haml setlocal iskeyword+=-
 
-		" delimitmate custom matches
-		au FileType vim,html let b:delimitMate_matchpairs = "(:),[:],{:},<:>"
+    " delimitmate custom matches
+    au FileType vim,html let b:delimitMate_matchpairs = "(:),[:],{:},<:>"
 
-		" custom matchit pairs b:match_words
-		au FileType python let b:match_words = '\<if\>:\<elif\>:\<else\>'
+    " custom matchit pairs b:match_words
+    au FileType python let b:match_words = '\<if\>:\<elif\>:\<else\>'
 
-		" quickfix full width bottom
-		au FileType qf wincmd J
+    " quickfix full width bottom
+    au FileType qf wincmd J
 
-		" https://github.com/vim-ruby/vim-ruby/wiki/VimRubySupport#compiler-plugins
-		au FileType ruby compiler ruby
-	augroup END
+    " https://github.com/vim-ruby/vim-ruby/wiki/VimRubySupport#compiler-plugins
+    au FileType ruby compiler ruby
+  augroup END
 
-	augroup editing
-		au!
+  augroup editing
+    au!
 
-		" exit paste mode when leaving insert mode
-		au InsertLeave * set nopaste
+    " exit paste mode when leaving insert mode
+    au InsertLeave * set nopaste
 
-		" only show linenumbers on current buffer
-		au BufEnter * set number
-		au BufLeave * set nonumber
+    " only show linenumbers on current buffer
+    au BufEnter * set number
+    au BufLeave * set nonumber
 
-		" show extra whitespace as red
-		au BufWinEnter * match ExtraWhitespace /\s\+$/
-		au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-		au InsertLeave * match ExtraWhitespace /\s\+$/
-		au BufWinLeave * call clearmatches()
+    " show extra whitespace as red
+    au BufWinEnter * match ExtraWhitespace /\s\+$/
+    au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+    au InsertLeave * match ExtraWhitespace /\s\+$/
+    au BufWinLeave * call clearmatches()
 
-		" smart show cursorline
-		au WinEnter    * set cursorline
-		au WinLeave    * set nocursorline
-		au InsertEnter * set nocursorline
-		au InsertLeave * set cursorline
+    " smart show cursorline
+    au WinEnter    * set cursorline
+    au WinLeave    * set nocursorline
+    au InsertEnter * set nocursorline
+    au InsertLeave * set cursorline
 
-		" open quickfix after grep
-		au QuickFixCmdPost *grep* cwindow
-	augroup END
+    " open quickfix after grep
+    au QuickFixCmdPost *grep* cwindow
+  augroup END
 endif
 "---- }}}
 
@@ -535,8 +542,8 @@ let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 " set t_8b=[48;2;%lu;%lu;%lum
 
 if !exists('g:colors_name') || g:colors_name != 'base16-eighties'
-	let base16colorspace=256
-	colorscheme base16-eighties
+  let base16colorspace=256
+  colorscheme base16-eighties
 endif
 
 " let &colorcolumn=80
