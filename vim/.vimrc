@@ -28,6 +28,7 @@ Plug 'chriskempson/base16-vim'
 
 "------ tools {{{
 Plug 'tpope/vim-abolish'
+Plug 'mileszs/ack.vim'
 Plug 'w0rp/ale'
 Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'chrisbra/csv.vim'
@@ -204,6 +205,13 @@ set t_Co=256 " number of colors
 
 "---- plugin settings {{{
 
+"------ ack {{{
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep'
+endif
+cnoreabbrev Ack Ack!
+"------}}}
+
 "------ airline {{{
 let g:airline_theme     = 'base16color'
 
@@ -254,6 +262,7 @@ let g:ale_linters = {
       \}
 let g:ale_fixers = {
       \ 'javascript': ['prettier', 'eslint'],
+      \ 'typescript': ['prettier'],
       \ 'css': ['prettier'],
       \ 'scss': ['prettier'],
       \ 'ruby': ['rubocop']
@@ -298,6 +307,10 @@ let g:delimitMate_expand_cr = 1
 "------ editorconfig {{{
 " https://github.com/editorconfig/editorconfig-vim#recommended-options
 let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
+"------ }}}
+
+"------ fugitive {{{
+cnoreabbrev Ggrep Ggrep!
 "------ }}}
 
 "------ javascript-libraries-syntax {{{
@@ -401,14 +414,14 @@ xnoremap Q :norm @q<cr>
 noremap <S-l> gt
 noremap <S-h> gT
 
+" new tabs with shift+t
+nnoremap <S-t> :tabnew<CR>
+
 " jump to last edited file with BS
 nnoremap <BS> <C-^>
 
 " bind K to grep word under cursor
 nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
-
-" bind \ (backward slash) to grep shortcut
-command! -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
 
 " move forward and backward (fixme) in the quickfix list
 nnoremap <silent> <C-N> :cn<CR>zv
@@ -464,11 +477,12 @@ noremap <leader>td :YcmCompleter GoToDefinition<CR>
 noremap <leader>tr :YcmCompleter GoToReferences<CR>
 noremap <leader>tR :YcmCompleter RefactorRename<SPACE>
 
-" search for arbitrary input
-nnoremap \ :Ag<SPACE>
-
 " toggle tagbar
 nnoremap <leader>t :TagbarToggle<CR>
+
+" search
+nnoremap <Leader>a :Ack!<Space>
+nnoremap <Leader>g :Ggrep!<Space>
 "------ }}}
 "---- }}}
 
