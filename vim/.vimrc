@@ -61,6 +61,10 @@ Plug 'sukima/xmledit'
 Plug 'othree/javascript-libraries-syntax.vim'
 "------ }}}
 
+"------ typescript {{{
+Plug 'Quramy/tsuquyomi'
+"------ }}}
+
 "------ ruby {{{
 Plug 'tpope/vim-endwise'
 " Plug 'tpope/vim-rails'
@@ -258,7 +262,8 @@ let g:airline#extensions#ale#enabled = 1
 "------ ale {{{
 let g:ale_open_list = 0
 let g:ale_linters = {
-      \ 'javascript': ['eslint']
+      \ 'javascript': ['standard'],
+      \ 'typescript': ['']
       \}
 let g:ale_fixers = {
       \ 'javascript': ['prettier', 'eslint'],
@@ -270,7 +275,7 @@ let g:ale_fixers = {
 let g:ale_javascript_eslint_use_global = 1
 let g:ale_javascript_prettier_use_global = 1
 " let g:ale_javascript_prettier_options = '--config ~/.prettierrc'
-let g:ale_javascript_prettier_options = '--single-quote --no-semi'
+let g:ale_javascript_prettier_options = '--single-quote --no-semi --trailing-comma'
 
 if emoji#available()
   let g:ale_sign_error   = emoji#for('boom')
