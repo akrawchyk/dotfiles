@@ -66,6 +66,13 @@ export PATH="$(brew --prefix mysql@5.6)/bin:$PATH"
 export NVM_DIR="$HOME/.nvm"
 
 #
+# pyenv
+#
+
+export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+export PYENV_ROOT="$HOME/.pyenv"
+
+#
 # android
 #
 
