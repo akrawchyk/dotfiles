@@ -136,10 +136,9 @@ add-zsh-hook chpwd load-nvmrc
 # pyenv
 #
 
-# export PYENV_VIRTUALENV_DISABLE_PROMPT=1
-# path=("$HOME/.pyenv/bin" $path)
-# eval "$(pyenv init -)"
-# eval "$(pyenv virtualenv-init -)"
+path=("$PYENV_ROOT/bin" $path)
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
 
 #
 # rustup
