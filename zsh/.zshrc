@@ -7,6 +7,19 @@ if [[ -f ~/.zplug/init.zsh ]]; then
 fi
 
 #
+# Editor mode
+#
+
+bindkey -e
+
+#
+# History substring search
+#
+
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+
+#
 # Smart URLs
 #
 
@@ -101,7 +114,6 @@ zstyle ':completion:*:*:kill:*' menu yes select
 zstyle ':completion:*:*:kill:*' force-list always
 zstyle ':completion:*:*:kill:*' insert-ids single
 
-
 # Auto attach Tmux session or start one
 if [[ -z "$TMUX" ]] ;then
     ID="`tmux ls | grep -vm1 attached | cut -d: -f1`" # get the id of a deattached session
@@ -141,27 +153,9 @@ eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
 #
-# rustup
-#
-
-path=("$HOME/.cargo/bin" $path)
-
-#
 # base16-shell
 #
 
 BASE16_SHELL=$HOME/.config/base16-shell/
 [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
 
-#
-# spaceship
-#
-
-spaceship_vi_mode_disable
-
-#
-# History substring search
-#
-
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
