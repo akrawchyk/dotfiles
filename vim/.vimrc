@@ -34,11 +34,10 @@ Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'chrisbra/csv.vim'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'Raimondi/delimitMate'
+Plug 'rhysd/devdocs.vim'
 Plug 'junegunn/vim-easy-align'
 Plug 'editorconfig/editorconfig-vim'
-Plug 'junegunn/vim-emoji'
 Plug 'tpope/vim-fugitive'
-Plug 'Yggdroot/indentLine'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rsi'
@@ -46,17 +45,11 @@ Plug 'mhinz/vim-signify'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'tpope/vim-surround'
 Plug 'majutsushi/tagbar'
-Plug 'wellle/targets.vim'
 Plug 'tomtom/tcomment_vim'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-vinegar'
 Plug 'Valloric/YouCompleteMe', { 'do': 'chmod +x ./install.py; python ./install.py --tern-completer' }
-"------ }}}
-
-"------ html {{{
-Plug 'Valloric/MatchTagAlways'
-Plug 'sukima/xmledit'
 "------ }}}
 
 "------ javascript {{{
@@ -69,8 +62,7 @@ Plug 'Quramy/tsuquyomi'
 
 "------ ruby {{{
 Plug 'tpope/vim-endwise'
-" Plug 'tpope/vim-rails'
-Plug 'vim-ruby/vim-ruby'
+Plug 'tpope/vim-rails'
 "------ }}}
 
 call plug#end()
@@ -78,6 +70,7 @@ call plug#end()
 
 "--- moving around, searching and patterns {{{
 set incsearch " show match for partly typed search command
+set hlsearch " highlight search matches
 set ignorecase " ignore case in search patterns
 set smartcase " override the 'ignorecase' option if the search pattern contains uppercase characters
 set wrapscan " search commands wrap around the end of the buffer
@@ -276,13 +269,9 @@ let g:ale_fixers = {
       \}
 let g:ale_javascript_eslint_use_global = 1
 let g:ale_javascript_prettier_use_global = 1
-" let g:ale_javascript_prettier_options = '--config ~/.prettierrc'
 let g:ale_javascript_prettier_options = '--single-quote --no-semi --trailing-comma'
 
-if emoji#available()
-  let g:ale_sign_error   = emoji#for('boom')
-  let g:ale_sign_warning = emoji#for('bomb')
-elseif has('multi_byte') && &encoding ==# 'utf-8'
+if has('multi_byte') && &encoding ==# 'utf-8'
   let g:ale_sign_error   = '‼'
   let g:ale_sign_warning = '!'
 else
@@ -311,6 +300,13 @@ endif
 let g:delimitMate_expand_cr = 1
 "------ }}}
 
+"------ devdocs {{{
+let g:devdocs_filetype_map = {
+      \ 'ruby': 'rails',
+      \ 'javascript.jsx': 'react'
+      \ }
+"------ }}}
+
 "------ editorconfig {{{
 " https://github.com/editorconfig/editorconfig-vim#recommended-options
 let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
@@ -321,16 +317,7 @@ cnoreabbrev Ggrep Ggrep!
 "------ }}}
 
 "------ javascript-libraries-syntax {{{
-let g:used_javascript_libs = 'jquery,underscore,angularjs,angularuirouter'
-"------ }}}
-
-"------ MatchTagAlways {{{
-let g:mta_filetypes = {
-      \ 'html': 1,
-      \ 'xhtml': 1,
-      \ 'xml': 1,
-      \ 'jinja': 1
-      \}
+let g:used_javascript_libs = 'jquery,underscore,angularjs,angularuirouter,react,vue'
 "------ }}}
 
 "------ surround {{{
@@ -352,10 +339,6 @@ let g:ycm_seed_identifiers_with_syntax        = 1
 let g:ycm_complete_in_comments                = 1
 let g:ycm_complete_in_strings                 = 1
 " let g:ycm_path_to_python_interpreter          = '/usr/local/bin/python'
-"------ }}}
-
-"------ xmledit {{{
-let g:xmledit_enable_html = 1
 "------ }}}
 "---- }}}
 
@@ -437,6 +420,9 @@ nnoremap <silent> <C-N> :cn<CR>zv
 " fixing problems with ALE
 nmap <F8> <Plug>(ale_fix)
 
+" search devdocs.io instead of man
+nmap K <Plug>(devdocs-under-cursor)
+
 
 "------ leaders {{{
 let mapleader=','
@@ -513,7 +499,7 @@ if has("autocmd")
     au FileType scss,css,html,haml setlocal iskeyword+=-
 
     " delimitmate custom matches
-    au FileType vim,html let b:delimitMate_matchpairs = "(:),[:],{:},<:>"
+    au FileType vim,html,haml let b:delimitMate_matchpairs = "(:),[:],{:},<:>"
 
     " custom matchit pairs b:match_words
     au FileType python let b:match_words = '\<if\>:\<elif\>:\<else\>'
@@ -548,7 +534,7 @@ if has("autocmd")
     au InsertLeave * set cursorline
 
     " open quickfix after grep
-    au QuickFixCmdPost *grep* cwindow
+    " au QuickFixCmdPost *grep* cwindow
   augroup END
 endif
 "---- }}}
