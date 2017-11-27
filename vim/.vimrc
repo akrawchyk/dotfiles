@@ -1,4 +1,3 @@
-" Andrew Krawchyk
 " Options are organized similarly to the :options command
 "
 
@@ -44,11 +43,13 @@ Plug 'tpope/vim-rsi'
 Plug 'mhinz/vim-signify'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'tpope/vim-surround'
+Plug 'ervandew/supertab'
 Plug 'majutsushi/tagbar'
 Plug 'tomtom/tcomment_vim'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'tpope/vim-unimpaired'
-Plug 'tpope/vim-vinegar'
+" Plug 'tpope/vim-vinegar'
+Plug 'matthewd/vim-vinegar', { 'branch': 'netrw-plug' }
 Plug 'Valloric/YouCompleteMe', { 'do': 'chmod +x ./install.py; python ./install.py --tern-completer' }
 "------ }}}
 
@@ -97,7 +98,6 @@ set nowrap " long lines wrap
 
 "--- syntax, highlighting and spelling {{{
 set background=dark
-set cursorline " highlight the screen line of the cursor
 set synmaxcol=200 " maximum column to look for syntax items
 if has('termguicolors')
   set termguicolors
@@ -249,35 +249,19 @@ let g:airline_symbols.linenr = ''
 
 " see https://github.com/vim-airline/vim-airline/blob/a2431f2adb23a003abdfe5294861bbd69de52e52/doc/airline.txt#L252
 let g:airline#parts#ffenc#skip_expected_string = 'utf-8[unix]'
-
-" see https://github.com/w0rp/ale#5iv-how-can-i-show-errors-or-warnings-in-my-statusline
-let g:airline#extensions#ale#enabled = 1
 "------ }}}
 
 "------ ale {{{
 let g:ale_open_list = 0
-let g:ale_linters = {
-      \ 'javascript': ['standard'],
-      \ 'typescript': ['']
-      \}
 let g:ale_fixers = {
-      \ 'javascript': ['prettier', 'eslint'],
+      \ 'javascript': ['prettier'],
       \ 'typescript': ['prettier'],
       \ 'css': ['prettier'],
-      \ 'scss': ['prettier'],
-      \ 'ruby': ['rubocop']
+      \ 'scss': ['prettier']
       \}
 let g:ale_javascript_eslint_use_global = 1
 let g:ale_javascript_prettier_use_global = 1
-let g:ale_javascript_prettier_options = '--single-quote --no-semi --trailing-comma'
-
-if has('multi_byte') && &encoding ==# 'utf-8'
-  let g:ale_sign_error   = '‼'
-  let g:ale_sign_warning = '!'
-else
-  let g:ale_sign_error   = 'E'
-  let g:ale_sign_warning = 'W'
-endif
+let g:ale_javascript_prettier_options = '--single-quote --no-semi --trailing-comma --print-width 100'
 "------ }}}
 
 "------ ctrlp.vim {{{
@@ -292,7 +276,7 @@ let g:ctrlp_user_command = {
       \ }
 if executable('ag')
   let g:ctrlp_user_command['fallback'] = 'ag %s -l --nocolor -g ""'
-  let g:ctrlp_use_caching = 0
+  " let g:ctrlp_use_caching = 0
 endif
 "------ }}}
 
@@ -324,29 +308,33 @@ let g:used_javascript_libs = 'jquery,underscore,angularjs,angularuirouter,react,
 let g:surround_indent = 1
 "------ }}}
 
+"------ supertab {{{
+let g:SuperTabDefaultCompletionType = '<C-n>'
+"------ }}}
+
 "------ UltiSnips {{{
-let g:UltiSnipsSnippetsDir         = '~/.vim/UltiSnips'
-let g:UltiSnipsExpandTrigger       = '<Tab>'
-let g:UltiSnipsJumpForwardTrigger  = '<C-j>'
+let g:UltiSnipsSnippetsDir = '~/.vim/UltiSnips'
+let g:UltiSnipsExpandTrigger = '<C-j>'
+let g:UltiSnipsJumpForwardTrigger = '<C-j>'
 let g:UltiSnipsJumpBackwardTrigger = '<C-k>'
 "------ }}}
 
 "------ YouCompleteMe {{{
-let g:ycm_key_list_select_completion          = ['<C-n>']
-let g:ycm_key_list_previous_completion        = ['<C-p>']
+let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
 let g:ycm_collect_identifiers_from_tags_files = 1
-let g:ycm_seed_identifiers_with_syntax        = 1
-let g:ycm_complete_in_comments                = 1
-let g:ycm_complete_in_strings                 = 1
-" let g:ycm_path_to_python_interpreter          = '/usr/local/bin/python'
+let g:ycm_seed_identifiers_with_syntax = 1
+let g:ycm_complete_in_comments = 1
+let g:ycm_complete_in_strings = 1
+let g:ycm_python_binary_path = 'python3'
 "------ }}}
 "---- }}}
 
 
 "---- mappings {{{
 " up/down keys to be based on display lines, not physical lines
-map j gj
-map k gk
+noremap j gj
+noremap k gk
 
 " faster exit insert
 inoremap jk <Esc>
@@ -356,11 +344,15 @@ nnoremap U <C-r>
 noremap Y y$
 inoremap <C-U> <C-G>u<C-U>
 
+" easier open splits
+nnoremap <C-w>- <C-w>s
+nnoremap <C-w>\ <C-w>v
+
 " easier split navigating
-map <C-h> <C-w>h
-map <C-j> <C-w>j
-map <C-k> <C-w>k
-map <C-l> <C-w>l
+noremap <C-h> <C-w>h
+noremap <C-j> <C-w>j
+noremap <C-k> <C-w>k
+noremap <C-l> <C-w>l
 
 " commonly capitalized commands
 cnoremap W w
@@ -372,10 +364,10 @@ xnoremap > >gv
 xnoremap < <gv
 
 " write file without correct permissions when opened
-cmap w!! %!sudo tee > /dev/null %
+cnoremap w!! %!sudo tee > /dev/null %
 
 " insert the current directory into a command-line path
-cmap <C-p> <C-R>=expand("%:p:h") . "/"<CR>
+cnoremap <C-p> <C-R>=expand("%:p:h") . "/"<CR>
 
 " faster scrolling
 nnoremap <C-e> 5<C-e>
@@ -527,14 +519,8 @@ if has("autocmd")
     au InsertLeave * match ExtraWhitespace /\s\+$/
     au BufWinLeave * call clearmatches()
 
-    " smart show cursorline
-    au WinEnter    * set cursorline
-    au WinLeave    * set nocursorline
-    au InsertEnter * set nocursorline
-    au InsertLeave * set cursorline
-
     " open quickfix after grep
-    " au QuickFixCmdPost *grep* cwindow
+    au QuickFixCmdPost *grep* cwindow
   augroup END
 endif
 "---- }}}
@@ -553,10 +539,6 @@ if !exists('g:colors_name') || g:colors_name != 'base16-eighties'
   colorscheme base16-eighties
 endif
 
-" let &colorcolumn=80
-
 " highlight ColorColumn ctermbg=236 guibg=gray18
 highlight ExtraWhitespace ctermbg=196 guibg=red
-highlight ALEErrorSign ctermbg=09 ctermfg=196
-highlight ALEWarningSign ctermbg=03 ctermfg=202
 "---- }}}

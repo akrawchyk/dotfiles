@@ -115,9 +115,9 @@ zstyle ':completion:*:*:kill:*' force-list always
 zstyle ':completion:*:*:kill:*' insert-ids single
 
 # Auto attach Tmux session or start one
-if [[ -z "$TMUX" ]] ;then
+if [[ -z "$TMUX" ]]; then
     ID="`tmux ls | grep -vm1 attached | cut -d: -f1`" # get the id of a deattached session
-    if [[ -z "$ID" ]] ;then # if not available create a new one
+    if [[ -z "$ID" ]]; then # if not available create a new one
         tmux new-session
     else
         tmux attach-session -t "$ID" # if available attach to it
@@ -128,16 +128,18 @@ fi
 # nvm
 #
 
-source "$NVM_DIR/nvm.sh"
+if [[ -s $NVM_DIR/nvm.sh ]]; then
+  source "$NVM_DIR/nvm.sh"
 
-# auto use .nvmrc
-autoload -U add-zsh-hook
-load-nvmrc() {
-  if [[ -f .nvmrc && -r .nvmrc ]]; then
-    nvm use
-  fi
-}
-add-zsh-hook chpwd load-nvmrc
+  # auto use .nvmrc
+  autoload -U add-zsh-hook
+  load-nvmrc() {
+    if [[ -f .nvmrc && -r .nvmrc ]]; then
+      nvm use
+    fi
+  }
+  add-zsh-hook chpwd load-nvmrc
+fi
 
 #
 # chruby
@@ -148,9 +150,18 @@ add-zsh-hook chpwd load-nvmrc
 # pyenv
 #
 
-path=("$PYENV_ROOT/bin" $path)
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+if (( $+commands[pyenv] )); then
+  eval "$(pyenv init -)"
+  eval "$(pyenv virtualenv-init -)"
+fi
+
+#
+# jenv
+#
+
+if (( $+commands[jenv] )); then
+  eval "$(jenv init -)"
+fi
 
 #
 # base16-shell

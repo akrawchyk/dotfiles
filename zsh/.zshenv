@@ -51,26 +51,44 @@ fi
 # qt5 https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit#homebrew
 #
 
-export PATH="$(brew --prefix qt@5.5)/bin:$PATH"
+if (( $+commands[brew] )); then
+  path=("$(brew --prefix qt@5.5)/bin" $path)
+fi
 
 #
 # mysql@5.6
 #
 
-export PATH="$(brew --prefix mysql@5.6)/bin:$PATH"
+if (( $+commands[brew] )); then
+  path=("$(brew --prefix mysql@5.6)/bin" $path)
+fi
 
 #
 # nvm
 #
 
-export NVM_DIR="$HOME/.nvm"
+if (( $+commands[nvm] )); then
+  export NVM_DIR="$HOME/.nvm"
+fi
 
 #
 # pyenv
 #
 
-export PYENV_VIRTUALENV_DISABLE_PROMPT=1
-export PYENV_ROOT="$HOME/.pyenv"
+if (( $+commands[pyenv] )); then
+  export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+  export PYENV_ROOT="$HOME/.pyenv"
+  path=("$PYENV_ROOT/bin" $path)
+fi
+
+#
+# jenv
+#
+
+if (( $+commands[jenv] )); then
+  export JENV_ROOT="$HOME/.jenv"
+  path=("$JENV_ROOT/bin" $path)
+fi
 
 #
 # android
