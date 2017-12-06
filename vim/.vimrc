@@ -63,7 +63,7 @@ Plug 'Quramy/tsuquyomi'
 
 "------ ruby {{{
 Plug 'tpope/vim-endwise'
-Plug 'tpope/vim-rails'
+" Plug 'tpope/vim-rails'
 "------ }}}
 
 call plug#end()
@@ -116,6 +116,7 @@ set splitright " a new window is put right of the current one
 
 "--- terminal {{{
 set ttyfast " terminal connection is fast
+set scrolljump=4 " scroll lines at a time
 "--- }}}
 
 "--- using the mouse {{{
@@ -249,6 +250,7 @@ let g:airline_symbols.linenr = ''
 
 " see https://github.com/vim-airline/vim-airline/blob/a2431f2adb23a003abdfe5294861bbd69de52e52/doc/airline.txt#L252
 let g:airline#parts#ffenc#skip_expected_string = 'utf-8[unix]'
+let g:airline#extensions#branch#displayed_head_limit = 8
 "------ }}}
 
 "------ ale {{{
@@ -322,7 +324,8 @@ let g:UltiSnipsJumpBackwardTrigger = '<C-k>'
 "------ YouCompleteMe {{{
 let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
 let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
-let g:ycm_collect_identifiers_from_tags_files = 1
+" let g:ycm_collect_identifiers_from_tags_files = 1
+let g:ycm_cache_omnifunc = 0
 let g:ycm_seed_identifiers_with_syntax = 1
 let g:ycm_complete_in_comments = 1
 let g:ycm_complete_in_strings = 1
