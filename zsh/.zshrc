@@ -150,18 +150,14 @@ fi
 # pyenv
 #
 
-if (( $+commands[pyenv] )); then
-  eval "$(pyenv init -)"
-  eval "$(pyenv virtualenv-init -)"
-fi
+# eval "$(pyenv init -)"
+# eval "$(pyenv virtualenv-init -)"
 
 #
 # jenv
 #
 
-if (( $+commands[jenv] )); then
-  eval "$(jenv init -)"
-fi
+eval "$(jenv init -)"
 
 #
 # base16-shell
@@ -169,4 +165,3 @@ fi
 
 BASE16_SHELL=$HOME/.config/base16-shell/
 [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
-

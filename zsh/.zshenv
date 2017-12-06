@@ -4,6 +4,13 @@ export PAGER='less'
 export LESS='-F -g -i -M -R -S -w -X -z-4'
 
 #
+# Locale
+#
+
+export LC_CTYPE=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+#
 # Homebrew
 #
 
@@ -67,28 +74,28 @@ fi
 # nvm
 #
 
-if (( $+commands[nvm] )); then
-  export NVM_DIR="$HOME/.nvm"
-fi
+export NVM_DIR="$HOME/.nvm"
 
 #
 # pyenv
 #
 
-if (( $+commands[pyenv] )); then
-  export PYENV_VIRTUALENV_DISABLE_PROMPT=1
-  export PYENV_ROOT="$HOME/.pyenv"
-  path=("$PYENV_ROOT/bin" $path)
-fi
+export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+export PYENV_ROOT="$HOME/.pyenv"
+path=("$PYENV_ROOT/bin" $path)
 
 #
 # jenv
 #
 
-if (( $+commands[jenv] )); then
-  export JENV_ROOT="$HOME/.jenv"
-  path=("$JENV_ROOT/bin" $path)
-fi
+export JENV_ROOT="$HOME/.jenv"
+path=("$JENV_ROOT/bin" $path)
+
+#
+# rust
+#
+
+path=("$HOME/.cargo/bin" $path)
 
 #
 # android
