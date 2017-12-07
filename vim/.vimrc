@@ -36,7 +36,7 @@ Plug 'rhysd/devdocs.vim'
 Plug 'junegunn/vim-easy-align'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'tpope/vim-fugitive'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-repeat'
@@ -214,7 +214,7 @@ cnoreabbrev Ack Ack!
 "------}}}
 
 "------ airline {{{
-let g:airline_theme     = 'base16color'
+let g:airline_theme = 'base16color'
 
 " see https://github.com/vim-airline/vim-airline/blob/a2431f2adb23a003abdfe5294861bbd69de52e52/doc/airline.txt#L176
 if !exists('g:airline_symbols')
@@ -314,7 +314,9 @@ let g:ycm_cache_omnifunc = 0
 let g:ycm_seed_identifiers_with_syntax = 1
 let g:ycm_complete_in_comments = 1
 let g:ycm_complete_in_strings = 1
-let g:ycm_python_binary_path = 'python3'
+if executable('python3')
+  let g:ycm_python_binary_path = 'python3'
+endif
 "------ }}}
 "---- }}}
 

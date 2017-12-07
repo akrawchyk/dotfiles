@@ -1,10 +1,8 @@
 awscli
 chromedriver
 cmake
-cookiecutter
 coreutils
 editorconfig
-fasd
 git
 git-extras
 gnu-tar
@@ -13,7 +11,6 @@ imagemagick
 macvim
 mercurial
 node
-nvm
 openssl
 postgresql
 pyenv
@@ -22,7 +19,6 @@ python
 reattach-to-user-namespace
 redis
 stow
-terminal-notifier
 the_silver_searcher
 tmux
 watchman
