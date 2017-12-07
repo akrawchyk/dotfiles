@@ -101,7 +101,7 @@ path=("$HOME/.cargo/bin" $path)
 # android
 #
 
-export ANDROID_SDK_ROOT=/usr/local/share/android-sdk
+# export ANDROID_SDK_ROOT=/usr/local/share/android-sdk
 
 #
 # spaceship
@@ -116,3 +116,13 @@ export SPACESHIP_PACKAGE_SHOW=false
 #
 
 export ZSH_AUTOSUGGEST_USE_ASYNC=true
+
+#
+# fzf
+#
+
+# https://github.com/junegunn/fzf#tips
+export FZF_DEFAULT_COMMAND='
+  (git ls-tree -r --name-only HEAD ||
+       find . -path "*/\.*" -prune -o -type f -print -o -type l -print |
+        sed s/^..//) 2> /dev/null'
