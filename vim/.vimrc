@@ -31,12 +31,13 @@ Plug 'mileszs/ack.vim'
 Plug 'w0rp/ale'
 Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'chrisbra/csv.vim'
-Plug 'ctrlpvim/ctrlp.vim'
 Plug 'Raimondi/delimitMate'
 Plug 'rhysd/devdocs.vim'
 Plug 'junegunn/vim-easy-align'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'tpope/vim-fugitive'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rsi'
@@ -264,22 +265,6 @@ let g:ale_fixers = {
 let g:ale_javascript_eslint_use_global = 1
 let g:ale_javascript_prettier_use_global = 1
 let g:ale_javascript_prettier_options = '--single-quote --no-semi --trailing-comma --print-width 100'
-"------ }}}
-
-"------ ctrlp.vim {{{
-let g:ctrlp_clear_cache_on_exit = 1
-let g:ctrlp_show_hidden = 1
-let g:ctrlp_user_command = {
-      \ 'types': {
-      \ 1: ['.git', 'cd %s && git ls-files --others --cached --exclude-standard'],
-      \ 2: ['.hg', 'hg --cwd %s locate -I .'],
-      \ },
-      \ 'fallback': 'find %s -type f'
-      \ }
-if executable('ag')
-  let g:ctrlp_user_command['fallback'] = 'ag %s -l --nocolor -g ""'
-  " let g:ctrlp_use_caching = 0
-endif
 "------ }}}
 
 "------ delimitMate {{{

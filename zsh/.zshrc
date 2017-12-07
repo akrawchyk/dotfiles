@@ -125,26 +125,14 @@ if [[ -z "$TMUX" ]]; then
 fi
 
 #
-# nvm
-#
-
-if [[ -s $NVM_DIR/nvm.sh ]]; then
-  source "$NVM_DIR/nvm.sh"
-
-  # auto use .nvmrc
-  autoload -U add-zsh-hook
-  load-nvmrc() {
-    if [[ -f .nvmrc && -r .nvmrc ]]; then
-      nvm use
-    fi
-  }
-  add-zsh-hook chpwd load-nvmrc
-fi
-
-#
 # chruby
 #
-# TODO
+
+if [[ -x "$(command -v chruby-exec)" ]]; then
+  source /usr/local/share/chruby/chruby.sh
+  source /usr/local/share/chruby/auto.sh
+  chruby_auto
+fi
 
 #
 # pyenv
@@ -157,7 +145,9 @@ fi
 # jenv
 #
 
-eval "$(jenv init -)"
+if [[ -x "$(command -v jenv)" ]]; then
+  eval "$(jenv init -)"
+fi
 
 #
 # base16-shell
