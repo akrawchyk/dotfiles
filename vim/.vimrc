@@ -27,7 +27,6 @@ Plug 'chriskempson/base16-vim'
 
 "------ tools {{{
 Plug 'tpope/vim-abolish'
-Plug 'mileszs/ack.vim'
 Plug 'w0rp/ale'
 Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'chrisbra/csv.vim'
@@ -64,7 +63,7 @@ Plug 'Quramy/tsuquyomi'
 
 "------ ruby {{{
 Plug 'tpope/vim-endwise'
-" Plug 'tpope/vim-rails'
+Plug 'tpope/vim-rails'
 "------ }}}
 
 call plug#end()
@@ -206,13 +205,6 @@ set t_Co=256 " number of colors
 
 "---- plugin settings {{{
 
-"------ ack {{{
-if executable('ag')
-  let g:ackprg = 'ag --vimgrep'
-endif
-cnoreabbrev Ack Ack!
-"------}}}
-
 "------ airline {{{
 let g:airline_theme = 'base16color'
 
@@ -260,7 +252,8 @@ let g:ale_fixers = {
       \ 'javascript': ['prettier'],
       \ 'typescript': ['prettier'],
       \ 'css': ['prettier'],
-      \ 'scss': ['prettier']
+      \ 'scss': ['prettier'],
+      \ 'ruby': ['rubocop']
       \}
 let g:ale_javascript_eslint_use_global = 1
 let g:ale_javascript_prettier_use_global = 1
@@ -287,8 +280,36 @@ let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
 cnoreabbrev Ggrep Ggrep!
 "------ }}}
 
+"------ fzf {{{
+let g:fzf_colors = {
+      \ 'fg':      ['fg', 'Normal'],
+      \ 'bg':      ['bg', 'Normal'],
+      \ 'hl':      ['fg', 'Comment'],
+      \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+      \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+      \ 'hl+':     ['fg', 'Statement'],
+      \ 'info':    ['fg', 'PreProc'],
+      \ 'border':  ['fg', 'Ignore'],
+      \ 'prompt':  ['fg', 'Conditional'],
+      \ 'pointer': ['fg', 'Exception'],
+      \ 'marker':  ['fg', 'Keyword'],
+      \ 'spinner': ['fg', 'Label'],
+      \ 'header':  ['fg', 'Comment']
+      \}
+"------ }}}
+
 "------ javascript-libraries-syntax {{{
 let g:used_javascript_libs = 'jquery,underscore,angularjs,angularuirouter,react,vue'
+"------ }}}
+
+"------ vim-ruby {{{
+let ruby_operators = 1
+let ruby_space_errors = 1
+let ruby_no_expensive = 1
+let g:rubycomplete_buffer_loading = 1
+let g:rubycomplete_classes_in_global = 1
+let g:rubycomplete_rails = 1
+let g:rubycomplete_load_gemfile = 1
 "------ }}}
 
 "------ surround {{{
@@ -380,30 +401,30 @@ nnoremap <silent> g# g#zz
 
 " apply macros with Q
 nnoremap Q @q
-xnoremap Q :norm @q<cr>
+xnoremap Q :norm @q<CR>
 
-" change tabs with shift
-noremap <S-l> gt
-noremap <S-h> gT
+" move through quickfix and loclist
+nnoremap ]q :cnext<CR>zz
+nnoremap [q :cprev<CR>zz
+nnoremap ]l :lnext<CR>zz
+nnoremap [l :lprev<CR>zz
 
-" new tabs with shift+t
-nnoremap <S-t> :tabnew<CR>
+" move through buffers
+nnoremap ]b :bnext<CR>
+nnoremap [b :bprev<CR>
+
+" move through tabs
+nnoremap ]t :tabn<CR>
+nnoremap [t :tabp<CR>
 
 " jump to last edited file with BS
 nnoremap <BS> <C-^>
 
-" bind K to grep word under cursor
-nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
-
-" move forward and backward (fixme) in the quickfix list
-nnoremap <silent> <C-N> :cn<CR>zv
-" nmap <silent> <C-P> :cp<CR>zv
-
 " fixing problems with ALE
-nmap <F8> <Plug>(ale_fix)
+nnoremap <F8> <Plug>(ale_fix)
 
 " search devdocs.io instead of man
-nmap K <Plug>(devdocs-under-cursor)
+nnoremap K <Plug>(devdocs-under-cursor)
 
 
 "------ leaders {{{
@@ -455,9 +476,11 @@ noremap <leader>tR :YcmCompleter RefactorRename<SPACE>
 " toggle tagbar
 nnoremap <leader>t :TagbarToggle<CR>
 
-" search
-nnoremap <Leader>a :Ack!<Space>
-nnoremap <Leader>g :Ggrep!<Space>
+" search for word under cursor
+nnoremap <silent><leader>ag :Ag <C-R><C-W><CR>
+
+" fuzzy find files
+nnoremap <leader><leader> :Files<CR>
 "------ }}}
 "---- }}}
 
