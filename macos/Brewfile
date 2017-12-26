@@ -20,6 +20,7 @@ reattach-to-user-namespace
 redis
 stow
 the_silver_searcher
+tldr
 tmux
 watchman
 weechat

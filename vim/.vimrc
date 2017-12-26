@@ -180,6 +180,7 @@ set wildmenu " command-line completion shows a list of matches
 "--- }}}
 
 "--- executing external commands {{{
+set shell=/bin/zsh
 "--- }}}
 
 "--- running make and jumping to errors {{{
@@ -247,7 +248,7 @@ let g:airline#extensions#branch#displayed_head_limit = 8
 "------ }}}
 
 "------ ale {{{
-let g:ale_open_list = 0
+let g:ale_echo_msg_format = '[%linter%:%severity%] %code: %%s'
 let g:ale_fixers = {
       \ 'javascript': ['prettier'],
       \ 'typescript': ['prettier'],
@@ -255,9 +256,9 @@ let g:ale_fixers = {
       \ 'scss': ['prettier'],
       \ 'ruby': ['rubocop']
       \}
-let g:ale_javascript_eslint_use_global = 1
 let g:ale_javascript_prettier_use_global = 1
-let g:ale_javascript_prettier_options = '--single-quote --no-semi --trailing-comma --print-width 100'
+let g:ale_javascript_prettier_options = '--single-quote --no-semi --no-trailing-comma --print-width 100'
+let g:ale_writegood_use_global = 1
 "------ }}}
 
 "------ delimitMate {{{
@@ -304,12 +305,12 @@ let g:used_javascript_libs = 'jquery,underscore,angularjs,angularuirouter,react,
 
 "------ vim-ruby {{{
 let ruby_operators = 1
-let ruby_space_errors = 1
+" let ruby_space_errors = 1
 let ruby_no_expensive = 1
 let g:rubycomplete_buffer_loading = 1
 let g:rubycomplete_classes_in_global = 1
-let g:rubycomplete_rails = 1
-let g:rubycomplete_load_gemfile = 1
+" let g:rubycomplete_rails = 1 " FIXME
+" let g:rubycomplete_load_gemfile = 1 " FIXME
 "------ }}}
 
 "------ surround {{{
@@ -552,6 +553,5 @@ if !exists('g:colors_name') || g:colors_name != 'base16-eighties'
   colorscheme base16-eighties
 endif
 
-" highlight ColorColumn ctermbg=236 guibg=gray18
-highlight ExtraWhitespace ctermbg=196 guibg=red
+highlight link ExtraWhitespace Error
 "---- }}}
