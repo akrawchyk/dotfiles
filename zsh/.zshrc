@@ -3,7 +3,7 @@
 #
 
 if [[ -f ~/.zplug/init.zsh ]]; then
-	source ~/.zplug/init.zsh
+  source ~/.zplug/init.zsh
 fi
 
 #
@@ -11,13 +11,6 @@ fi
 #
 
 bindkey -e
-
-#
-# History substring search
-#
-
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
 
 #
 # Smart URLs
