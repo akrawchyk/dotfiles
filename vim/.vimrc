@@ -180,7 +180,7 @@ set wildmenu " command-line completion shows a list of matches
 "--- }}}
 
 "--- executing external commands {{{
-set shell=/bin/zsh
+set shell=/usr/local/bin/zsh
 "--- }}}
 
 "--- running make and jumping to errors {{{
@@ -207,7 +207,7 @@ set t_Co=256 " number of colors
 "---- plugin settings {{{
 
 "------ airline {{{
-let g:airline_theme = 'base16color'
+let g:airline_theme = 'base16_eighties'
 
 " see https://github.com/vim-airline/vim-airline/blob/a2431f2adb23a003abdfe5294861bbd69de52e52/doc/airline.txt#L176
 if !exists('g:airline_symbols')
@@ -547,10 +547,10 @@ let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 " same thing, but with escape sequences instead of literals
 " set t_8f=[38;2;%lu;%lu;%lum
 " set t_8b=[48;2;%lu;%lu;%lum
-
-if !exists('g:colors_name') || g:colors_name != 'base16-eighties'
+"
+if filereadable(expand("~/.vimrc_background"))
   let base16colorspace=256
-  colorscheme base16-eighties
+  source ~/.vimrc_background
 endif
 
 highlight link ExtraWhitespace Error
