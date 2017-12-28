@@ -4,6 +4,10 @@ if [[ "$OSTYPE" = darwin* ]]; then
   antigen bundle brew
 fi
 
+if [[ "$(uname -a)" = *Ubuntu* ]]; then
+  antigen bundle ubuntu
+fi
+
 antigen bundle colored-man-pages
 antigen bundle tmux
 
