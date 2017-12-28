@@ -1,0 +1,26 @@
+antigen use oh-my-zsh
+
+if [[ "$OSTYPE" = darwin* ]]; then
+  antigen bundle brew
+fi
+
+antigen bundle colored-man-pages
+antigen bundle tmux
+
+antigen bundle nvm
+
+antigen bundle chruby
+antigen bundle rails
+antigen bundle bundler
+antigen bundle rake
+antigen bundle rake-fast
+
+antigen bundle zsh-users/zsh-autosuggestions
+antigen bundle zsh-users/zsh-completions
+antigen bundle zsh-users/zsh-history-substring-search
+
+antigen bundle chriskempson/base16-shell
+
+antigen theme denysdovhan/spaceship-zsh-theme spaceship
+
+antigen apply

@@ -1,30 +1,50 @@
 [user]
-	email = 903716+akrawchyk@users.noreply.github.com
-	name = Andrew Krawchyk
-[apply]
-	whitespace = fix
+  email = 903716+akrawchyk@users.noreply.github.com
+  name = Andrew Krawchyk
+
 [core]
-	autocrlf = input
-	whitespace = trailing-space,space-before-tab
-	safecrlf = true
-	trustctime = false
-	excludesfile = ~/.gitignore_global
-[push]
-	default = current
-[diff]
-	renames = copies
-	tool = vimdiff
+  autocrlf = input
+  whitespace = trailing-space,space-before-tab
+  safecrlf = true
+  trustctime = false
+  excludesfile = ~/.gitignore_global
+
 [help]
-	autocorrect = 1
+  autocorrect = 1
+
+[include]
+  path = .gitconfig.d/gitalias.txt
+
+[alias]
+  l = log --graph --oneline
+  s = status -sb
+
+[format]
+  pretty = "%H %ci %ce %ae %d %s"
+
+[apply]
+  whitespace = fix
+
+[push]
+  default = current
+
 [merge]
-	log = true
-	tool = fugitive
+  log = true
+  tool = fugitive
+
 [mergetool "fugitive"]
-	cmd = vim -f -c \"Gdiff\" \"$MERGED\" -c \"wincmd =\"
-	trustExitCode = false
-[credential]
-	helper = osxkeychain
-[color "diff"]
-	whitespace = red reverse
+  cmd = vim -f -c \"Gdiff\" \"$MERGED\" -c \"wincmd =\"
+  trustExitCode = false
+
+[diff]
+  renames = copies
+  tool = vimdiff
+
 [color]
-	ui = true
+  ui = true
+
+[color "diff"]
+  whitespace = red reverse
+
+[credential]
+  helper = osxkeychain
