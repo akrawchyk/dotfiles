@@ -1,6 +1,7 @@
 source $HOME/.antigen/antigen.zsh
 antigen init $HOME/.antigenrc
 
+# bindings for history-substring-search
 if [[ -n "$terminfo[kcuu1]" ]]; then
   bindkey -M emacs "$terminfo[kcuu1]" history-substring-search-up
   bindkey -M viins "$terminfo[kcuu1]" history-substring-search-up
