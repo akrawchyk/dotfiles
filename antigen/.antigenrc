@@ -28,3 +28,5 @@ antigen bundle chriskempson/base16-shell
 antigen theme denysdovhan/spaceship-zsh-theme spaceship
 
 antigen apply
+
+unalias rg

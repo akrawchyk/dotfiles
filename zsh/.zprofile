@@ -8,8 +8,11 @@ export LC_ALL=$LANG
 # https://github.com/zsh-users/antigen/wiki/Commands#antigen-theme
 export ANTIGEN_CACHE=$HOME/.antigen/init-${OSTYPE}.zsh
 
-export ZSH_TMUX_AUTOSTART=true
+# https://github.com/junegunn/fzf#tips
+export FZF_DEFAULT_COMMAND='(git ls-tree -r --name-only HEAD || fd --type f --hidden --exclude .git) 2> /dev/null'
+
 export ZSH_AUTOSUGGEST_USE_ASYNC=true
+export ZSH_TMUX_AUTOSTART=true
 
 if (( $+commands[brew] )); then
   export HOMEBREW_NO_ANALYTICS=1

@@ -2,12 +2,11 @@
 "
 
 " create expected directories
-if filewritable('.') && !filewritable('~/.vim/tmp')
+if isdirectory('.') && !isdirectory('~/.vim/tmp')
   silent execute '!mkdir -p $HOME/.vim/tmp'
 endif
 
 "--- important {{{
-set nocompatible
 "--- }}}
 
 "---- plugins {{{
@@ -48,8 +47,7 @@ Plug 'majutsushi/tagbar'
 Plug 'tomtom/tcomment_vim'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'tpope/vim-unimpaired'
-" Plug 'tpope/vim-vinegar'
-Plug 'matthewd/vim-vinegar', { 'branch': 'netrw-plug' }
+Plug 'tpope/vim-vinegar'
 Plug 'Valloric/YouCompleteMe', { 'do': 'chmod +x ./install.py; python ./install.py --tern-completer' }
 "------ }}}
 
@@ -63,19 +61,21 @@ Plug 'Quramy/tsuquyomi'
 
 "------ ruby {{{
 Plug 'tpope/vim-endwise'
-Plug 'tpope/vim-rails'
+" Plug 'tpope/vim-rails'
 "------ }}}
 
 call plug#end()
 "---- }}}
 
 "--- moving around, searching and patterns {{{
-set incsearch " show match for partly typed search command
-set hlsearch " highlight search matches
-set ignorecase " ignore case in search patterns
-set smartcase " override the 'ignorecase' option if the search pattern contains uppercase characters
-set wrapscan " search commands wrap around the end of the buffer
-if executable('ag')
+set incsearch
+set hlsearch
+set ignorecase
+set smartcase
+set wrapscan
+if executable('rg')
+  set grepprg=rg\ -H\ --no-heading\ --vimgrep
+elseif executable('ag')
   set grepprg=ag\ --nogroup\ --nocolor
 endif
 "--- }}}
@@ -84,39 +84,38 @@ endif
 "--- }}}
 
 "--- displaying text {{{
-set display=lastline " include lastline to show the last line even if it doesn't fit
-set lazyredraw " don't redraw while executing macros
-set list " show <Tab> as ^I and end-of-line as $
+set display=lastline
+set lazyredraw
+set list
 if has('multi_byte') && &encoding ==# 'utf-8'
-  " list of strings used for list mode
   let &listchars = 'tab:˒ ,trail:·,extends:…,precedes:…,nbsp:+'
 else
   let &listchars = 'tab:> ,extends:>,precedes:<,nbsp:.'
 endif
-set nowrap " long lines wrap
+set nowrap
 "--- }}}
 
 "--- syntax, highlighting and spelling {{{
 set background=dark
-set synmaxcol=200 " maximum column to look for syntax items
+set synmaxcol=200
 if has('termguicolors')
   set termguicolors
 endif
 "--- }}}
 
 "--- multiple windows {{{
-set hidden " don't unload a buffer when no longer shown in a window
-set laststatus=2 " 0, 1 or 2; when to use a status line for the last window
-set splitbelow " a new window is put below the current one
-set splitright " a new window is put right of the current one
+set hidden
+set laststatus=2
+set splitbelow
+set splitright
 "--- }}}
 
 "--- multiple tab pages {{{
 "--- }}}
 
 "--- terminal {{{
-set ttyfast " terminal connection is fast
-set scrolljump=4 " scroll lines at a time
+set ttyfast
+set scrolljump=4
 "--- }}}
 
 "--- using the mouse {{{
@@ -126,11 +125,11 @@ set scrolljump=4 " scroll lines at a time
 "--- }}}
 
 "--- messages and info {{{
-set ruler " show cursor position below each window
-set report=0 " threshold for reporting number of changed lines
-set showcmd " show (partial) command keys in the status line
-set shortmess=aoOtI " list of flags to make messages shorter"
-set showmode " display the current mode in the status line
+set ruler
+set report=0
+set showcmd
+set shortmess=aoOtI
+set showmode
 "--- }}}
 
 "--- selecting text {{{
@@ -138,21 +137,21 @@ set clipboard=unnamed
 "--- }}}
 
 "--- editing text {{{
-set backspace=indent,eol,start " specifies what <BS>, CTRL-W, etc. can do in Insert mode
-set complete-=i " specifies how Insert mode completion works for CTRL-N and CTRL-P
-set completeopt=menu,menuone " whether to use a popup menu for Insert mode completion
-set undofile " automatically save and restore undo history
-set undodir^=$HOME/.vim/tmp// " list of directories for undo files
+set backspace=indent,eol,start
+set complete-=i
+set completeopt=menu,menuone
+set undofile
+set undodir^=$HOME/.vim/tmp//
 "--- }}}
 
 "--- tabs and indenting {{{
-set autoindent " automatically set the indent of a new line
-set shiftround " round to 'shiftwidth' for '<<' and '>>'
+set autoindent
+set shiftround
 "--- }}}
 
 "--- folding {{{
-set foldmethod=marker " folding type: 'manual', 'indent', 'expr', 'marker' or 'syntax'
-set foldopen+=jump " specifies for which commands a fold will be opened
+set foldmethod=marker
+set foldopen+=jump
 "--- }}}
 
 "--- diff mode {{{
@@ -162,21 +161,21 @@ set foldopen+=jump " specifies for which commands a fold will be opened
 "--- }}}
 
 "--- reading and writing files {{{
-set backup " keep a backup after overwriting a file
-set backupdir^=$HOME/.vim/tmp// " list of directories to put backup files in
-set backupext=.bak " file name extension for the backup file
-set autoread " automatically read a file when it was modified outside of Vim
+set backup
+set backupdir^=$HOME/.vim/tmp//
+set backupext=.bak
+set autoread
 "--- }}}
 
 "--- the swap file {{{
-set directory^=$HOME/.vim/tmp// " list of directories for the swap file
-set updatecount=100 " number of characters typed to cause a swap file update
+set directory^=$HOME/.vim/tmp//
+set updatecount=100
 "--- }}}
 
 "--- command line editing {{{
 set wildmode=longest:full,full
 set wildignore+=tags,*.pyc
-set wildmenu " command-line completion shows a list of matches
+set wildmenu
 "--- }}}
 
 "--- executing external commands {{{
@@ -195,12 +194,12 @@ set termencoding=utf-8
 "--- }}}
 
 "--- various {{{
-set gdefault " use the 'g' flag for :substitute
-set viminfo='100,n$HOME/.vim/tmp/viminfo " list that specifies what to write in the viminfo file
+set gdefault
+set viminfo='100,n$HOME/.vim/tmp/viminfo
 "--- }}}
 
 "--- term {{{
-set t_Co=256 " number of colors
+set t_Co=256
 "--- }}}
 
 
@@ -277,10 +276,6 @@ let g:devdocs_filetype_map = {
 let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
 "------ }}}
 
-"------ fugitive {{{
-cnoreabbrev Ggrep Ggrep!
-"------ }}}
-
 "------ fzf {{{
 let g:fzf_colors = {
       \ 'fg':      ['fg', 'Normal'],
@@ -297,6 +292,24 @@ let g:fzf_colors = {
       \ 'spinner': ['fg', 'Label'],
       \ 'header':  ['fg', 'Comment']
       \}
+" https://github.com/junegunn/fzf.vim/blob/master/doc/fzf-vim.txt#L206
+" Command for git grep
+command! -bang -nargs=* GGrep
+      \ call fzf#vim#grep('git grep --line-number '.shellescape(<q-args>), 0, <bang>0)
+" Augmenting Rg command using fzf#vim#with_preview function
+if executable('rg')
+  command! -bang -nargs=* Rg
+        \ call fzf#vim#grep(
+        \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+        \   <bang>0 ? fzf#vim#with_preview('up:60%')
+        \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+        \   <bang>0)
+end
+
+" Files command with preview window
+command! -bang -nargs=? -complete=dir Files
+      \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+
 "------ }}}
 
 "------ javascript-libraries-syntax {{{
@@ -379,7 +392,7 @@ xnoremap < <gv
 cnoremap w!! %!sudo tee > /dev/null %
 
 " insert the current directory into a command-line path
-cnoremap <C-p> <C-R>=expand("%:p:h") . "/"<CR>
+cnoremap <C-p> <C-R>=expand('%:p:h') . '/'<CR>
 
 " faster scrolling
 nnoremap <C-e> 5<C-e>
@@ -424,9 +437,6 @@ nnoremap <BS> <C-^>
 " fixing problems with ALE
 nnoremap <F8> <Plug>(ale_fix)
 
-" search devdocs.io instead of man
-nnoremap K <Plug>(devdocs-under-cursor)
-
 
 "------ leaders {{{
 let mapleader=','
@@ -442,7 +452,7 @@ noremap <leader>et :tabe %%
 
 " Auto-indent whole file
 nnoremap <leader>= gg=G``
-noremap <silent><leader>=f gg=G`` :delmarks z<CR>:echo "Reformatted."<CR>
+noremap <silent><leader>=f gg=G`` :delmarks z<CR>:echo 'Reformatted.'<CR>
 
 " autoindent pasted blocks
 nnoremap <leader>[p p`[v`]=
@@ -487,68 +497,69 @@ nnoremap <leader><leader> :Files<CR>
 
 
 "---- autocmds {{{
-if has("autocmd")
-  augroup vim
-    au!
+augroup vim
+  au!
 
-    " autosource vimrc on write
-    au BufWritePost .vimrc source $MYVIMRC
-  augroup END
+  " autosource vimrc on write
+  au BufWritePost .vimrc source $MYVIMRC
+augroup END
 
-  augroup filetypes
-    au!
+augroup filetypes
+  au!
 
-    " set xml formatting command to xmllint
-    au FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
+  " set xml formatting command to xmllint
+  au FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
 
-    " set tab completion on css-classes
-    au FileType scss,css,html,haml setlocal iskeyword+=-
+  " set tab completion on css-classes
+  au FileType scss,css,html,haml setlocal iskeyword+=-
 
-    " delimitmate custom matches
-    au FileType vim,html,haml let b:delimitMate_matchpairs = "(:),[:],{:},<:>"
+  " delimitmate custom matches
+  au FileType vim,html,haml let b:delimitMate_matchpairs = '(:),[:],{:},<:>'
 
-    " custom matchit pairs b:match_words
-    au FileType python let b:match_words = '\<if\>:\<elif\>:\<else\>'
+  " custom matchit pairs b:match_words
+  au FileType python let b:match_words = '\<if\>:\<elif\>:\<else\>'
 
-    " quickfix full width bottom
-    au FileType qf wincmd J
+  " quickfix full width bottom
+  au FileType qf wincmd J
 
-    " https://github.com/vim-ruby/vim-ruby/wiki/VimRubySupport#compiler-plugins
-    au FileType ruby compiler ruby
-  augroup END
+  " https://github.com/vim-ruby/vim-ruby/wiki/VimRubySupport#compiler-plugins
+  au FileType ruby compiler ruby
 
-  augroup editing
-    au!
+  " https://github.com/rhysd/devdocs.vim#mapping-k-to-search-under-the-word-quickly
+  au FileType python,ruby,javascript nnoremap <buffer>K <Plug>(devdocs-under-cursor)
+augroup END
 
-    " exit paste mode when leaving insert mode
-    au InsertLeave * set nopaste
+augroup editing
+  au!
 
-    " only show linenumbers on current buffer
-    au BufEnter * set number
-    au BufLeave * set nonumber
+  " exit paste mode when leaving insert mode
+  au InsertLeave * set nopaste
 
-    " show extra whitespace as red
-    au BufWinEnter * match ExtraWhitespace /\s\+$/
-    au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-    au InsertLeave * match ExtraWhitespace /\s\+$/
-    au BufWinLeave * call clearmatches()
+  " only show linenumbers on current buffer
+  au BufEnter * set number
+  au BufLeave * set nonumber
 
-    " open quickfix after grep
-    au QuickFixCmdPost *grep* cwindow
-  augroup END
-endif
+  " show extra whitespace as red
+  au BufWinEnter * match ExtraWhitespace /\s\+$/
+  au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+  au InsertLeave * match ExtraWhitespace /\s\+$/
+  au BufWinLeave * call clearmatches()
+
+  " open quickfix after grep
+  au QuickFixCmdPost *grep* cwindow
+augroup END
 "---- }}}
 
 "---- gui {{{
 " set Vim-specific sequences for RGB colors
-let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+"let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+"let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 
 " same thing, but with escape sequences instead of literals
-" set t_8f=[38;2;%lu;%lu;%lum
-" set t_8b=[48;2;%lu;%lu;%lum
-"
-if filereadable(expand("~/.vimrc_background"))
+set t_8f=[38;2;%lu;%lu;%lum
+set t_8b=[48;2;%lu;%lu;%lum
+
+if filereadable(expand('~/.vimrc_background'))
   let base16colorspace=256
   source ~/.vimrc_background
 endif
