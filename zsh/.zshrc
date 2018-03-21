@@ -19,3 +19,5 @@ load-nvmrc() {
   fi
 }
 add-zsh-hook chpwd load-nvmrc
+
+alias vim="nvim"

@@ -16,7 +16,11 @@ if empty(glob('~/.vim/autoload/plug.vim'))
   au VimEnter * PlugInstall
 endif
 
-packadd! matchit
+" packadd! matchit
+
+if !exists('loaded_matchit')
+  source $VIMRUNTIME/macros/matchit.vim
+endif
 
 call plug#begin()
 
@@ -53,6 +57,8 @@ Plug 'Valloric/YouCompleteMe', { 'do': 'chmod +x ./install.py; python ./install.
 
 "------ javascript {{{
 Plug 'othree/javascript-libraries-syntax.vim'
+Plug 'othree/yajs.vim'
+Plug 'othree/es.next.syntax.vim'
 "------ }}}
 
 "------ typescript {{{
@@ -68,8 +74,10 @@ call plug#end()
 "---- }}}
 
 "--- moving around, searching and patterns {{{
-set incsearch
-set hlsearch
+if !has('nvim')
+  set incsearch
+  set hlsearch
+endif
 set ignorecase
 set smartcase
 set wrapscan
@@ -84,7 +92,9 @@ endif
 "--- }}}
 
 "--- displaying text {{{
-set display=lastline
+if !has('nvim')
+  set display=lastline
+endif
 set lazyredraw
 set list
 if has('multi_byte') && &encoding ==# 'utf-8'
@@ -105,7 +115,9 @@ endif
 
 "--- multiple windows {{{
 set hidden
-set laststatus=2
+if !has('nvim')
+  set laststatus=2
+endif
 set splitbelow
 set splitright
 "--- }}}
@@ -114,7 +126,9 @@ set splitright
 "--- }}}
 
 "--- terminal {{{
-set ttyfast
+if !has('nvim')
+  set ttyfast
+endif
 set scrolljump=4
 "--- }}}
 
@@ -125,15 +139,21 @@ set scrolljump=4
 "--- }}}
 
 "--- messages and info {{{
-set ruler
+if !has('nvim')
+  set ruler
+  set showcmd
+endif
 set report=0
-set showcmd
 set shortmess=aoOtI
 set showmode
 "--- }}}
 
 "--- selecting text {{{
-set clipboard=unnamed
+if has('nvim')
+  set clipboard+=unnamedplus
+else
+  set clipboard=unnamed
+endif
 "--- }}}
 
 "--- editing text {{{
@@ -141,11 +161,15 @@ set backspace=indent,eol,start
 set complete-=i
 set completeopt=menu,menuone
 set undofile
-set undodir^=$HOME/.vim/tmp//
+if !has('nvim')
+  set undodir^=$HOME/.vim/tmp//
+endif
 "--- }}}
 
 "--- tabs and indenting {{{
-set autoindent
+if !has('nvim')
+  set autoindent
+endif
 set shiftround
 "--- }}}
 
@@ -162,20 +186,26 @@ set foldopen+=jump
 
 "--- reading and writing files {{{
 set backup
-set backupdir^=$HOME/.vim/tmp//
+if !has('nvim')
+  set autoread
+  set backupdir^=$HOME/.vim/tmp//
+endif
 set backupext=.bak
-set autoread
 "--- }}}
 
 "--- the swap file {{{
-set directory^=$HOME/.vim/tmp//
+if !has('nvim')
+  set directory^=$HOME/.vim/tmp//
+endif
 set updatecount=100
 "--- }}}
 
 "--- command line editing {{{
 set wildmode=longest:full,full
 set wildignore+=tags,*.pyc
-set wildmenu
+if !has('nvim')
+  set wildmenu
+endif
 "--- }}}
 
 "--- executing external commands {{{
@@ -195,7 +225,9 @@ set termencoding=utf-8
 
 "--- various {{{
 set gdefault
-set viminfo='100,n$HOME/.vim/tmp/viminfo
+if !has('nvim')
+  set viminfo='100,n$HOME/.vim/tmp/viminfo
+endif
 "--- }}}
 
 "--- term {{{
@@ -206,7 +238,7 @@ set t_Co=256
 "---- plugin settings {{{
 
 "------ airline {{{
-let g:airline_theme = 'base16_eighties'
+let g:airline_theme = 'base16_oceanicnext'
 
 " see https://github.com/vim-airline/vim-airline/blob/a2431f2adb23a003abdfe5294861bbd69de52e52/doc/airline.txt#L176
 if !exists('g:airline_symbols')
@@ -251,6 +283,7 @@ let g:ale_echo_msg_format = '[%linter%:%severity%] %code: %%s'
 let g:ale_fixers = {
       \ 'javascript': ['prettier'],
       \ 'typescript': ['prettier'],
+      \ 'json': ['prettier'],
       \ 'css': ['prettier'],
       \ 'scss': ['prettier'],
       \ 'ruby': ['rubocop']
@@ -316,6 +349,10 @@ command! -bang -nargs=? -complete=dir Files
 let g:used_javascript_libs = 'jquery,underscore,angularjs,angularuirouter,react,vue'
 "------ }}}
 
+"------ vim-polyglot {{{
+let g:polyglot_disabled = ['javascript']
+"------
+
 "------ vim-ruby {{{
 let ruby_operators = 1
 " let ruby_space_errors = 1
@@ -349,6 +386,10 @@ let g:ycm_cache_omnifunc = 0
 let g:ycm_seed_identifiers_with_syntax = 1
 let g:ycm_complete_in_comments = 1
 let g:ycm_complete_in_strings = 1
+if !exists('g:ycm_semantic_triggers')
+  let g:ycm_semantic_triggers = {}
+endif
+let g:ycm_semantic_triggers['typescript'] = ['.']
 if executable('python3')
   let g:ycm_python_binary_path = 'python3'
 endif
@@ -433,9 +474,6 @@ nnoremap [t :tabp<CR>
 
 " jump to last edited file with BS
 nnoremap <BS> <C-^>
-
-" fixing problems with ALE
-nnoremap <F8> <Plug>(ale_fix)
 
 
 "------ leaders {{{

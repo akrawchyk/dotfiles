@@ -1,5 +1,5 @@
-# https://github.com/GitAlias/gitalias/blob/master/gitalias.txt
 [alias]
+
   ##
   # One letter alias for our most frequent commands.
   #
@@ -60,11 +60,11 @@
   # commit - amend the tip of the current branch rather than creating a new commit.
   ca = commit --amend
 
-  # commit - amend the tip of the current branch, and do not edit the message.
-  can = commit --amend --no-edit
-
   # commit - amend the tip of the current branch, and edit the message.
   cam = commit --amend --message
+
+  # commit - amend the tip of the current branch, and do not edit the message.
+  cane = commit --amend --no-edit
 
   # commit interactive
   ci = commit --interactive
@@ -103,7 +103,13 @@
 
   ### grep ###
 
-  # grep with grouping of the output lines
+  # find text
+  g = grep
+
+  # grep and show line number
+  gl =  grep --line-number
+
+  # grep group: find text and group the output lines; a.k.a. `grep-group`.
   gg =  grep --break --heading --line-number
 
   ### log ###
@@ -306,8 +312,21 @@
   heads = !"git log origin/master.. --format='%Cred%h%Creset;%C(yellow)%an%Creset;%H;%Cblue%f%Creset' | git name-rev --stdin --always --name-only | column -t -s';'"
   lost = !"git fsck | awk '/dangling commit/ {print $3}' | git show --format='SHA1: %C(yellow)%h%Creset %f' --stdin | awk '/SHA1/ {sub(\"SHA1: \", \"\"); print}'"
 
-  # Find text in any commit ever
+  ### grep ###
+
+  # Find text in any commit ever.
   grep-all = !"f() { git rev-list --all | xargs git grep \"$@\"; }; f"
+
+  # Find text and group the output lines. Also aliased as `gg`.
+  grep-group = grep --break --heading --line-number
+
+  # grep with ack-like formatting
+  ack = -c color.grep.linenumber=\"bold yellow\" \
+        -c color.grep.filename=\"bold green\" \
+        -c color.grep.match=\"reverse yellow\" \
+        grep --break --heading --line-number
+
+  ###
 
   # Given a merge commit, find the span of commits that exist(ed).
   # Not so useful in itself, but used by other aliases.
@@ -416,7 +435,7 @@
   # For instance, to see who contributed most to the API part of an application:
   #
   #    $ git log --format='%an' --since='1 month ago' app/controllers/api/ | \
-    #      sort | uniq -c | sort -rn | head
+  #      sort | uniq -c | sort -rn | head
   #
   #    109 Alice Anderson
   #    13 Bob Brown
@@ -457,8 +476,11 @@
   # Clone a git repository including all submodules
   cloner = clone --recursive
 
-  # Stash aliases
-  save = stash save
+  # Stash aliases for push & pop
+  #
+  # Note that if you are using an older version of git, before 2.16.0,
+  # then you can use the older "stash save" instead of the newer "stash push".
+  save = stash push
   pop = stash pop
 
   # Stash snapshot - from http://blog.apiaxle.com/post/handy-git-tips-to-stop-you-getting-fired/
@@ -476,7 +498,7 @@
   #
   # And seemingly no changes to your working tree.
   #
-  snapshot = !git stash save "snapshot: $(date)" && git stash apply "stash@{0}"
+  snapshot = !git stash push "snapshot: $(date)" && git stash apply "stash@{0}"
 
   # When you're a little worried that the world is coming to an end
   panic = !tar cvf ../git_panic.tar *
@@ -519,8 +541,15 @@
 
   # Discard changes in a (list of) file(s) in working tree
   discard = checkout --
+
   # Clean and discard changes and untracked files in working tree
   cleanout = !git clean -df && git checkout -- .
+
+  # Expunge a file everywhere; this command is typically for a serious problem,
+  # such as accidentially committing a file of sensistive data, such as passwords.
+  # After you use command, you will likely need to force push everything.
+  # See https://help.github.com/articles/removing-sensitive-data-from-a-repository/
+  expunge = !"f() { git filter-branch --force --index-filter \"git rm --cached --ignore-unmatch $1\" --prune-empty --tag-name-filter cat -- --all }; f"
 
   # Edit all files of the given type
   edit-cached = !"f() { git ls-files --cached | sort -u ; }; `git var GIT_EDITOR` `f`"
@@ -762,6 +791,233 @@
 
   # Serve the local directory by starting a git server daemon, so others can pull/push from my machine
   serve = "-c daemon.receivepack=true daemon --base-path=. --export-all --reuseaddr --verbose"
+
+  ##########################################################################
+
+  ##
+  # Git alias settings suitable for topic branches.
+  #
+  # These aliases are simple starting points for a simple topic flow.
+  # Lots of people have lots of ideas about how to do various git flows.
+  #
+  # Some people like to use a topic branch for a new feature, or a
+  # hotfix patch, or refactoring work, or some spike research, etc.
+  #
+  # Our simple workflow:
+  #
+  #     $ git topic-start foo
+  #     ... do work ...
+  #     $ git topic-finish
+  #
+  # If you want more control, then you can use these building blocks: 
+  # 
+  #     $ git topic-create foo
+  #     $ git topic-delete
+  #
+  # If you want to pull and push while you're working, then use these:
+  #
+  #     $ git topic-pull
+  #     $ git topic-push
+  #
+  # Ideas for your own alias customizations:
+  #
+  #   * Notify your team, such as by sending an email, posting to chat, etc.
+  #   * Trigger testing of the new topic branch to ensure all tests succeed.
+  #   * Update the project management software.
+  #
+  # Customize these aliases as you like for your own workflow.
+  ##
+
+  ##
+  # Provide the name of the topic base branch, such as "master".
+  #
+  # When we create a new topic branch, we base it on the topic base branch.
+  # Many projects use the default "master" branch; some projects use custom
+  # branches, such as "trunk", "develop", "integrate", "release", etc.
+  #
+  # Customize this alias as you like for your own workflow.
+  ##
+
+  topic-base-branch-name = "echo master"
+
+  ### START & FINISH ###
+
+  ##
+  # Start a topic branch.
+  #
+  # Example:
+  #
+  #     git topic-start foo
+  #
+  # This implementatation does these steps:
+  #
+  #   1. Create the topic branch.
+  #   2. Push the topic branch.
+  #
+  # Customize this alias as you like for your own workflow.
+  ##
+
+  topic-start = "!f(){ \
+    branch=\"$1\"; \
+    git topic-create \"$branch\"; \
+    git topic-push; \
+  };f"
+
+  ##
+  # Finish a topic branch; this must be the current branch.
+  #
+  # Example:
+  #
+  #     git topic-finish
+  #
+  # This implementatation does these:
+  #
+  #   1. Push the topic branch.
+  #   2. Delete the topic branch.
+  #
+  # Customize this alias as you like for your own workflow.
+  ##
+
+  topic-finish = "!f(){ \
+    git topic-push; \
+    git topic-delete; \
+  };f"
+
+  ### CREATE & DELETE ###
+
+  ##
+  # Create a topic branch.
+  #
+  # Example:
+  #
+  #     git topic-create foo
+  #
+  # This implementatation does these steps:
+  #
+  #   1. Update the base branch locally.
+  #   2. Create a new branch with your topic name, based on the base branch.
+  #
+  # Customize this alias as you like for your own workflow.
+  ##
+
+  topic-create = "!f(){ \
+    branch=\"$1\"; \
+    base=$(git topic-base-branch-name); \
+    git checkout \"$base\"; git pull; \
+    git checkout -b \"$branch\" \"$base\"; \
+  };f"
+
+  ##
+  # Delete a topic branch; this must be the current branch.
+  #
+  # Example:
+  #
+  #     git topic-delete
+  #
+  # This implementatation does these:
+  #
+  #   1. Delete the topic branch locally.
+  #   2. Delete the topic branch remotely.
+  #
+  # Customize this for your own workflow preferences.
+  #
+  # If you use a sharing site such a GitHub, and use typical settings,
+  # then this implementation deletes your branch for the site.
+  #
+  # Many teams choose to delete topic branches when they are finished,
+  # to keep the repositories clean and with a smaller number of branches.
+  #
+  # If git says "unable to push to unqualified destination" then it means
+  # that the remote branch doesn't exist, so git is unable to delete it.
+  # That's fine; it means someone else has already deleted the branch.
+  # To synchronize your branch list, use "git fetch --prune".
+  #
+  # Customize this alias as you like for your own workflow.
+  ##
+
+  topic-delete = "!f(){ \
+    branch=$(git branch-name); \
+    base=$(git topic-base-branch-name); \
+    git checkout \"$base\"; \
+    git branch --delete \"$branch\"; \
+    git push origin \":$branch\"; \
+  };f"
+
+  ### PULL & PUSH ###
+
+  ##
+  # Update the current topic branch by pulling changes.
+  #
+  # Example:
+  #
+  #     git topic-pull
+  #
+  # This implementatation does these:
+  #
+  #   1. Update the trunk branch
+  #   2. Update the topic branch with any changes from the master branch
+  #
+  # If you use any kind of testing framework, or test driven development,
+  # then it can be wise to test your topic immediately after running this,
+  # to ensure that any available updates are successfully integrated.
+  #
+  # Customize this alias as you like for your own workflow.
+  ##
+
+  topic-pull = "!f(){ \
+    branch=$(git branch-name); \
+    base=$(git topic-base-branch-name); \
+    git checkout \"$base\"; git pull; \
+    git checkout \"$branch\"; git rebase \"$base\"; \
+  };f"
+
+  ##
+  # Update the current topic branch by pushing changes.
+  #
+  # Example:
+  #
+  #     git topic-push
+  #
+  # This implementatation does these:
+  #
+  #   1. Push the topic branch to the origin.
+  #   2. Set the upstream tracking.
+  #
+  # Customize this for your own workflow preferences.
+  #
+  # If you use a sharing site such a GitHub, and use typical settings,
+  # then this implementation makes your branch visible to collaborators.
+  #
+  # Many teams share branches before they are fully ready, to help
+  # the team provide feedback on the work-in-progress.
+  #
+  # Customize this alias as you like for your own workflow.
+  ##
+
+  topic-push = "!f(){ \
+    branch=$(git branch-name); \
+    git push --set-upstream origin \"$branch\"; \
+  };f"
+
+  ##
+  # Update the current topic branch by synchronizing changes.
+  #
+  # Example:
+  #
+  #     git topic-sync
+  #
+  # This implementation does these:
+  #
+  #   1. Run topic-pull.
+  #   2. Run topic-push.
+  #
+  # Customize this alias as you like for your own workflow.
+  ##
+
+  topic-sync = "!f(){ \
+    git topic-pull; \
+    git topic-push; \
+  };f"
 
   ##########################################################################
 
