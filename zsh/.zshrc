@@ -21,3 +21,5 @@ load-nvmrc() {
 add-zsh-hook chpwd load-nvmrc
 
 alias vim="nvim"
+
+eval "$(keychain --eval --agents ssh id_ed25519_github_2018-02-28)"
