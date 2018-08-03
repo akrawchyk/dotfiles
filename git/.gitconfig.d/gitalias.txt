@@ -112,12 +112,6 @@
   # grep group: find text and group the output lines; a.k.a. `grep-group`.
   gg =  grep --break --heading --line-number
 
-  # grep with ack-like formatting
-  ack = -c color.grep.linenumber=\"bold yellow\" \
-        -c color.grep.filename=\"bold green\" \
-        -c color.grep.match=\"reverse yellow\" \
-        grep --break --heading --line-number
-
   ### log ###
 
   # log with a text-based graphical representation of the commit history.
@@ -511,7 +505,7 @@
 
   # Do everything we can to synchronize all changes
   get = !git pull --rebase && git submodule update --init --recursive
-  put = !git commit --all --message="$1" && git push
+  put = !git commit --all --message=\"$1\" && shift && git push
 
   # Ignore all untracked files by appending them to .gitignore:
   ignore = "!git status | grep -P \"^\\t\" | grep -vF .gitignore | sed \"s/^\\t//\" >> .gitignore"
@@ -815,8 +809,8 @@
   #     ... do work ...
   #     $ git topic-finish
   #
-  # If you want more control, then you can use these building blocks: 
-  # 
+  # If you want more control, then you can use these building blocks:
+  #
   #     $ git topic-create foo
   #     $ git topic-delete
   #
