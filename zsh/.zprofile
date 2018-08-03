@@ -39,6 +39,7 @@ typeset -gU path fpath cdpath
 path=(
   /usr/local/{bin,sbin}
   $HOME/bin
+  $HOME/.cargo/bin
   $path
 )
 

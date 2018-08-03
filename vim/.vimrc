@@ -52,7 +52,7 @@ Plug 'tomtom/tcomment_vim'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-vinegar'
-Plug 'Valloric/YouCompleteMe', { 'do': 'chmod +x ./install.py; python ./install.py --tern-completer' }
+Plug 'Valloric/YouCompleteMe', { 'do': 'chmod +x ./install.py; python ./install.py' }
 "------ }}}
 
 "------ javascript {{{
@@ -186,9 +186,11 @@ set foldopen+=jump
 
 "--- reading and writing files {{{
 set backup
-if !has('nvim')
+if has('nvim')
+  set backupdir=$HOME/.local/share/nvim/backup
+else
   set autoread
-  set backupdir^=$HOME/.vim/tmp//
+  set backupdir^=$HOME/.vim/tmp
 endif
 set backupext=.bak
 "--- }}}
@@ -474,6 +476,12 @@ nnoremap [t :tabp<CR>
 
 " jump to last edited file with BS
 nnoremap <BS> <C-^>
+
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
 
 
 "------ leaders {{{
