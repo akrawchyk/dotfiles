@@ -37,6 +37,7 @@ Plug 'Raimondi/delimitMate'
 Plug 'rhysd/devdocs.vim'
 Plug 'junegunn/vim-easy-align'
 Plug 'editorconfig/editorconfig-vim'
+Plug 'wsdjeg/FlyGrep.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
@@ -57,8 +58,8 @@ Plug 'Valloric/YouCompleteMe', { 'do': 'chmod +x ./install.py; python ./install.
 
 "------ javascript {{{
 Plug 'othree/javascript-libraries-syntax.vim'
-Plug 'othree/yajs.vim'
-Plug 'othree/es.next.syntax.vim'
+" Plug 'othree/yajs.vim'
+" Plug 'othree/es.next.syntax.vim'
 "------ }}}
 
 "------ typescript {{{
@@ -344,7 +345,6 @@ end
 " Files command with preview window
 command! -bang -nargs=? -complete=dir Files
       \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
-
 "------ }}}
 
 "------ javascript-libraries-syntax {{{
@@ -352,7 +352,7 @@ let g:used_javascript_libs = 'jquery,underscore,angularjs,angularuirouter,react,
 "------ }}}
 
 "------ vim-polyglot {{{
-let g:polyglot_disabled = ['javascript']
+" let g:polyglot_disabled = ['javascript']
 "------
 
 "------ vim-ruby {{{
@@ -483,6 +483,7 @@ xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
 
+nnoremap <Space>/ :FlyGrep<cr>
 
 "------ leaders {{{
 let mapleader=','
