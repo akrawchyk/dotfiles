@@ -126,11 +126,8 @@
   # log with items appearing in topological order, i.e. descendant commits are shown before their parents.
   lt = log --topo-order
 
-  # log key - our favorite way to show our key performance indicators, i.e. our most useful summary.
-  lk = log --graph --topo-order --abbrev-commit --date=short --decorate --all --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn]%Creset %Cblue%G?%Creset'
-
-  # log latest - show the 10 most recent lines using `lk`
-  ll = log -n 10 --graph --topo-order --abbrev-commit --date=short --decorate --all --boundary --pretty=format:'%Cgreen%ad'
+  # log like - we like this format that shows our key performance indicators, i.e. our useful summary.
+  ll = log --graph --topo-order --abbrev-commit --date=short --decorate --all --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn]%Creset %Cblue%G?%Creset'
 
   ## ls-files ##
 
@@ -503,9 +500,21 @@
   # When you're a little worried that the world is coming to an end
   panic = !tar cvf ../git_panic.tar *
 
-  # Do everything we can to synchronize all changes
-  get = !git pull --rebase && git submodule update --init --recursive
-  put = !git commit --all --message=\"$1\" && shift && git push
+  # Do everything we can to synchronize all changes for the current branch.
+  #
+  #  * git get: fetch and prune, pull and rebase, then update submodules
+  #  * git put: commit all items, then push
+  #
+  # TODO: handle tags, delete superfluous branches, and add error handing.
+  #
+  get = !git fetch --prune && git pull --rebase=preserve && git submodule update --init --recursive
+  put = !git commit --all && git push
+
+  # Do everything we can to make the local repo like the master branch.
+  #
+  # TODO: handle tags, and delete superfluous branches, and add error handling.
+  #
+  mastery = !git checkout master && git fetch origin --prune && git reset --hard origin/master
 
   # Ignore all untracked files by appending them to .gitignore:
   ignore = "!git status | grep -P \"^\\t\" | grep -vF .gitignore | sed \"s/^\\t//\" >> .gitignore"
@@ -807,7 +816,7 @@
   #
   #     $ git topic-start foo
   #     ... do work ...
-  #     $ git topic-finish
+  #     $ git topic-stop
   #
   # If you want more control, then you can use these building blocks:
   #
@@ -818,6 +827,11 @@
   #
   #     $ git topic-pull
   #     $ git topic-push
+  #
+  # If you want to manage your branch while you're working, then use these:
+  #
+  #     $ git topic-sync
+  #     $ git topic-rename
   #
   # Ideas for your own alias customizations:
   #
@@ -838,9 +852,11 @@
   # Customize this alias as you like for your own workflow.
   ##
 
-  topic-base-branch-name = "echo master"
+  topic-base-branch-name = "!f(){ \
+    printf \"master\n\"; \
+  };f"
 
-  ### START & FINISH ###
+  ### START & STOP ###
 
   ##
   # Start a topic branch.
@@ -848,6 +864,9 @@
   # Example:
   #
   #     git topic-start foo
+  #
+  # We use this alias to begin work on a new feature,
+  # new task, new fix, new refactor, new optimization, etc.
   #
   # This implementatation does these steps:
   #
@@ -858,17 +877,20 @@
   ##
 
   topic-start = "!f(){ \
-    branch=\"$1\"; \
-    git topic-create \"$branch\"; \
+    topic_branch=\"$1\"; \
+    git topic-create \"$topic_branch\"; \
     git topic-push; \
   };f"
 
   ##
-  # Finish a topic branch; this must be the current branch.
+  # Stop a topic branch; this must be the current branch.
   #
   # Example:
   #
-  #     git topic-finish
+  #     git topic-stop
+  #
+  # We use this alias to complete work on a new feature,
+  # new task, new fix, new refactor, new optimization, etc.
   #
   # This implementatation does these:
   #
@@ -878,7 +900,7 @@
   # Customize this alias as you like for your own workflow.
   ##
 
-  topic-finish = "!f(){ \
+  topic-stop = "!f(){ \
     git topic-push; \
     git topic-delete; \
   };f"
@@ -901,10 +923,10 @@
   ##
 
   topic-create = "!f(){ \
-    branch=\"$1\"; \
-    base=$(git topic-base-branch-name); \
-    git checkout \"$base\"; git pull; \
-    git checkout -b \"$branch\" \"$base\"; \
+    topic_branch=\"$1\"; \
+    base_branch=$(git topic-base-branch-name); \
+    git checkout \"$base_branch\"; git pull; \
+    git checkout -b \"$topic_branch\" \"$base_branch\"; \
   };f"
 
   ##
@@ -936,12 +958,20 @@
   ##
 
   topic-delete = "!f(){ \
-    branch=$(git branch-name); \
-    base=$(git topic-base-branch-name); \
-    git checkout \"$base\"; \
-    git branch --delete \"$branch\"; \
-    git push origin \":$branch\"; \
+    topic_branch=$(git branch-name); \
+    base_branch=$(git topic-base-branch-name); \
+    if [ \"$topic_branch\" = \"$base_branch\" ]; then \
+      printf \"You are trying to delete your git topic branch,\n\"; \
+      printf \"but you are on the base branch: $topic_base_branch.\n\"; \
+      printf \"Please checkout the topic branch that you want,\n\"; \
+      printf \"then retry the git topic delete command.\n\"; \
+    else \
+      git checkout \"$base_branch\"; \
+      git branch --delete \"$topic_branch\"; \
+      git push origin \":$topic_branch\"; \
+    fi; \
   };f"
+
 
   ### PULL & PUSH ###
 
@@ -954,21 +984,26 @@
   #
   # This implementatation does these:
   #
-  #   1. Update the trunk branch
-  #   2. Update the topic branch with any changes from the master branch
+  #   1. Pull the topic branch from the origin.
   #
   # If you use any kind of testing framework, or test driven development,
   # then it can be wise to test your topic immediately after running this,
   # to ensure that any available updates are successfully integrated.
   #
   # Customize this alias as you like for your own workflow.
+  #
+  #   * E.g. some teams prefer to use `pull --rebase`.
   ##
 
   topic-pull = "!f(){ \
-    branch=$(git branch-name); \
-    base=$(git topic-base-branch-name); \
-    git checkout \"$base\"; git pull; \
-    git checkout \"$branch\"; git rebase \"$base\"; \
+    git pull; \
+  };f"
+
+  topic-pull-rebase = "!f(){ \
+    topic_branch=$(git branch-name); \
+    base_branch=$(git topic-base-branch-name); \
+    git checkout \"$base_branch\"; git pull; \
+    git checkout \"$topic_branch\"; git rebase \"$base_branch\"; \
   };f"
 
   ##
@@ -995,9 +1030,11 @@
   ##
 
   topic-push = "!f(){ \
-    branch=$(git branch-name); \
-    git push --set-upstream origin \"$branch\"; \
+    topic_branch=$(git branch-name); \
+    git push --set-upstream origin \"$topic_branch\"; \
   };f"
+
+  ### MANAGE TOPIC BRANCES ###
 
   ##
   # Update the current topic branch by synchronizing changes.
@@ -1018,6 +1055,29 @@
     git topic-pull; \
     git topic-push; \
   };f"
+
+  ##
+  # Move/rename the current topic branch.
+  #
+  # Example:
+  #
+  #     git topic-move hello
+  #
+  # This implementation does these:
+  #
+  #   1. Move/rename the local branch.
+  #   2. Move/rename the remote branch by pusing to origin.
+  #
+  # Customize this alias as you like for your own workflow.
+  ##
+
+  topic-move = "!f(){ \
+    new_branch=\"$1\"; \
+    old_branch=$(git branch-name); \
+    git branch --move \"$old_branch\" \"$new_branch\"; \
+    git push origin \":$old_branch\" \"$new_branch\"; \
+  };f"
+
 
   ##########################################################################
 

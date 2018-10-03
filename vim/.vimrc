@@ -175,8 +175,10 @@ set shiftround
 "--- }}}
 
 "--- folding {{{
-set foldmethod=marker
-set foldopen+=jump
+set foldenable
+set foldmethod=syntax
+set foldminlines=2
+set foldlevel=1
 "--- }}}
 
 "--- diff mode {{{
@@ -241,7 +243,8 @@ set t_Co=256
 "---- plugin settings {{{
 
 "------ airline {{{
-let g:airline_theme = 'base16_oceanicnext'
+" let g:airline_theme = 'base16_oceanicnext'
+let g:airline_theme = 'onedark'
 
 " see https://github.com/vim-airline/vim-airline/blob/a2431f2adb23a003abdfe5294861bbd69de52e52/doc/airline.txt#L176
 if !exists('g:airline_symbols')
@@ -279,20 +282,23 @@ let g:airline_symbols.linenr = ''
 " see https://github.com/vim-airline/vim-airline/blob/a2431f2adb23a003abdfe5294861bbd69de52e52/doc/airline.txt#L252
 let g:airline#parts#ffenc#skip_expected_string = 'utf-8[unix]'
 let g:airline#extensions#branch#displayed_head_limit = 8
+let g:airline#extensions#ale#enabled = 1
 "------ }}}
 
 "------ ale {{{
+" let g:ale_sign_error = ' ⚑'
+" let g:ale_sign_warning = ' ⚐'
 let g:ale_echo_msg_format = '[%linter%:%severity%] %code: %%s'
 let g:ale_fixers = {
       \ 'javascript': ['prettier'],
       \ 'typescript': ['prettier'],
       \ 'json': ['prettier'],
       \ 'css': ['prettier'],
-      \ 'scss': ['prettier'],
-      \ 'ruby': ['rubocop']
+      \ 'scss': ['prettier']
       \}
 let g:ale_javascript_prettier_use_global = 1
 let g:ale_javascript_prettier_options = '--single-quote --no-semi --no-trailing-comma --print-width 100'
+let g:ale_ruby_rubocop_executable = 'bundle'
 let g:ale_writegood_use_global = 1
 "------ }}}
 
@@ -356,6 +362,9 @@ let g:used_javascript_libs = 'jquery,underscore,angularjs,angularuirouter,react,
 "------
 
 "------ vim-ruby {{{
+let ruby_fold = 1
+let ruby_foldable_groups = 'def'
+let ruby_spellcheck_strings = 1
 let ruby_operators = 1
 " let ruby_space_errors = 1
 let ruby_no_expensive = 1
