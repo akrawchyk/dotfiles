@@ -22,4 +22,9 @@ add-zsh-hook chpwd load-nvmrc
 
 alias vim="nvim"
 
-eval "$(keychain --eval --agents ssh id_ed25519_github_2018-02-28)"
+# eval "$(keychain --eval --agents ssh id_ed25519_github_2018-02-28)"
+
+export PATH="$HOME/.jenv/bin:$PATH"
+eval "$(jenv init -)"
+
+export PATH="$HOME/.nimble/bin:$PATH"
