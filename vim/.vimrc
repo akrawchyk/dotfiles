@@ -34,6 +34,7 @@ Plug 'w0rp/ale'
 Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'chrisbra/csv.vim'
 Plug 'Raimondi/delimitMate'
+Plug 'tpope/vim-dispatch'
 Plug 'rhysd/devdocs.vim'
 Plug 'junegunn/vim-easy-align'
 Plug 'editorconfig/editorconfig-vim'
@@ -392,15 +393,11 @@ let g:UltiSnipsJumpBackwardTrigger = '<C-k>'
 "------ YouCompleteMe {{{
 let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
 let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
-" let g:ycm_collect_identifiers_from_tags_files = 1
+let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_cache_omnifunc = 0
 let g:ycm_seed_identifiers_with_syntax = 1
 let g:ycm_complete_in_comments = 1
 let g:ycm_complete_in_strings = 1
-if !exists('g:ycm_semantic_triggers')
-  let g:ycm_semantic_triggers = {}
-endif
-let g:ycm_semantic_triggers['typescript'] = ['.']
 if executable('python3')
   let g:ycm_python_binary_path = 'python3'
 endif

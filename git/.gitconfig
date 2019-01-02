@@ -1,6 +1,7 @@
 [user]
   email = 903716+akrawchyk@users.noreply.github.com
   name = Andrew Krawchyk
+  signingkey = 0xD40B20EAD93911FF
 
 [core]
   autocrlf = input
@@ -48,3 +49,9 @@
 
 [credential]
   helper = osxkeychain
+
+[commit]
+  gpgsign = true
+
+[gpg]
+  program = gpg

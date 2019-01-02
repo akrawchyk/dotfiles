@@ -19,14 +19,6 @@ if (( $+commands[brew] )); then
 fi
 
 #
-# qt5 https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit#homebrew
-#
-
-if (( $+commands[brew] )); then
-  path=("$(brew --prefix qt@5.5)/bin" $path)
-fi
-
-#
 # mysql@5.6
 #
 
