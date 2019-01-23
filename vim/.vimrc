@@ -400,7 +400,7 @@ let g:ycm_seed_identifiers_with_syntax = 1
 let g:ycm_complete_in_comments = 1
 let g:ycm_complete_in_strings = 1
 if executable('python3')
-  let g:ycm_python_binary_path = 'python3'
+  let g:ycm_server_python_interpreter = '/usr/local/bin/python3'
 endif
 "------ }}}
 "---- }}}
