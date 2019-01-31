@@ -19,11 +19,11 @@ antigen bundle bundler
 antigen bundle rake
 antigen bundle rake-fast
 
+antigen bundle github
+
 antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle zsh-users/zsh-completions
 antigen bundle zsh-users/zsh-history-substring-search
-
-# antigen bundle chriskempson/base16-shell
 
 antigen theme denysdovhan/spaceship-zsh-theme spaceship
 

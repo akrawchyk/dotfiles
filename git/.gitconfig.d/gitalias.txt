@@ -1,3 +1,61 @@
+##
+# GitAlias.com file of many git alias items, including shortcuts, helpers, workflows, etc.
+#
+#
+# ## Usage
+#
+# Typical usage for a typical user:
+#
+#   * Save this file as a dot file in your home directory: `~/.gitalias.txt`
+#
+#   * Edit your git config dot file in your home directory such as  `~/.gitconfig`
+#
+#   * Include the path to this file.
+#
+# Example file `~/.gitconfg` with an entry to include the file `~/.gitalias.txt`:
+#
+#     [include]
+#       path = gitalias.txt
+#
+#
+# ## Usage for older git versions
+#
+# If you use an older version of git that does not have git config "include" capability,
+# or if you prefer more control, then you can simply copy/paste anything you like from
+# this file to your own git config file.
+#
+#
+# ## Customization
+#
+# If you want to use this file, and also want to change some of the items,
+# then one way is to use your git config file to include this gitalias file,
+# and also define your own alias items; a later alias takes precedence.
+#
+# Example file `~/.gitconfg` item to include the file `~/.gitalias.txt`:
+#
+#     [include]
+#       path = ~/.gitconfig.d/gitalias.txt
+#     [alias]
+#       l = log --graph --oneline
+#
+#
+# ## Links
+#
+#   * [GitAlias.com website](http://gitlias.com)
+#   * [GitAlias GitHub](https://github.com/gitalias)
+#   * [Git Basics - Git Aliases](https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases)
+#   * [Git Basics - Tips and Tricks](https://git-scm.com/book/en/v1/Git-Basics-Tips-and-Tricks)
+#
+# ## Tracking
+#
+#   * Package: gitalias
+#   * Version: 20.4.0
+#   * Created: 2016-06-17
+#   * Updated: 2019-01-16
+#   * License: GPL
+#   * Contact: Joel Parker Henderson (joel@joelparkerhenderson.com)
+##
+
 [alias]
 
   ##
@@ -90,11 +148,14 @@
   # diff - show changes not yet staged
   dc = diff --cached
 
-  # diff - changes about to be commited
+  # diff - show changes about to be commited
   ds = diff --staged
 
   # diff - show changes but by word, not line
   dw = diff --word-diff
+
+  # diff deep - show changes with our preferred options. Also aliased as `diff-deep`.
+  dd = diff --check --dirstat --find-copies --find-renames --histogram --color
 
   ### clean ###
 
@@ -103,14 +164,14 @@
 
   ### grep ###
 
-  # find text
+  # grep i.e. search for text
   g = grep
 
-  # grep and show line number
-  gl =  grep --line-number
+  # grep - show line number
+  gl = grep --line-number
 
-  # grep group: find text and group the output lines; a.k.a. `grep-group`.
-  gg =  grep --break --heading --line-number
+  # grep group - search with our preferred options. Also aliased as `grep-group`.
+  gg = grep --break --heading --line-number --color
 
   ### log ###
 
@@ -123,10 +184,13 @@
   # log with patch generation.
   lp = log --patch
 
+  # log with first parent, useful for team branch that only accepts pull requests
+  lfp = log --first-parent
+
   # log with items appearing in topological order, i.e. descendant commits are shown before their parents.
   lt = log --topo-order
 
-  # log like - we like this format that shows our key performance indicators, i.e. our useful summary.
+  # log like - we like this summarization our key performance indicators. Also aliased as `log-like`.
   ll = log --graph --topo-order --abbrev-commit --date=short --decorate --all --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn]%Creset %Cblue%G?%Creset'
 
   ## ls-files ##
@@ -201,11 +265,12 @@
   # Let's say I want to squash the "foo" and "goo" commits together,
   # and also change "hoo" to say "whatever". To do these, I change "pick"
   # to say "s" for squash; this tells git to squash the two together;
-  # I also edit "hoo". I make the file look like:
+  # I also edit "hoo" to rename it to "whatever". I make the file look like:
   #
   #     pick 7f06d36 foo
   #     s ad544d0 goo
   #     r de3083a whatever
+  #
   # This gives me two new commit messages to edit, which I update.
   # Now when I push the remote repo host receives two commits
   #
@@ -298,32 +363,37 @@
   # Latest annotated tag in all branches
   lasttagged = !git describe --tags `git rev-list --tags --max-count=1`
 
-  # Diffs
-  diff-all = !"for name in $(git diff --name-only $1); do git difftool $1 $name & done"
-  diff-changes = diff --name-status -r
-  diff-stat = diff --stat --ignore-space-change -r
-  diff-staged = diff --cached
-
   # From https://gist.github.com/492227
   head = log -n1
   heads = !"git log origin/master.. --format='%Cred%h%Creset;%C(yellow)%an%Creset;%H;%Cblue%f%Creset' | git name-rev --stdin --always --name-only | column -t -s';'"
   lost = !"git fsck | awk '/dangling commit/ {print $3}' | git show --format='SHA1: %C(yellow)%h%Creset %f' --stdin | awk '/SHA1/ {sub(\"SHA1: \", \"\"); print}'"
 
-  ### grep ###
+  ### diff-* ###
+
+  diff-all = !"for name in $(git diff --name-only $1); do git difftool $1 $name & done"
+  diff-changes = diff --name-status -r
+  diff-stat = diff --stat --ignore-space-change -r
+  diff-staged = diff --cached
+
+  # Diff using our preferred options. A.k.a. `dd`.
+  diff-deep = diff --check --dirstat --find-copies --find-renames --histogram --color
+
+  ### grep-* ###
 
   # Find text in any commit ever.
   grep-all = !"f() { git rev-list --all | xargs git grep \"$@\"; }; f"
 
-  # Find text and group the output lines. Also aliased as `gg`.
-  grep-group = grep --break --heading --line-number
+  # Find text and group the output lines. A.k.a. `gg`.
+  grep-group = grep --break --heading --line-number --color
 
   # grep with ack-like formatting
-  ack = -c color.grep.linenumber=\"bold yellow\" \
-        -c color.grep.filename=\"bold green\" \
-        -c color.grep.match=\"reverse yellow\" \
-        grep --break --heading --line-number
+  grep-ack = \
+    -c color.grep.linenumber=\"bold yellow\" \
+    -c color.grep.filename=\"bold green\" \
+    -c color.grep.match=\"reverse yellow\" \
+    grep --break --heading --line-number
 
-  ###
+  ### merge-* ###
 
   # Given a merge commit, find the span of commits that exist(ed).
   # Not so useful in itself, but used by other aliases.
@@ -367,23 +437,50 @@
   # Show log of new commits after you fetched, with stats, excluding merges
   log-fresh = log ORIG_HEAD.. --stat --no-merges
 
+  # Show log in our preferred format for our key performance indicators. A.k.a. `ll`.
+  log-like = log --graph --topo-order --abbrev-commit --date=short --decorate --all --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn]%Creset %Cblue%G?%Creset'
+
   # Show log with dates in our local timezone
   log-local = log --date=local
 
-  # Show the log for my own user email
-  log-me = !git log --author $(git config user.email)
+  # Show the log for my own commits by my own user email
+  log-my = !git log --author $(git config user.email)
 
   # Show log as a graph
   log-graph = log --graph --all --oneline --decorate
 
-  # Show the date of the first commit
-  log-first-date = !"git log --date-order --date=iso --pretty=%ad --reverse | head -1"
+  # Show the date of the earliest commit, in strict ISO 8601 format
+  log-first-date = !"git log --date-order --format=%cI | tail -1"
 
-  # Show the recent day
-  log-day = log --since yesterday
+  # Show the date of the latest commit, in strict ISO 8601 format
+  log-latest-date = log -1 --date-order --format=%cI
 
-  # Summarize your own changes since yesterday, suitable for a daily standup meeting.
-  log-standup = !git log --since yesterday --author $(git config user.email) --pretty=short
+  # Show the number of log entries by a specific date format
+  log-count-per-date-format = "!f() { d=\"$1\"; shift; git log $@ --format=oneline --format="%ad" --date=format:\"$d\" | awk '{a[$0]++}END{for(i in a){print i, a[i]}}' | sort; }; f"
+
+  # Show the log of the recent hour, day, week, month, year
+  log-hour  = log --since "1 hour ago"
+  log-day   = log --since "1 day ago"
+  log-week  = log --since "1 week ago"
+  log-month = log --since "1 month ago"
+  log-year  = log --since "1 year ago"
+
+  # Show the log of my own recent hour, day, week, month, year
+  log-my-hour  = log --author $(git config user.email) --since "1 hour ago"
+  log-my-day   = log --author $(git config user.email) --since "1 day ago"
+  log-my-week  = log --author $(git config user.email) --since "1 week ago"
+  log-my-month = log --author $(git config user.email) --since "1 month ago"
+  log-my-year  = log --author $(git config user.email) --since "1 year ago"
+
+  # Show the number of log items by year, or month, or day, etc.
+  log-count-per-hour          = "!f() { git log-count-per-date-format \"%Y-%m-%dT%H\" $@ ; }; f"
+  log-count-per-day           = "!f() { git log-count-per-date-format \"%Y-%m-%d\" $@ ; }; f"
+  log-count-per-week          = "!f() { git log-count-per-date-format \"%Y#%V\" $@; }; f"
+  log-count-per-month         = "!f() { git log-count-per-date-format \"%Y-%m\" $@ ; }; f"
+  log-count-per-year          = "!f() { git log-count-per-date-format \"%Y\" $@ ; }; f"
+  log-count-per-hour-of-day   = "!f() { git log-count-per-date-format \"%H\" $@; }; f"
+  log-count-per-day-of-week   = "!f() { git log-count-per-date-format \"%u\" $@; }; f"
+  log-count-per-week-of-year  = "!f() { git log-count-per-date-format \"%V\" $@; }; f"
 
   # TODO
   log-refs = log --all --graph --decorate --oneline --simplify-by-decoration --no-merges
@@ -396,7 +493,7 @@
   #   * Written by (Corey Haines)[http://coreyhaines.com/]
   #   * Scriptified by Gary Bernhardt
   #   * Obtained from https://github.com/garybernhardt/dotfiles/blob/master/bin/git-churn
-  #   * Edited for sixarm_git_config repo by Joel Parker Henderson
+  #   * Edited for GitAlias.com repo by Joel Parker Henderson
   #   * Comments by Mislav http://mislav.uniqpath.com/2014/02/hidden-documentation/
   #
   # Show churn for whole repo:
@@ -468,6 +565,12 @@
 
   issues = !sh -c \"git log $1 --oneline | grep -o \\\"ISSUE-[0-9]\\+\\\" | sort -u\"
 
+  # Show the commit's parents
+  commit-parents = !git cat-file -p "$1" | sed -n '/0/,/^ *$/p' | grep "^parent "
+
+  # Is the commit a merge commit? If yes exit 0, else exit 1
+  commit-is-merge = ![ "$(git cat-file -p "42e810fddc4688b28ef1cf438998579344cc33f5" | sed -n '/0/,/^ *$/p' | grep -c "^parent ")" -ge "2" ]
+
   ### WORKFLOW ALIASES ###
 
   # Clone a git repository including all submodules
@@ -498,7 +601,10 @@
   snapshot = !git stash push "snapshot: $(date)" && git stash apply "stash@{0}"
 
   # When you're a little worried that the world is coming to an end
-  panic = !tar cvf ../git_panic.tar *
+  panic = !tar cvf ../panic.tar *
+
+  # Create an archive file of everything in the repo
+  archive = !"f() { top=$(rev-parse --show-toplevel); cd $top; tar cvf $top.tar $top ; }; f"
 
   # Do everything we can to synchronize all changes for the current branch.
   #
@@ -523,6 +629,10 @@
   push1 = "!git push origin $(git branch-name)"
   pull1 = "!git pull origin $(git branch-name)"
 
+  # Track all remote branches that aren't already being tracked;
+  # this is a bit hacky because of the parsing, and we welcome
+  # better code that works using more-specific git commands.
+  track-all-remote-branches = !"f() { git branch -r | grep -v ' -> ' | sed 's/^ \\+origin\\///' ; }; f"
 
   ##
   # Reset & Undo
@@ -670,15 +780,14 @@
 
   ### SHELL SCRIPTING ALIASES ###
 
+  # Get the top level directory name
+  top-name = rev-parse --show-toplevel
+
   # Get the current branch name
   branch-name = rev-parse --abbrev-ref HEAD
 
-  # Get name of the upstream branch
+  # Get the upstream branch name
   upstream-name = !git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)
-
-  # Get the top level directory, regardless of what subdirectory we're in.
-  # root = ! pwd # this one is funny but slow
-  root = rev-parse --show-toplevel
 
   # Execute shell scripts. Git always runs scripts in the top directory.
   # For example "git exec pwd" will always show you the top directory.
