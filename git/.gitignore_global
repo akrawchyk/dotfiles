@@ -303,3 +303,4 @@ node_modules/
 
 .adr-dir
 *.bak
+.solargraph.yml

@@ -6,41 +6,32 @@ if isdirectory('.') && !isdirectory('~/.vim/tmp')
   silent execute '!mkdir -p $HOME/.vim/tmp'
 endif
 
-"--- important {{{
-"--- }}}
-
 "---- plugins {{{
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  au VimEnter * PlugInstall
-endif
-
-" packadd! matchit
-
-if !exists('loaded_matchit')
-  source $VIMRUNTIME/macros/matchit.vim
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
 call plug#begin()
+Plug 'tpope/vim-sensible'
 
-"------ colors {{{
 Plug 'chriskempson/base16-vim'
-"------ }}}
 
-"------ tools {{{
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
+Plug 'shumphrey/fugitive-gitlab.vim'
+
 Plug 'tpope/vim-abolish'
 Plug 'w0rp/ale'
 Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
-Plug 'chrisbra/csv.vim'
 Plug 'Raimondi/delimitMate'
 Plug 'tpope/vim-dispatch'
 Plug 'rhysd/devdocs.vim'
 Plug 'junegunn/vim-easy-align'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'wsdjeg/FlyGrep.vim'
-Plug 'tpope/vim-fugitive'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'sheerun/vim-polyglot'
@@ -55,32 +46,15 @@ Plug 'tomtom/tcomment_vim'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-vinegar'
-Plug 'Valloric/YouCompleteMe', { 'do': 'chmod +x ./install.py; python ./install.py' }
-"------ }}}
 
-"------ javascript {{{
-Plug 'othree/javascript-libraries-syntax.vim'
-" Plug 'othree/yajs.vim'
-" Plug 'othree/es.next.syntax.vim'
-"------ }}}
-
-"------ typescript {{{
-Plug 'Quramy/tsuquyomi'
-"------ }}}
-
-"------ ruby {{{
-Plug 'tpope/vim-endwise'
-" Plug 'tpope/vim-rails'
-"------ }}}
+Plug 'othree/javascript-libraries-syntax.vim', { 'for': ['javascript', 'typescript'] }
+Plug 'tpope/vim-endwise', { 'for': 'ruby' }
+Plug 'tpope/vim-rails', { 'for': 'ruby' }
 
 call plug#end()
 "---- }}}
 
 "--- moving around, searching and patterns {{{
-if !has('nvim')
-  set incsearch
-  set hlsearch
-endif
 set ignorecase
 set smartcase
 set wrapscan
@@ -91,20 +65,9 @@ elseif executable('ag')
 endif
 "--- }}}
 
-"--- tags {{{
-"--- }}}
-
 "--- displaying text {{{
-if !has('nvim')
-  set display=lastline
-endif
 set lazyredraw
 set list
-if has('multi_byte') && &encoding ==# 'utf-8'
-  let &listchars = 'tab:˒ ,trail:·,extends:…,precedes:…,nbsp:+'
-else
-  let &listchars = 'tab:> ,extends:>,precedes:<,nbsp:.'
-endif
 set nowrap
 "--- }}}
 
@@ -118,14 +81,8 @@ endif
 
 "--- multiple windows {{{
 set hidden
-if !has('nvim')
-  set laststatus=2
-endif
 set splitbelow
 set splitright
-"--- }}}
-
-"--- multiple tab pages {{{
 "--- }}}
 
 "--- terminal {{{
@@ -135,15 +92,8 @@ endif
 set scrolljump=4
 "--- }}}
 
-"--- using the mouse {{{
-"--- }}}
-
-"--- printing {{{
-"--- }}}
-
 "--- messages and info {{{
 if !has('nvim')
-  set ruler
   set showcmd
 endif
 set report=0
@@ -160,8 +110,6 @@ endif
 "--- }}}
 
 "--- editing text {{{
-set backspace=indent,eol,start
-set complete-=i
 set completeopt=menu,menuone
 set undofile
 if !has('nvim')
@@ -170,9 +118,6 @@ endif
 "--- }}}
 
 "--- tabs and indenting {{{
-if !has('nvim')
-  set autoindent
-endif
 set shiftround
 "--- }}}
 
@@ -183,18 +128,11 @@ set foldminlines=2
 set foldlevel=1
 "--- }}}
 
-"--- diff mode {{{
-"--- }}}
-
-"--- mapping {{{
-"--- }}}
-
 "--- reading and writing files {{{
 set backup
 if has('nvim')
   set backupdir=$HOME/.local/share/nvim/backup
 else
-  set autoread
   set backupdir^=$HOME/.vim/tmp
 endif
 set backupext=.bak
@@ -210,19 +148,10 @@ set updatecount=100
 "--- command line editing {{{
 set wildmode=longest:full,full
 set wildignore+=tags,*.pyc
-if !has('nvim')
-  set wildmenu
-endif
 "--- }}}
 
 "--- executing external commands {{{
 set shell=/usr/local/bin/zsh
-"--- }}}
-
-"--- running make and jumping to errors {{{
-"--- }}}
-
-"--- language specific {{{
 "--- }}}
 
 "--- multi-byte characters {{{
@@ -232,9 +161,6 @@ set termencoding=utf-8
 
 "--- various {{{
 set gdefault
-if !has('nvim')
-  set viminfo='100,n$HOME/.vim/tmp/viminfo
-endif
 "--- }}}
 
 "--- term {{{
@@ -392,16 +318,16 @@ let g:UltiSnipsJumpBackwardTrigger = '<C-k>'
 "------ }}}
 
 "------ YouCompleteMe {{{
-let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
-let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
-let g:ycm_collect_identifiers_from_tags_files = 1
-let g:ycm_cache_omnifunc = 0
-let g:ycm_seed_identifiers_with_syntax = 1
-let g:ycm_complete_in_comments = 1
-let g:ycm_complete_in_strings = 1
-if executable('python3')
-  let g:ycm_server_python_interpreter = '/usr/local/bin/python3'
-endif
+" let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+" let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+" let g:ycm_collect_identifiers_from_tags_files = 1
+" let g:ycm_cache_omnifunc = 0
+" let g:ycm_seed_identifiers_with_syntax = 1
+" let g:ycm_complete_in_comments = 1
+" let g:ycm_complete_in_strings = 1
+" if executable('python3')
+"   let g:ycm_server_python_interpreter = '/usr/local/bin/python3'
+" endif
 "------ }}}
 "---- }}}
 
@@ -417,7 +343,6 @@ inoremap jk <Esc>
 " make undo and yank consistent
 nnoremap U <C-r>
 noremap Y y$
-inoremap <C-U> <C-G>u<C-U>
 
 " easier open splits
 nnoremap <C-w>- <C-w>s
@@ -532,21 +457,26 @@ nnoremap <leader>l :lcl<CR>
 nnoremap <silent><leader>p :set paste<CR>
 
 " YouCompleteMe Tern commands
-noremap <leader>tD :YcmCompleter GetDoc<CR>
-noremap <leader>tt :YcmCompleter GetType<CR>
-noremap <leader>td :YcmCompleter GoToDefinition<CR>
-noremap <leader>tr :YcmCompleter GoToReferences<CR>
-noremap <leader>tR :YcmCompleter RefactorRename<SPACE>
+" noremap <leader>tD :YcmCompleter GetDoc<CR>
+" noremap <leader>tt :YcmCompleter GetType<CR>
+" noremap <leader>td :YcmCompleter GoToDefinition<CR>
+" noremap <leader>tr :YcmCompleter GoToReferences<CR>
+" noremap <leader>tR :YcmCompleter RefactorRename<SPACE>
 
 " toggle tagbar
 nnoremap <leader>t :TagbarToggle<CR>
 
 " search for word under cursor
-nnoremap <silent><leader>ag :Ag <C-R><C-W><CR>
+nnoremap <silent><leader>rg :Rg <C-R><C-W><CR>
 
 " fuzzy find files
 nnoremap <leader><leader> :Files<CR>
 "------ }}}
+"---- }}}
+
+
+"---- syntax {{{
+highlight link ExtraWhitespace Error
 "---- }}}
 
 
@@ -578,6 +508,7 @@ augroup filetypes
 
   " https://github.com/vim-ruby/vim-ruby/wiki/VimRubySupport#compiler-plugins
   au FileType ruby compiler ruby
+  au FileType java let b:dispatch = 'bundle exec rspec %'
 
   " https://github.com/rhysd/devdocs.vim#mapping-k-to-search-under-the-word-quickly
   au FileType python,ruby,javascript nnoremap <buffer>K <Plug>(devdocs-under-cursor)
@@ -617,6 +548,4 @@ if filereadable(expand('~/.vimrc_background'))
   let base16colorspace=256
   source ~/.vimrc_background
 endif
-
-highlight link ExtraWhitespace Error
 "---- }}}
