@@ -12,7 +12,7 @@
 #
 #   * Include the path to this file.
 #
-# Example file `~/.gitconfg` with an entry to include the file `~/.gitalias.txt`:
+# Example file `~/.gitconfig` with an entry to include the file `~/.gitalias.txt`:
 #
 #     [include]
 #       path = gitalias.txt
@@ -31,7 +31,7 @@
 # then one way is to use your git config file to include this gitalias file,
 # and also define your own alias items; a later alias takes precedence.
 #
-# Example file `~/.gitconfg` item to include the file `~/.gitalias.txt`:
+# Example file `~/.gitconfig` item to include the file `~/.gitalias.txt`:
 #
 #     [include]
 #       path = ~/.gitconfig.d/gitalias.txt
@@ -140,6 +140,12 @@
   # cherry-pick - apply the changes introduced by some existing commits; useful for moving small chunks of code between branches.
   cp = cherry-pick
 
+  # cherry-pick - abort the picking process
+  cpa = cherry-pick --abort
+
+  # cherry-pick - continue the picking process
+  cpc = cherry-pick --continue
+
   # cherry-pick without making a commit, and when when recording the commit, append a line that says "(cherry picked from commit ...)"
   cp-nx = cherry-pick --no-commit -x
 
@@ -191,7 +197,10 @@
   lt = log --topo-order
 
   # log like - we like this summarization our key performance indicators. Also aliased as `log-like`.
-  ll = log --graph --topo-order --abbrev-commit --date=short --decorate --all --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn]%Creset %Cblue%G?%Creset'
+  ll = log --graph --topo-order --date=short --abbrev-commit --decorate --all --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn]%Creset %Cblue%G?%Creset'
+
+  # log like long  - we like this summarization our key performance indicators. Also aliased as `log-like-long`.
+  lll = log --graph --topo-order --date=iso8601-strict --no-abbrev-commit --abbrev=40 --decorate --all --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn <%ce>]%Creset %Cblue%G?%Creset'
 
   ## ls-files ##
 
@@ -238,10 +247,31 @@
   #
   pr = pull --rebase
 
+  # pp - pull with rebase preserve of merge commits
+  #
+  # See https://stackoverflow.com/questions/21364636/git-pull-rebase-preserve-merges
+  #
+  # You should only rebase if you know (in a sort of general sense)
+  # what you are doing, and if you do know what you are doing, then you
+  # would probably prefer a merge-preserving rebase as a general rule.
+  #
+  # Although by the time you've decided that rebasing is a good idea,
+  # you will probably find that a history that has its own embedded
+  # branch-and-merge-points is not necessarily the correct "final
+  # rewritten history".
+  #
+  # That is, if it's appropriate to do a rebase at all, it's at least fairly
+  # likely that the history to be rebased is itself linear, so that the
+  # preserve-vs-flatten question is moot anyway.
+  pp = pull --rebase=preserve
+
   ### rebase ###
 
   # rebase - forward-port local commits to the updated upstream head.
   rb = rebase
+
+  # rebase abort - cancel the rebasing process
+  rba = rebase --abort
 
   # rebase - continue the rebasing process after resolving a conflict manually and updating the index with the resolution.
   rbc = rebase --continue
@@ -325,6 +355,15 @@
 
   # submodule - enables foreign repositories to be embedded within a dedicated subdirectory of the source tree.
   sm = submodule
+
+  # submodule init
+  smi = submodule init
+
+  # submodule add
+  sma = submodule add
+
+  # submodule sync
+  sms = submodule sync
 
   # submodule update
   smu = submodule update
@@ -438,7 +477,10 @@
   log-fresh = log ORIG_HEAD.. --stat --no-merges
 
   # Show log in our preferred format for our key performance indicators. A.k.a. `ll`.
-  log-like = log --graph --topo-order --abbrev-commit --date=short --decorate --all --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn]%Creset %Cblue%G?%Creset'
+  log-like = log --graph --topo-order --date=short --abbrev-commit --decorate --all --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn]%Creset %Cblue%G?%Creset'
+
+  # Show log in our preferred format for our key performance indicators, with long items. A.k.a. `lll`.
+  log-like-long = log --graph --topo-order --date=iso8601-strict --no-abbrev-commit --decorate --all --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn <%ce>]%Creset %Cblue%G?%Creset'
 
   # Show log with dates in our local timezone
   log-local = log --date=local
@@ -629,6 +671,10 @@
   push1 = "!git push origin $(git branch-name)"
   pull1 = "!git pull origin $(git branch-name)"
 
+  # Track and untrack, with default parameters, and with printing the command
+  track = "!f(){ branch=$(git rev-parse --abbrev-ref HEAD); cmd=\"git branch $branch -u ${1:-origin}/${2:-$branch}\"; echo $cmd; $cmd; }; f"
+  untrack = "!f(){ branch=$(git rev-parse --abbrev-ref HEAD); cmd=\"git branch --unset-upstream ${1:-$branch}\"; echo $cmd; $cmd; }; f"
+
   # Track all remote branches that aren't already being tracked;
   # this is a bit hacky because of the parsing, and we welcome
   # better code that works using more-specific git commands.
@@ -665,7 +711,7 @@
   cleanout = !git clean -df && git checkout -- .
 
   # Expunge a file everywhere; this command is typically for a serious problem,
-  # such as accidentially committing a file of sensistive data, such as passwords.
+  # such as accidentally committing a file of sensitive data, such as passwords.
   # After you use command, you will likely need to force push everything.
   # See https://help.github.com/articles/removing-sensitive-data-from-a-repository/
   expunge = !"f() { git filter-branch --force --index-filter \"git rm --cached --ignore-unmatch $1\" --prune-empty --tag-name-filter cat -- --all }; f"
@@ -703,7 +749,7 @@
   # Work In Progress: from https://gist.github.com/492227 and VonC on stackoverflow.
   # This enables a quick way to add all new and modified files to the index,
   # while cleaning the index from the files removed from the working tree;
-  # this cleaning will facilite a rebase, because there won't be any conlfict
+  # this cleaning will facilitate a rebase, because there won't be any conflict
   # due to an "unclean" working directory (not in sync with the index).
   # The unwip will restore the deleted files to the working tree.
   wip = !"git add --all; git ls-files --deleted -z | xargs -0 git rm; git commit --message=wip"
@@ -977,7 +1023,7 @@
   # We use this alias to begin work on a new feature,
   # new task, new fix, new refactor, new optimization, etc.
   #
-  # This implementatation does these steps:
+  # This implementation does these steps:
   #
   #   1. Create the topic branch.
   #   2. Push the topic branch.
@@ -1001,7 +1047,7 @@
   # We use this alias to complete work on a new feature,
   # new task, new fix, new refactor, new optimization, etc.
   #
-  # This implementatation does these:
+  # This implementation does these:
   #
   #   1. Push the topic branch.
   #   2. Delete the topic branch.
@@ -1023,7 +1069,7 @@
   #
   #     git topic-create foo
   #
-  # This implementatation does these steps:
+  # This implementation does these steps:
   #
   #   1. Update the base branch locally.
   #   2. Create a new branch with your topic name, based on the base branch.
@@ -1045,7 +1091,7 @@
   #
   #     git topic-delete
   #
-  # This implementatation does these:
+  # This implementation does these:
   #
   #   1. Delete the topic branch locally.
   #   2. Delete the topic branch remotely.
@@ -1091,7 +1137,7 @@
   #
   #     git topic-pull
   #
-  # This implementatation does these:
+  # This implementation does these:
   #
   #   1. Pull the topic branch from the origin.
   #
@@ -1122,7 +1168,7 @@
   #
   #     git topic-push
   #
-  # This implementatation does these:
+  # This implementation does these:
   #
   #   1. Push the topic branch to the origin.
   #   2. Set the upstream tracking.
@@ -1143,7 +1189,7 @@
     git push --set-upstream origin \"$topic_branch\"; \
   };f"
 
-  ### MANAGE TOPIC BRANCES ###
+  ### MANAGE TOPIC BRANCHES ###
 
   ##
   # Update the current topic branch by synchronizing changes.
@@ -1175,7 +1221,7 @@
   # This implementation does these:
   #
   #   1. Move/rename the local branch.
-  #   2. Move/rename the remote branch by pusing to origin.
+  #   2. Move/rename the remote branch by pushing to origin.
   #
   # Customize this alias as you like for your own workflow.
   ##

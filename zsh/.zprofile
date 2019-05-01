@@ -40,3 +40,5 @@ cdpath=(
   $HOME/Developer
   $cdpath
 )
+
+export PATH="$HOME/.cargo/bin:$PATH"
