@@ -47,7 +47,7 @@
     "vue"
   ]
   [layers.override_cmd]
-    ruby = ["chruby-exec", "2.6.3 --", "solargraph", "stdio"]
+    ruby = ["solargraph", "stdio"]
 
 [[layers]]
   name = "lang#json"
