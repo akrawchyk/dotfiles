@@ -1,14 +1,14 @@
 [options]
-    colorscheme = "onedark"
-    colorscheme_bg = "dark"
-    filemanager = "defx"
-    enable_guicolors = true
-    statusline_separator = "arrow"
-# statusline_inactive_separator = "arrow"
-    buffer_index_type = 4
-    enable_tabline_filetype_icon = true
-    enable_statusline_mode = false
-    bootstrap_after = "customize#after"
+  colorscheme = "onedark"
+  colorscheme_bg = "dark"
+  filemanager = "defx"
+  enable_guicolors = true
+  statusline_separator = "arrow"
+  statusline_inactive_separator = "arrow"
+  buffer_index_type = 4
+  enable_tabline_filetype_icon = true
+  enable_statusline_mode = false
+  bootstrap_after = "customize#after"
 
 [[layers]]
   name = "colorscheme"
@@ -50,6 +50,9 @@
     ruby = ["solargraph", "stdio"]
 
 [[layers]]
+  name = "incsearch"
+
+[[layers]]
   name = "lang#json"
 
 [[layers]]
@@ -71,4 +74,12 @@
   name = "lang#ruby"
 
 [[layers]]
+  name = "lang#go"
+
+[[layers]]
   name = "test"
+
+[[custom_plugins]]
+   name = "chrisbra/csv.vim"
+   on_ft = ['csv']
+   merged = false
