@@ -6,12 +6,12 @@ IRB.conf[:AUTO_INDENT] = true
 IRB.conf[:BACK_TRACE_LIMIT] = 128
 
 # use awesome_print if available
-begin
-  require 'awesome_print'
-  AwesomePrint.irb!
-rescue LoadError => err
-  warn "No awesome_print: #{err}"
-end
+# begin
+  # require 'awesome_print'
+  # AwesomePrint.irb!
+# rescue LoadError => err
+  # warn "No awesome_print: #{err}"
+# end
 
 # Log Rails and/or ActiveRecord to STDOUT
 # if defined?(Rails) && Rails.respond_to?(:logger=)

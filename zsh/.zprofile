@@ -41,4 +41,7 @@ cdpath=(
   $cdpath
 )
 
-export PATH="$HOME/.cargo/bin:$PATH"
+export PATH=$HOME/.cargo/bin:$PATH
+
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin

@@ -20,6 +20,8 @@ antigen bundle bundler
 antigen bundle rake
 antigen bundle rake-fast
 
+antigen bundle golang
+
 antigen bundle github
 
 antigen bundle zsh-users/zsh-autosuggestions
