@@ -45,6 +45,16 @@ tags.lock
 tags.temp
 
 
+# Visual  Stuido Code https://github.com/github/gitignore/blob/cedf2d1e99693ea98262df1f126f306436f3ae1f/Global/VisualStudioCode.gitignore
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+
 # Mercurial https://github.com/github/gitignore/blob/2664dad61f3fda7755acc70ceb5aac4b1e956981/Global/Mercurial.gitignore
 
 .hg/
