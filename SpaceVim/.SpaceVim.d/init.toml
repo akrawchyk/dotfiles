@@ -74,9 +74,6 @@
   name = "lang#ruby"
 
 [[layers]]
-  name = "lang#go"
-
-[[layers]]
   name = "test"
 
 [[custom_plugins]]
