@@ -1,7 +1,7 @@
 [user]
   email = 903716+akrawchyk@users.noreply.github.com
   name = Andrew Krawchyk
-  signingkey = 0xD40B20EAD93911FF
+  signingkey = D40B20EAD93911FF
 
 [core]
   autocrlf = input
@@ -54,7 +54,8 @@
   gpgsign = true
 
 [gpg]
-  program = gpg
+  program = gpg2
+
 [merge "npm-merge-driver"]
 	name = automatically merge npm lockfiles
 	driver = npx npm-merge-driver merge %A %O %B %P
