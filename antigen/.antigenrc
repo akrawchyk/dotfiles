@@ -9,6 +9,7 @@ if [[ "$(uname -a)" = *Ubuntu* ]]; then
 fi
 
 antigen bundle colored-man-pages
+antigen bundle asdf
 antigen bundle fzf
 antigen bundle tmux
 
@@ -28,8 +29,6 @@ antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle zsh-users/zsh-completions
 antigen bundle zsh-users/zsh-history-substring-search
 
-antigen theme denysdovhan/spaceship-zsh-theme spaceship
+antigen theme denysdovhan/spaceship-prompt
 
 antigen apply
-
-unalias rg
