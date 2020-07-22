@@ -1,3 +1,5 @@
+# -*- mode: gitconfig; -*-
+# vim: set filetype=gitconfig:
 ##
 # GitAlias.com file of many git alias items, including shortcuts, helpers, workflows, etc.
 #
@@ -49,9 +51,9 @@
 # ## Tracking
 #
 #   * Package: gitalias
-#   * Version: 20.4.0
+#   * Version: 23.1.0
 #   * Created: 2016-06-17
-#   * Updated: 2019-01-16
+#   * Updated: 2020-03-01
 #   * License: GPL
 #   * Contact: Joel Parker Henderson (joel@joelparkerhenderson.com)
 ##
@@ -104,7 +106,10 @@
 
   ### branch ###
 
-  # branch - edit the description
+  # branch description
+  bd = !"git config branch.$(git rev-parse --abbrev-ref HEAD 2>/dev/null).description"
+
+  # bra nch - edit the description
   be = branch --edit-description
 
   # branch and only list branches whose tips are reachable from the specified commit (HEAD if not specified).
@@ -134,6 +139,7 @@
 
   # checkout - update the working tree to match a branch or paths. [same as "o" for "out"]
   co = checkout
+  con = checkout --no-guess
 
   ### cherry-pick ###
 
@@ -222,6 +228,18 @@
 
   # pull with rebase - to provide a cleaner, linear, bisectable history.
   #
+  # To automatically do "pull --rebase" everywhere:
+  #
+  #     git config --global pull.rebase true
+  #
+  # To automatically do "pull --rebase" for any branch based on master:
+  #
+  #    git config branch.master.rebase true
+  #
+  # To automatically do "pull --rebase" for any newly-created branches:
+  #
+  #     git config --global branch.autosetuprebase always
+  #
   # To integrate changes between branches, you can merge or rebase.
   #
   # When we use "git pull", git does a fetch then a merge.
@@ -236,14 +254,6 @@
   # the remote HEAD, then replays your local commits back into repo.
   # This means you don't get any noisy merge messages in your history.
   # This gives us a linear history, and also helps with git bisect.
-  #
-  # To automatically do "pull --rebase" for any branch based on master:
-  #
-  #    git config branch.master.rebase true
-  #
-  # To automatically do "pull --rebase" for all branches:
-  #
-  #     git config --global branch.autosetuprebase always
   #
   pr = pull --rebase
 
@@ -263,6 +273,30 @@
   # That is, if it's appropriate to do a rebase at all, it's at least fairly
   # likely that the history to be rebased is itself linear, so that the
   # preserve-vs-flatten question is moot anyway.
+  #
+  # See https://stackoverflow.com/questions/38269092/is-it-possible-to-put-preserve-merges-in-the-gitconfig
+  #
+  # While preserving merges is probably generally superior, in at least a
+  # few ways, to discarding them when rebasing, the fact is that rebase
+  # cannot preserve them. The only thing it can do, once some commits
+  # have been copied to new commits, is re-perform them. This can have new
+  # and/or different merge conflicts, vs the last time the merge was done.
+  # You should also pay close attention to the restrictions on merge
+  # preservation in the git rebase documentation.
+  #
+  # Without getting into a lot of detail, it always seems to me that most
+  # commit graph subsets that "should be" rebased, rarely have any
+  # internal merges. If such a graph subset has a single final merge, you
+  # can simply strip away that merge (with git reset) before rebasing,
+  # and re-do that single merge manually at the end. (In fact, git rebase
+  # normally drops merge commits entirely, so you don't have to run the git
+  # reset itself in some cases. The one where you do have to run it is when
+  # the merge is into the branch onto which you intend to rebase. This is
+  # where git pull actually does the right thing when it uses
+  # `git rebase -p`, except that it fails to check for, and warn about,
+  # internal merges, which are sort of warning signs that rebasing might
+  # not be a good idea.
+  #
   pp = pull --rebase=preserve
 
   ### rebase ###
@@ -432,6 +466,11 @@
     -c color.grep.match=\"reverse yellow\" \
     grep --break --heading --line-number
 
+  ### init ###
+
+  # initalize a repo and immediate add an empty commit, which makes rebase easier.
+  init-empty = !"f() { git init && git commit --allow-empty --allow-empty-message --message ''; }; f"
+
   ### merge-* ###
 
   # Given a merge commit, find the span of commits that exist(ed).
@@ -465,8 +504,11 @@
 
   # List all blobs by size in bytes.
   # By [CodeGnome](http://www.codegnome.com/)
-  rev-list-all-objects-sort-by-size = !"git rev-list --all --objects  | awk '{print $1}'| git cat-file --batch-check | fgrep blob | sort -k3nr"
+  rev-list-all-objects-by-size = !"git rev-list --all --objects  | awk '{print $1}'| git cat-file --batch-check | fgrep blob | sort -k3nr"
 
+  # List all objects by size in bytes and file name.
+  # By [raphinesse](https://stackoverflow.com/users/380229/raphinesse)
+  rev-list-all-objects-by-size-and-name = !"git rev-list --all --objects | git cat-file --batch-check='%(objecttype) %(objectname) %(objectsize) %(rest)' | awk '/^blob/ {print substr($0,6)}' | sort --numeric-sort --key=2"
 
   ### LOG ALIASES ###
 
@@ -497,38 +539,146 @@
   # Show the date of the latest commit, in strict ISO 8601 format
   log-latest-date = log -1 --date-order --format=%cI
 
-  # Show the number of log entries by a specific date format
-  log-count-per-date-format = "!f() { d=\"$1\"; shift; git log $@ --format=oneline --format="%ad" --date=format:\"$d\" | awk '{a[$0]++}END{for(i in a){print i, a[i]}}' | sort; }; f"
-
   # Show the log of the recent hour, day, week, month, year
-  log-hour  = log --since "1 hour ago"
-  log-day   = log --since "1 day ago"
-  log-week  = log --since "1 week ago"
-  log-month = log --since "1 month ago"
-  log-year  = log --since "1 year ago"
+  log-hour  = log --since=1-hour-ago
+  log-day   = log --since=1-day-ago
+  log-week  = log --since=1-week-ago
+  log-month = log --since=1-month-ago
+  log-year  = log --since=1-year-ago
 
   # Show the log of my own recent hour, day, week, month, year
-  log-my-hour  = log --author $(git config user.email) --since "1 hour ago"
-  log-my-day   = log --author $(git config user.email) --since "1 day ago"
-  log-my-week  = log --author $(git config user.email) --since "1 week ago"
-  log-my-month = log --author $(git config user.email) --since "1 month ago"
-  log-my-year  = log --author $(git config user.email) --since "1 year ago"
+  log-my-hour  = log --author $(git config user.email) --since=1-hour-ago
+  log-my-day   = log --author $(git config user.email) --since=1-day-ago
+  log-my-week  = log --author $(git config user.email) --since=1-week-ago
+  log-my-month = log --author $(git config user.email) --since=1-month-ago
+  log-my-year  = log --author $(git config user.email) --since=1-year-ago
 
-  # Show the number of log items by year, or month, or day, etc.
-  log-count-per-hour          = "!f() { git log-count-per-date-format \"%Y-%m-%dT%H\" $@ ; }; f"
-  log-count-per-day           = "!f() { git log-count-per-date-format \"%Y-%m-%d\" $@ ; }; f"
-  log-count-per-week          = "!f() { git log-count-per-date-format \"%Y#%V\" $@; }; f"
-  log-count-per-month         = "!f() { git log-count-per-date-format \"%Y-%m\" $@ ; }; f"
-  log-count-per-year          = "!f() { git log-count-per-date-format \"%Y\" $@ ; }; f"
-  log-count-per-hour-of-day   = "!f() { git log-count-per-date-format \"%H\" $@; }; f"
-  log-count-per-day-of-week   = "!f() { git log-count-per-date-format \"%u\" $@; }; f"
-  log-count-per-week-of-year  = "!f() { git log-count-per-date-format \"%V\" $@; }; f"
+  # Show a specific format string and its number of log entries
+  log-of-format-and-count = "!f() { format=\"$1\"; shift; git log $@ --format=oneline --format="$format" | awk '{a[$0]++}END{for(i in a){print i, a[i], int((a[i]/NR)*100) \"%\"}}' | sort; }; f"
+  log-of-count-and-format = "!f() { format=\"$1\"; shift; git log $@ --format=oneline --format="$format" | awk '{a[$0]++}END{for(i in a){print a[i], int((a[i]/NR)*100) \"%\", i}}' | sort -nr; }; f"
+
+  # Show the number of log entries by a specific format string and date format string
+  log-of-format-and-count-with-date = "!f() { format=\"$1\"; shift; date_format=\"$1\"; shift; git log $@ --format=oneline --format=\"$format\" --date=format:\"$date_format\" | awk '{a[$0]++}END{for(i in a){print i, a[i], int((a[i]/NR)*100) \"%\"}}' | sort -r; }; f"
+  log-of-count-and-format-with-date = "!f() { format=\"$1\"; shift; date_format=\"$1\"; shift; git log $@ --format=oneline --format=\"$format\" --date=format:\"$date_format\" | awk '{a[$0]++}END{for(i in a){print a[i], int((a[i]/NR)*100) \"%\", i}}' | sort -nr; }; f"
+
+  # Show the number of log items by email
+  log-of-email-and-count         = "!f() { git log-of-format-and-count \"%aE\" $@; }; f"
+  log-of-count-and-email         = "!f() { git log-of-count-and-format \"%aE\" $@; }; f"
+
+  # Show the number of log items by hour
+  log-of-hour-and-count          = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%Y-%m-%dT%H\" $@ ; }; f"
+  log-of-count-and-hour          = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%Y-%m-%dT%H\" $@ ; }; f"
+
+  # Show the number of log items by day
+  log-of-day-and-count           = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%Y-%m-%d\" $@ ; }; f"
+  log-of-count-and-day           = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%Y-%m-%d\" $@ ; }; f"
+
+  # Show the number of log items by week
+  log-of-week-and-count          = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%Y#%V\" $@; }; f"
+  log-of-count-and-week          = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%Y#%V\" $@; }; f"
+
+  # Show the number of log items by month
+  log-of-month-and-count         = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%Y-%m\" $@ ; }; f"
+  log-of-count-and-month         = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%Y-%m\" $@ ; }; f"
+
+  # Show the number of log items by year
+  log-of-year-and-count          = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%Y\" $@ ; }; f"
+  log-of-count-and-year          = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%Y\" $@ ; }; f"
+
+  # Show the number of log items by hour of day
+  log-of-hour-of-day-and-count   = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%H\" $@; }; f"
+  log-of-count-and-hour-of-day   = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%H\" $@; }; f"
+
+  # Show the number of log items by day of week
+  log-of-day-of-week-and-count   = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%u\" $@; }; f"
+  log-of-count-and-day-of-week   = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%u\" $@; }; f"
+
+  # Show the number of log items by week of year
+  log-of-week-of-year-and-count  = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%V\" $@; }; f"
+  log-of-count-and-week-of-year  = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%V\" $@; }; f"
 
   # TODO
   log-refs = log --all --graph --decorate --oneline --simplify-by-decoration --no-merges
   log-timeline = log --format='%h %an %ar - %s'
   log-local = log --oneline origin..HEAD
   log-fetched = log --oneline HEAD..origin/master
+
+  # chart: show a summary chart of activity per author.
+  #
+  # Example:
+  #
+  #     $ git chart
+  #     ..X..........X...2..12 alice@example.com
+  #     ....2..2..13.......... bob@example.com
+  #     2.....1....11......... carol@example.com
+  #     ..1............1..1... david@example.com
+  #     ....1.......1.3.3.22.2 eve@example.com
+  #
+  # The chart rows are the authors.
+  # TODO: sort the rows meaningfully,
+  # such as alphabetically, or by count.
+  #
+  # The chart columns are the days.
+  # The chart column prints one character per day.
+  #
+  #   * For 1-9 commits, show the number.
+  #   * For 10 or more commits, show "X" as a visual indicator.
+  #   * For no commits, show "." as a visual placeholder.
+  #
+  # The chart timeline adjusts the date range automatically:
+  #
+  #   * The timeline starts with the date of the earliest commit.
+  #   * The timeline stops with the date of the latest commit.
+  #   * The intent is to show the most relevant information.
+  #
+  # The chart default is to look at the past 6 weeks;
+  # this gives a good balance of recency and speed
+  # for a team that's currently working on a repo,
+  # and also gives a good balance of fitting within
+  # one terminal window 80 character width.
+  #
+  # You can adjust how far back the chart looks,
+  # by providing your own `--since` parameter.
+  # For example if you want to chart an older repo,
+  # that does not have any recent commits, then you
+  # you must provide a longer `--since` parameter.
+  #
+  chart = "!f() { \
+    git log \
+    --format=oneline \
+    --format=\"%aE %at\" \
+    --since=6-weeks-ago \
+    $* | \
+    awk ' \
+    function time_to_slot(t) { return strftime(\"%Y-%m-%d\", t, true) } \
+    function count_to_char(i) { return (i > 0) ? ((i < 10) ? i : \"X\") : \".\" } \
+    BEGIN { \
+      time_min = systime(); time_max = 0; \
+      SECONDS_PER_DAY=86400; \
+    } \
+    { \
+      item = $1; \
+      time = 0 + $2; \
+      if (time > time_max){ time_max = time } else if (time < time_min){ time_min = time }; \
+      slot = time_to_slot(time); \
+      items[item]++; \
+      slots[slot]++; \
+      views[item, slot]++; \
+    } \
+    END{ \
+      printf(\"Chart time range %s to %s.\\n\", time_to_slot(time_min), time_to_slot(time_max)); \
+      time_max_add = time_max += SECONDS_PER_DAY; \
+      for(item in items){ \
+        row = \"\"; \
+        for(time = time_min; time < time_max_add; time += SECONDS_PER_DAY) { \
+          slot = time_to_slot(time); \
+          count = views[item, slot]; \
+          row = row count_to_char(count); \
+        } \
+        print row, item; \
+      } \
+    }'; \
+  }; f"
 
   # churn: show log of files that have many changes
   #
@@ -548,17 +698,17 @@
   #
   # Show churn for a time range:
   #
-  #   $ git churn --since='1 month ago'
+  #   $ git churn --since=1-month-ago
   #
   # These are all standard arguments to `git log`.
   #
   # It's possible to get valuable insight from history of a project not only
   # by viewing individual commits, but by analyzing sets of changes as a whole.
-  # For instance, git-log-churn compiles stats about which files change the most.
+  # For instance, `git churn` compiles stats about which files change the most.
   #
   # For example, to see where work on an app was focused on in the past month:
   #
-  #     $ git churn --since='1 month ago' app/ | tail
+  #     $ git churn --since=1-month-ago app/ | tail
   #
   # This can also highlight potential problems with technical debt in a project.
   # A specific file changing too often is generally a red flag, since it probably
@@ -570,15 +720,41 @@
   #
   # For instance, to see who contributed most to the API part of an application:
   #
-  #    $ git log --format='%an' --since='1 month ago' app/controllers/api/ | \
+  #    $ git log --format='%an' --since=1-month-ago app/controllers/api/ | \
   #      sort | uniq -c | sort -rn | head
   #
   #    109 Alice Anderson
   #    13 Bob Brown
   #    7 Carol Clark
   #
-  churn = !git log --all --find-copies --find-renames --name-only --format='format:' "$@" | sort | grep -v '^$' | uniq -c | sort | awk 'BEGIN {print "count\tfile"} {print $1 "\t" $2}' | sort -g
+  churn = !"f() { git log --all --find-copies --find-renames --name-only --format='format:' \"$@\" | awk 'NF{a[$0]++}END{for(i in a){print a[i], i}}' | sort -rn;};f"
 
+  # summary: print a helpful summary of some typical metrics
+  summary = "!f() { \
+    printf \"Summary of this branch...\n\"; \
+    printf \"%s\n\" $(git rev-parse --abbrev-ref HEAD); \
+    printf \"%s first commit timestamp\n\" $(git log --date-order --format=%cI | tail -1); \
+    printf \"%s latest commit timestamp\n\" $(git log -1 --date-order --format=%cI); \
+    printf \"%d commit count\n\" $(git rev-list --count HEAD); \
+    printf \"%d date count\n\" $(git log --format=oneline --format=\"%ad\" --date=format:\"%Y-%m-%d\" | awk '{a[$0]=1}END{for(i in a){n++;} print n}'); \
+    printf \"%d tag count\n\" $(git tag | wc -l); \
+    printf \"%d author count\n\" $(git log --format=oneline --format=\"%aE\" | awk '{a[$0]=1}END{for(i in a){n++;} print n}'); \
+    printf \"%d committer count\n\" $(git log --format=oneline --format=\"%cE\" | awk '{a[$0]=1}END{for(i in a){n++;} print n}'); \
+    printf \"%d local branch count\n\" $(git branch | grep -v \" -> \" | wc -l); \
+    printf \"%d remote branch count\n\" $(git branch -r | grep -v \" -> \" | wc -l); \
+    printf \"\nSummary of this directory...\n\"; \
+    printf \"%s\n\" $(pwd); \
+    printf \"%d file count via git ls-files\n\" $(git ls-files | wc -l); \
+    printf \"%d file count via find command\n\" $(find . | wc -l); \
+    printf \"%d disk usage\n\" $(du -s | awk '{print $1}'); \
+    printf \"\nMost-active authors, with commit count and %%...\n\"; git log-of-count-and-email | head -7; \
+    printf \"\nMost-active dates, with commit count and %%...\n\"; git log-of-count-and-day | head -7; \
+    printf \"\nMost-active files, with churn count\n\"; git churn | head -7; \
+  }; f"
+
+  ### REF ALIASES ###
+
+  ref-recent = "!git for-each-ref --sort=-committerdate --format='%(committerdate:short) %(refname:short) %(objectname:short) %(contents:subject)' refs/heads/"
 
   ### LOOKUP ALIASES ###
 
@@ -608,15 +784,91 @@
   issues = !sh -c \"git log $1 --oneline | grep -o \\\"ISSUE-[0-9]\\+\\\" | sort -u\"
 
   # Show the commit's parents
-  commit-parents = !git cat-file -p "$1" | sed -n '/0/,/^ *$/p' | grep "^parent "
+  commit-parents = !"f(){ git cat-file -p \"${*:-HEAD}\" | sed -n '/0/,/^ *$/{/^parent /p}'; };f"
 
   # Is the commit a merge commit? If yes exit 0, else exit 1
-  commit-is-merge = ![ "$(git cat-file -p "42e810fddc4688b28ef1cf438998579344cc33f5" | sed -n '/0/,/^ *$/p' | grep -c "^parent ")" -ge "2" ]
+  commit-is-merge = !"f(){ [ -n \"$(git commit-parents \"$*\" | sed '0,/^parent /d')\" ];};f"
+
+  # Show the commit's keyword-marked lines.
+  #
+  # Show each line in the commit message that starts with zero or more blanks,
+  # then a keyword (alphanum and dash characters), then a colon.
+  #
+  # Example commit:
+  #
+  #     commit ce505d161fccdbc8d4bf12047846de7433ad6d04
+  #     Author: Joel Parker Henderson <joel@joelparkerhenderson.com>
+  #     Date:   Tue May 28 11:53:47 2019 -0700
+  #
+  #         Add feature foo
+  #
+  #         This commit is to add feature foo.
+  #
+  #         Time: 5 hours
+  #         Cost: 600 USD
+  #
+  # Command:
+  #
+  #     $ git commit-message-key-lines ce505d161fccdbc8d4bf12047846de7433ad6d04
+  #     Commit: ce505d161fccdbc8d4bf12047846de7433ad6d04
+  #     Author: Joel Parker Henderson <joel@joelparkerhenderson.com>
+  #     Date: Tue May 28 11:53:47 2019 -0700
+  #     Time: 5 hours
+  #     Cost: 600 USD
+  #
+  # Normalize the output:
+  #
+  #   * Start the output with "Commit: <commit>"
+  #
+  #   * Omit leading blanks
+  #
+  #   * After the colon, use one space (not tab, not multiple spaces, etc.)
+  #
+  # Known issues:
+  #
+  #   * TODO: improve the keyword matcher so it requires the keyword to end
+  #     in an alphanum (not a dash), and also so the dash is a separator i.e.
+  #     the matcher does not accept a dash followed by another dash.
+  #
+  commit-message-key-lines = "!f(){ echo \"Commit: $1\"; git log \"$1\" --format=fuller | grep \"^[[:blank:]]*[[:alnum:]][-[:alnum:]]*:\" | sed \"s/^[[:blank:]]*//; s/:[[:blank:]]*/: /\"; }; f"
+
 
   ### WORKFLOW ALIASES ###
 
   # Clone a git repository including all submodules
   cloner = clone --recursive
+
+  # Clone as lean as possible, for example to checkout just one subdiretory.
+  #
+  # This skips fetching unneeded objects from the server.
+  #
+  # Command breakdown:
+  #
+  #   * --depth 1 does a shallow clone and implies --single-branches
+  #
+  #   * --filter=blob:none skips all blobs, but fetches all tree objects
+  #
+  #   * --filter=tree:0 skips unneeded trees
+  #
+  #   * --filter=combine:FILTER1+FILTER2 is the syntax to use multiple
+  #       filters at once; trying to pass --filter multiple times fails
+  #       with: "multiple filter-specs cannot be combined". 
+  #
+  # This uses --filter=tree:0 added in Git 2.20 and --filter=combine 
+  # composite filter added in Git 2.24.
+  #
+  # The server should be configured with:
+  #
+  #     git config --local uploadpack.allowfilter 1
+  #     git config --local uploadpack.allowanysha1inwant 1
+  #
+  # An extension was made to the Git remote protocol to support this 
+  # feature in v2.19.0 and actually skip fetching unneeded objects.
+  # There was server support then, but it can be locally tested.
+  #
+  # Credit: https://stackoverflow.com/questions/600079/how-do-i-clone-a-subdirectory-only-of-a-git-repository/52269934#52269934
+  #
+  clone-lean = clone --depth 1 --filter=combine:blob:none+tree:0 --no-checkout 
 
   # Stash aliases for push & pop
   #
@@ -653,9 +905,13 @@
   #  * git get: fetch and prune, pull and rebase, then update submodules
   #  * git put: commit all items, then push
   #
+  # If you want to preserve merges, then we recommend you set this:
+  #
+  #     git config pull.rebase preserve
+  #
   # TODO: handle tags, delete superfluous branches, and add error handing.
   #
-  get = !git fetch --prune && git pull --rebase=preserve && git submodule update --init --recursive
+  get = !git fetch --prune && git pull --rebase && git submodule update --init --recursive
   put = !git commit --all && git push
 
   # Do everything we can to make the local repo like the master branch.
@@ -689,7 +945,7 @@
   reset-commit       = reset --soft HEAD~1
   reset-commit-hard  = reset --hard HEAD~1
   reset-commit-clean = !git reset --hard HEAD~1 && git clean -fd
-  reset-to-pristine   = !git reset --hard && git clean -ffdx
+  reset-to-pristine  = !git reset --hard && git clean -ffdx
   reset-to-upstream  = !git reset --hard $(git upstream-name)
 
   # Undo is simply a synonym for "reset" because "undo" can help novices.
@@ -717,18 +973,18 @@
   expunge = !"f() { git filter-branch --force --index-filter \"git rm --cached --ignore-unmatch $1\" --prune-empty --tag-name-filter cat -- --all }; f"
 
   # Edit all files of the given type
-  edit-cached = !"f() { git ls-files --cached | sort -u ; }; `git var GIT_EDITOR` `f`"
-  edit-deleted = !"f() { git ls-files --deleted | sort -u ; }; `git var GIT_EDITOR` `f`"
-  edit-others = !"f() { git ls-files --others | sort -u ; }; `git var GIT_EDITOR` `f`"
-  edit-ignored = !"f() { git ls-files --ignored | sort -u ; }; `git var GIT_EDITOR` `f`"
-  edit-killed = !"f() { git ls-files --killed | sort -u ; }; `git var GIT_EDITOR` `f`"
-  edit-modified = !"f() { git ls-files --modified | sort -u ; }; `git var GIT_EDITOR` `f`"
-  edit-stage = !"f() { git ls-files --stage | cut -f2 | sort -u ; }; `git var GIT_EDITOR` `f`"
+  edit-cached   = !"f() { git ls-files --cached          | sort -u ; }; `git var GIT_EDITOR` `f`"
+  edit-deleted  = !"f() { git ls-files --deleted         | sort -u ; }; `git var GIT_EDITOR` `f`"
+  edit-others   = !"f() { git ls-files --others          | sort -u ; }; `git var GIT_EDITOR` `f`"
+  edit-ignored  = !"f() { git ls-files --ignored         | sort -u ; }; `git var GIT_EDITOR` `f`"
+  edit-killed   = !"f() { git ls-files --killed          | sort -u ; }; `git var GIT_EDITOR` `f`"
+  edit-modified = !"f() { git ls-files --modified        | sort -u ; }; `git var GIT_EDITOR` `f`"
+  edit-stage    = !"f() { git ls-files --stage | cut -f2 | sort -u ; }; `git var GIT_EDITOR` `f`"
 
   # Editing and adding conflicted files: when we get many merge conflicts
   # and want to quickly solve them using an editor, then add the  files.
   edit-unmerged = !"f() { git ls-files --unmerged | cut -f2 | sort -u ; }; `git var GIT_EDITOR` `f`"
-  add-unmerged = !"f() { git ls-files --unmerged | cut -f2 | sort -u ; }; git add `f`"
+  add-unmerged  = !"f() { git ls-files --unmerged | cut -f2 | sort -u ; }; git add `f`"
 
   # Ours & Theirs - easy merging when you know which files you want
   #
@@ -743,7 +999,7 @@
   # N.b. the function is there as hack to get $@ doing
   # what you would expect it to as a shell user.
   #
-  ours   = !"f() { git checkout --ours $@ && git add $@; }; f"
+  ours   = !"f() { git checkout --ours   $@ && git add $@; }; f"
   theirs = !"f() { git checkout --theirs $@ && git add $@; }; f"
 
   # Work In Progress: from https://gist.github.com/492227 and VonC on stackoverflow.
@@ -967,32 +1223,29 @@
   # Some people like to use a topic branch for a new feature, or a
   # hotfix patch, or refactoring work, or some spike research, etc.
   #
-  # Our simple workflow:
+  # Start work on a new topic branch, which creates your branch:
   #
-  #     $ git topic-start foo
-  #     ... do work ...
-  #     $ git topic-stop
+  #     $ git topic-start add-feature-foo
   #
-  # If you want more control, then you can use these building blocks:
-  #
-  #     $ git topic-create foo
-  #     $ git topic-delete
-  #
-  # If you want to pull and push while you're working, then use these:
-  #
-  #     $ git topic-pull
-  #     $ git topic-push
-  #
-  # If you want to manage your branch while you're working, then use these:
+  # Do some work then synchronize your changes, which integrates your branch:
   #
   #     $ git topic-sync
+  #  
+  # Stop work on a topic branch, which deletes your branch:
+  #
+  #     $ git topic-stop
+  #
+  # If you want to move your branch a.k.a. rename it:
+  #
   #     $ git topic-rename
   #
   # Ideas for your own alias customizations:
   #
   #   * Notify your team, such as by sending an email, posting to chat, etc.
+  #
   #   * Trigger testing of the new topic branch to ensure all tests succeed.
-  #   * Update the project management software.
+  #
+  #   * Update your project management software with the new topic name.
   #
   # Customize these aliases as you like for your own workflow.
   ##
@@ -1002,7 +1255,7 @@
   #
   # When we create a new topic branch, we base it on the topic base branch.
   # Many projects use the default "master" branch; some projects use custom
-  # branches, such as "trunk", "develop", "integrate", "release", etc.
+  # branches, such as "trunk", "develop", "integrate", "release", "green", etc.
   #
   # Customize this alias as you like for your own workflow.
   ##
@@ -1011,30 +1264,38 @@
     printf \"master\n\"; \
   };f"
 
-  ### START & STOP ###
-
   ##
   # Start a topic branch.
   #
   # Example:
   #
-  #     git topic-start foo
+  #     git topic-start add-feature-foo
   #
   # We use this alias to begin work on a new feature,
   # new task, new fix, new refactor, new optimization, etc.
   #
-  # This implementation does these steps:
-  #
-  #   1. Create the topic branch.
-  #   2. Push the topic branch.
-  #
   # Customize this alias as you like for your own workflow.
+  #
+  # Our workflow does these steps:
+  #
+  #   1. Update the base branch.
+  #   2. Create a new branch with your topic name, based on the base branch.
+  #   3. Push the topic branch, so our team members can see the new branch.
+  #
+  # If you use a sharing site such a GitHub, and use typical settings,
+  # then this implementation makes your branch visible to collaborators.
+  #
+  # Many teams share branches before they are fully ready, to help
+  # the team provide feedback on the work-in-progress, and also to
+  # run any automatic tests to verify the branch runs successfully.
   ##
 
   topic-start = "!f(){ \
     topic_branch=\"$1\"; \
-    git topic-create \"$topic_branch\"; \
-    git topic-push; \
+    base_branch=$(git topic-base-branch-name); \
+    git checkout \"$base_branch\"; git pull; \
+    git checkout -b \"$topic_branch\" \"$base_branch\"; \
+    git push --set-upstream origin \"$topic_branch\"; \
   };f"
 
   ##
@@ -1047,56 +1308,13 @@
   # We use this alias to complete work on a new feature,
   # new task, new fix, new refactor, new optimization, etc.
   #
-  # This implementation does these:
+  # Customize this alias as you like for your own workflow.
+  #
+  # Our workflow does these steps:
   #
   #   1. Push the topic branch.
-  #   2. Delete the topic branch.
-  #
-  # Customize this alias as you like for your own workflow.
-  ##
-
-  topic-stop = "!f(){ \
-    git topic-push; \
-    git topic-delete; \
-  };f"
-
-  ### CREATE & DELETE ###
-
-  ##
-  # Create a topic branch.
-  #
-  # Example:
-  #
-  #     git topic-create foo
-  #
-  # This implementation does these steps:
-  #
-  #   1. Update the base branch locally.
-  #   2. Create a new branch with your topic name, based on the base branch.
-  #
-  # Customize this alias as you like for your own workflow.
-  ##
-
-  topic-create = "!f(){ \
-    topic_branch=\"$1\"; \
-    base_branch=$(git topic-base-branch-name); \
-    git checkout \"$base_branch\"; git pull; \
-    git checkout -b \"$topic_branch\" \"$base_branch\"; \
-  };f"
-
-  ##
-  # Delete a topic branch; this must be the current branch.
-  #
-  # Example:
-  #
-  #     git topic-delete
-  #
-  # This implementation does these:
-  #
-  #   1. Delete the topic branch locally.
-  #   2. Delete the topic branch remotely.
-  #
-  # Customize this for your own workflow preferences.
+  #   2. Delete the topic branch locally.
+  #   3. Delete the topic branch remotely.
   #
   # If you use a sharing site such a GitHub, and use typical settings,
   # then this implementation deletes your branch for the site.
@@ -1108,88 +1326,24 @@
   # that the remote branch doesn't exist, so git is unable to delete it.
   # That's fine; it means someone else has already deleted the branch.
   # To synchronize your branch list, use "git fetch --prune".
-  #
-  # Customize this alias as you like for your own workflow.
   ##
 
-  topic-delete = "!f(){ \
+  topic-stop = "!f(){ \
     topic_branch=$(git branch-name); \
     base_branch=$(git topic-base-branch-name); \
     if [ \"$topic_branch\" = \"$base_branch\" ]; then \
-      printf \"You are trying to delete your git topic branch,\n\"; \
-      printf \"but you are on the base branch: $topic_base_branch.\n\"; \
+      printf \"You are asking to do git topic-stop,\n\"; \
+      printf \"but you are not currently on a topic branch;\n\"; \
+      printf \"you are on the base branch: $base_branch.\n\"; \
       printf \"Please checkout the topic branch that you want,\n\"; \
       printf \"then retry the git topic delete command.\n\"; \
     else \
+      git push; \
       git checkout \"$base_branch\"; \
       git branch --delete \"$topic_branch\"; \
       git push origin \":$topic_branch\"; \
     fi; \
   };f"
-
-
-  ### PULL & PUSH ###
-
-  ##
-  # Update the current topic branch by pulling changes.
-  #
-  # Example:
-  #
-  #     git topic-pull
-  #
-  # This implementation does these:
-  #
-  #   1. Pull the topic branch from the origin.
-  #
-  # If you use any kind of testing framework, or test driven development,
-  # then it can be wise to test your topic immediately after running this,
-  # to ensure that any available updates are successfully integrated.
-  #
-  # Customize this alias as you like for your own workflow.
-  #
-  #   * E.g. some teams prefer to use `pull --rebase`.
-  ##
-
-  topic-pull = "!f(){ \
-    git pull; \
-  };f"
-
-  topic-pull-rebase = "!f(){ \
-    topic_branch=$(git branch-name); \
-    base_branch=$(git topic-base-branch-name); \
-    git checkout \"$base_branch\"; git pull; \
-    git checkout \"$topic_branch\"; git rebase \"$base_branch\"; \
-  };f"
-
-  ##
-  # Update the current topic branch by pushing changes.
-  #
-  # Example:
-  #
-  #     git topic-push
-  #
-  # This implementation does these:
-  #
-  #   1. Push the topic branch to the origin.
-  #   2. Set the upstream tracking.
-  #
-  # Customize this for your own workflow preferences.
-  #
-  # If you use a sharing site such a GitHub, and use typical settings,
-  # then this implementation makes your branch visible to collaborators.
-  #
-  # Many teams share branches before they are fully ready, to help
-  # the team provide feedback on the work-in-progress.
-  #
-  # Customize this alias as you like for your own workflow.
-  ##
-
-  topic-push = "!f(){ \
-    topic_branch=$(git branch-name); \
-    git push --set-upstream origin \"$topic_branch\"; \
-  };f"
-
-  ### MANAGE TOPIC BRANCHES ###
 
   ##
   # Update the current topic branch by synchronizing changes.
@@ -1200,19 +1354,33 @@
   #
   # This implementation does these:
   #
-  #   1. Run topic-pull.
-  #   2. Run topic-push.
+  #   1. Pull any changes.
+  #   2. Push any changes.
+  #
+  # If you use any kind of testing framework, or test driven development,
+  # then it can be wise to test your topic immediately after running this,
+  # to ensure that any available updates are successfully integrated.
   #
   # Customize this alias as you like for your own workflow.
   ##
 
   topic-sync = "!f(){ \
-    git topic-pull; \
-    git topic-push; \
+    topic_branch=$(git branch-name); \
+    base_branch=$(git topic-base-branch-name); \
+    if [ \"$topic_branch\" = \"$base_branch\" ]; then \
+      printf \"You are asking to do git topic-sync,\n\"; \
+      printf \"but you are not currently on a topic branch;\n\"; \
+      printf \"you are on the base branch: $base_branch.\n\"; \
+      printf \"Please checkout the topic branch that you want,\n\"; \
+      printf \"then retry the git topic delete command.\n\"; \
+    else \
+      git pull; \
+      git push; \
+    fi; \
   };f"
 
   ##
-  # Move/rename the current topic branch.
+  # Move the current topic branch, a.k.a. rename it.
   #
   # Example:
   #
@@ -1220,8 +1388,8 @@
   #
   # This implementation does these:
   #
-  #   1. Move/rename the local branch.
-  #   2. Move/rename the remote branch by pushing to origin.
+  #   1. Move the local branch.
+  #   2. Move the remote branch by pushing to origin.
   #
   # Customize this alias as you like for your own workflow.
   ##

@@ -187,7 +187,7 @@ target/
 celerybeat-schedule
 
 # dotenv
-.env
+#.env
 
 # virtualenv
 venv/
@@ -315,3 +315,5 @@ node_modules/
 *.bak
 .solargraph.yml
 definitions.rb
+
+.tool-versions

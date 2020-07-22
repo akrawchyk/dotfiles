@@ -9,6 +9,10 @@
   safecrlf = true
   trustctime = false
   excludesfile = ~/.gitignore_global
+  pager = delta --theme='base16'
+
+[interactive]
+  diffFilter = delta --color-only
 
 [help]
   autocorrect = 1
@@ -59,3 +63,5 @@
 [merge "npm-merge-driver"]
   name = automatically merge npm lockfiles
   driver = npx npm-merge-driver merge %A %O %B %P
+[branch]
+	autosetuprebase = always
