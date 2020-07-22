@@ -8,27 +8,25 @@ if [[ "$(uname -a)" = *Ubuntu* ]]; then
   antigen bundle ubuntu
 fi
 
+antigen theme denysdovhan/spaceship-prompt
+
 antigen bundle colored-man-pages
-antigen bundle asdf
 antigen bundle fzf
 antigen bundle tmux
 
-antigen bundle nvm
+antigen bundle asdf
+antigen bundle gitfast
 
-antigen bundle chruby
 antigen bundle rails
-antigen bundle bundler
+#antigen bundle bundler
 antigen bundle rake
 antigen bundle rake-fast
-
-antigen bundle golang
-
-antigen bundle github
 
 antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle zsh-users/zsh-completions
 antigen bundle zsh-users/zsh-history-substring-search
 
-antigen theme denysdovhan/spaceship-prompt
+# MUST be last
+antigen bundle zsh-users/zsh-syntax-highlighting
 
 antigen apply
