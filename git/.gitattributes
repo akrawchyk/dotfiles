@@ -1,0 +1,5 @@
+*.rb      diff=ruby
+*.gemspec diff=ruby
+*.css     diff=css
+*.html    diff=html
+.md       diff=markdown
