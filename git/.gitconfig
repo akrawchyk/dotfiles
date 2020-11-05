@@ -4,12 +4,13 @@
   signingkey = D40B20EAD93911FF
 
 [core]
-  autocrlf = input
+	autocrlf = input
   whitespace = trailing-space,space-before-tab
   safecrlf = true
   trustctime = false
   excludesfile = ~/.gitignore_global
   pager = delta --theme='base16'
+	attributesfile = /Users/akrawchyk/.gitattributes
 
 [interactive]
   diffFilter = delta --color-only
