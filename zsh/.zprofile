@@ -9,7 +9,8 @@ export LC_ALL=$LANG
 export ANTIGEN_CACHE=$HOME/.antigen/init-${OSTYPE}.zsh
 
 # https://github.com/junegunn/fzf#tips
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+
+export FZF_DEFAULT_COMMAND='fdfind --type f --hidden --follow --exclude .git'
 #export FZF_DEFAULT_COMMAND="(git ls-tree -r --name-only HEAD || fd --type f --hidden --exclude .git) 2> /dev/null"
 export FZF_TMUX=1
 export DISABLE_FZF_KEY_BINDINGS="true"
@@ -22,9 +23,6 @@ fi
 
 if [[ ${commands[brew]} ]]; then
   export HOMEBREW_NO_ANALYTICS=1
-fi
-
-if [[ ${commands[brew]} ]]; then
   path=("$(brew --prefix mysql@5.6)/bin" $path)
 fi
 
@@ -32,7 +30,6 @@ typeset -gU path fpath cdpath
 
 path=(
   $HOME/bin
-  $HOME/.cargo/bin
   /usr/local/{bin,sbin}
   $path
 )

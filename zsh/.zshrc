@@ -12,3 +12,5 @@ if [[ -n "$terminfo[kcud1]" ]]; then
 fi
 
 alias vim="nvim"
+
+alias fd="fdfind"

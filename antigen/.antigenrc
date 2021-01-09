@@ -22,6 +22,8 @@ antigen bundle rails
 antigen bundle rake
 antigen bundle rake-fast
 
+antigen bundle golang
+
 antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle zsh-users/zsh-completions
 antigen bundle zsh-users/zsh-history-substring-search
