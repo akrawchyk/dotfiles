@@ -10,6 +10,8 @@ export ANTIGEN_CACHE="$HOME/.antigen/init-${OSTYPE}.zsh"
 
 # https://github.com/denysdovhan/spaceship-prompt/blob/master/docs/Options.md#google-cloud-platform-gcloud
 export SPACESHIP_GCLOUD_SHOW=false
+# https://github.com/denysdovhan/spaceship-prompt/blob/master/docs/Options.md#battery-battery
+export SPACESHIP_BATTERY_SHOW=false
 
 # https://github.com/junegunn/fzf#tips
 export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git"
@@ -27,21 +29,16 @@ if [[ ${commands[brew]} ]]; then
   export HOMEBREW_NO_ANALYTICS=1
 fi
 
-if [[ ${commands[brew]} ]]; then
-  path=("$(brew --prefix mysql@5.6)/bin" $path)
-fi
-
-if [[ ${commands[bat] ]]; then
+if [[ ${commands[bat]} ]]; then
   export BAT_THEME="base16-256"
 fi
 
 typeset -gU path fpath cdpath
 
 path=(
-  $HOME/bin
-  $HOME/.cargo/bin
-  /usr/local/{bin,sbin}
   $path
+  /usr/local/{bin,sbin}
+  $HOME/bin
 )
 
 cdpath=(
