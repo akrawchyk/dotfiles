@@ -6,7 +6,7 @@ export LANG=en_US.UTF-8
 export LC_ALL=$LANG
 
 # https://github.com/zsh-users/antigen/wiki/Commands#antigen-theme
-export ANTIGEN_CACHE="$HOME/.antigen/init-${OSTYPE}.zsh"
+export ANTIGEN_CACHE="$HOME/.antigen/init-$OSTYPE.zsh"
 
 # https://github.com/denysdovhan/spaceship-prompt/blob/master/docs/Options.md#google-cloud-platform-gcloud
 export SPACESHIP_GCLOUD_SHOW=false

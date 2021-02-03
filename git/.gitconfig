@@ -1,7 +1,7 @@
 [user]
   email = 903716+akrawchyk@users.noreply.github.com
   name = Andrew Krawchyk
-  signingkey = D40B20EAD93911FF
+  signingkey = 76ED5D246378A8A051A2D080C4386EA1FE6358F9
 
 [core]
 	autocrlf = input
