@@ -13,6 +13,7 @@ antigen theme denysdovhan/spaceship-prompt
 antigen bundle colored-man-pages
 antigen bundle dotenv
 antigen bundle fzf
+antigen bundle keychain
 antigen bundle tmux
 
 antigen bundle asdf

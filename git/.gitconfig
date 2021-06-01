@@ -1,16 +1,16 @@
 [user]
   email = 903716+akrawchyk@users.noreply.github.com
   name = Andrew Krawchyk
-  signingkey = 76ED5D246378A8A051A2D080C4386EA1FE6358F9
+  #signingkey = 76ED5D246378A8A051A2D080C4386EA1FE6358F9
 
 [core]
-	autocrlf = input
+  autocrlf = input
   whitespace = trailing-space,space-before-tab
   safecrlf = true
   trustctime = false
   excludesfile = ~/.gitignore_global
-  pager = delta --theme='base16'
-	attributesfile = /Users/akrawchyk/.gitattributes
+  pager = delta
+  attributesfile = /Users/akrawchyk/.gitattributes
 
 [interactive]
   diffFilter = delta --color-only
@@ -45,6 +45,7 @@
 [diff]
   renames = copies
   tool = vimdiff
+  colorMoved = default
 
 [color]
   ui = true
@@ -56,13 +57,18 @@
   helper = osxkeychain
 
 [commit]
-  gpgsign = true
+  #gpgsign = true
 
 [gpg]
-  program = gpg2
+  #program = gpg2
 
 [merge "npm-merge-driver"]
   name = automatically merge npm lockfiles
   driver = npx npm-merge-driver merge %A %O %B %P
+
 [branch]
-	autosetuprebase = always
+  autosetuprebase = always
+
+[delta]
+    features = side-by-side line-numbers decorations
+    whitespace-error-style = 22 reverse

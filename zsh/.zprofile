@@ -12,8 +12,12 @@ export ANTIGEN_CACHE="$HOME/.antigen/init-$OSTYPE.zsh"
 export SPACESHIP_GCLOUD_SHOW=false
 # https://github.com/denysdovhan/spaceship-prompt/blob/master/docs/Options.md#battery-battery
 export SPACESHIP_BATTERY_SHOW=false
+export SPACESHIP_NODE_SHOW=false
+export SPACESHIP_RUBY_SHOW=false
+export SPACESHIP_GIT_STATUS_SHOW=false
 
 # https://github.com/junegunn/fzf#tips
+export FZF_BASE=/usr/local/bin/fzf
 export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git"
 #export FZF_DEFAULT_COMMAND="(git ls-tree -r --name-only HEAD || fd --type f --hidden --exclude .git) 2> /dev/null"
 export FZF_TMUX=1
