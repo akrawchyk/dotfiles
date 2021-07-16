@@ -1,7 +1,7 @@
 [user]
   email = 903716+akrawchyk@users.noreply.github.com
   name = Andrew Krawchyk
-  signingkey = 76ED5D246378A8A051A2D080C4386EA1FE6358F9
+  #signingkey = 76ED5D246378A8A051A2D080C4386EA1FE6358F9
 
 [core]
 	autocrlf = input
@@ -9,11 +9,27 @@
   safecrlf = true
   trustctime = false
   excludesfile = ~/.gitignore_global
-  pager = delta --theme='base16'
-	attributesfile = /Users/akrawchyk/.gitattributes
+	attributesfile = ~/.gitattributes
+
+[pager]
+	diff = delta
+	log = delta
+	reflog = delta
+	show = delta
+	colorMoved = default
 
 [interactive]
   diffFilter = delta --color-only
+
+[delta]
+    features = side-by-side line-numbers decorations
+    whitespace-error-style = 22 reverse
+    navigate = true
+
+[delta "decorations"]
+    commit-decoration-style = bold yellow box ul
+    file-style = bold yellow ul
+    file-decoration-style = none
 
 [help]
   autocorrect = 1
@@ -56,7 +72,7 @@
   helper = osxkeychain
 
 [commit]
-  gpgsign = true
+  #gpgsign = true
 
 [gpg]
   program = gpg2

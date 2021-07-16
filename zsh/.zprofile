@@ -21,9 +21,18 @@ export DISABLE_FZF_KEY_BINDINGS=true
 
 export ZSH_AUTOSUGGEST_USE_ASYNC=true
 
-if [[ ! $TERM_PROGRAM ]]; then
-  export ZSH_TMUX_AUTOSTART=true
-fi
+export JAVA_HOME="/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home"
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/tools
+export PATH=$PATH:$ANDROID_HOME/tools/bin
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+
+export ZSH_TMUX_AUTOSTART=true
+
+#if [[ $TERM_PROGRAM ]]; then
+#  export ZSH_TMUX_AUTOSTART_ONCE=false
+#fi
 
 if [[ ${commands[brew]} ]]; then
   export HOMEBREW_NO_ANALYTICS=1
@@ -44,5 +53,6 @@ path=(
 cdpath=(
   $HOME
   $HOME/Developer
+  $HOME/src
   $cdpath
 )
