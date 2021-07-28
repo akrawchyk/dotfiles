@@ -106,6 +106,9 @@ jspm_packages
 # Optional REPL history
 .node_repl_history
 
+# eslint cache file
+.eslintcache
+
 
 # Python https://github.com/github/gitignore/blob/2664dad61f3fda7755acc70ceb5aac4b1e956981/Python.gitignore
 
