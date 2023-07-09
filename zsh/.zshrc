@@ -24,20 +24,28 @@ fi
 zinit ice svn
 zinit snippet OMZP::tmux
 
-zinit snippet OMZL::clipboard.zsh
-zinit snippet OMZL::completion.zsh
-zinit snippet OMZL::functions.zsh
-zinit snippet OMZL::history.zsh
-zinit snippet OMZL::theme-and-appearance.zsh
-zinit snippet OMZL::misc.zsh 
+#zinit snippet OMZL::clipboard.zsh
+#zinit snippet OMZL::completion.zsh
+#zinit snippet OMZL::functions.zsh
+#zinit snippet OMZL::history.zsh
+#zinit snippet OMZL::theme-and-appearance.zsh
+#zinit snippet OMZL::misc.zsh
 
 zinit wait lucid for \
   atinit"zicompinit; zicdreplay" \
-    zdharma/fast-syntax-highlighting \
+    zdharma-continuum/fast-syntax-highlighting \
+    OMZL::clipboard.zsh \
+    OMZL::completion.zsh \
+    OMZL::functions.zsh \
+    OMZL::history.zsh \
+    OMZL::theme-and-appearance.zsh \
+    OMZL::misc.zsh \
     OMZP::colored-man-pages \
     OMZP::asdf \
     OMZP::dotenv \
     OMZP::gcloud \
+    OMZP::brew \
+    OMZP::kubectl \
   atload"_zsh_autosuggest_start" \
     zsh-users/zsh-autosuggestions \
   blockf atpull'zinit creinstall -q .' \
