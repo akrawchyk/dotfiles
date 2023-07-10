@@ -1,7 +1,7 @@
 [user]
   email = 903716+akrawchyk@users.noreply.github.com
   name = Andrew Krawchyk
-  signingkey = 8DDF3DD831B03FB6F0858FD921ED1067B9EFB8BA
+  #signingkey = 8DDF3DD831B03FB6F0858FD921ED1067B9EFB8BA
 
 [core]
 	autocrlf = input
@@ -9,14 +9,14 @@
   safecrlf = true
   trustctime = false
   excludesfile = ~/.gitignore_global
-	attributesfile = ~/.gitattributes
+  attributesfile = ~/.gitattributes
 
 [pager]
-	diff = delta
-	log = delta
-	reflog = delta
-	show = delta
-	colorMoved = default
+  diff = delta
+  log = delta
+  reflog = delta
+  show = delta
+  colorMoved = default
 
 [interactive]
   diffFilter = delta --color-only
@@ -52,11 +52,6 @@
 
 [merge]
   log = true
-  tool = fugitive
-
-[mergetool "fugitive"]
-  cmd = vim -f -c \"Gdiff\" \"$MERGED\" -c \"wincmd =\"
-  trustExitCode = false
 
 [diff]
   renames = copies
@@ -69,13 +64,13 @@
   whitespace = red reverse
 
 [credential]
-  helper = osxkeychain
+  #helper = osxkeychain
 
 [commit]
-  gpgsign = true
+  #gpgsign = true
 
 [gpg]
-  program = gpg
+  #program = gpg
 
 [merge "npm-merge-driver"]
   name = automatically merge npm lockfiles
