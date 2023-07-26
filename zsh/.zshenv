@@ -1,6 +1,6 @@
 export EDITOR="nvim"
 export VISUAL=$EDITOR
-export LANG="C.utf-8"
+export LANG="en_US.UTF-8"
 export LC_ALL=$LANG
   
 export ZSH_AUTOSUGGEST_USE_ASYNC=true
@@ -27,15 +27,26 @@ if [[ ${commands[bat]} ]]; then
   export BAT_THEME="base16-256"
 fi
 
+# alias
+source "$HOME/.aliasrc"
+
+# secrets
+source "$HOME/.secretrc"
+
+# gpg
 export GPG_TTY=$(tty)
 
+# asdf-vm
 # Don't add asdf shims to PATH
 # https://github.com/asdf-community/asdf-direnv#pro-tips
 export PATH="$PATH:$HOME/.asdf/bin"
 
+# go
+export PATH=$PATH:/usr/local/go/bin
+
+# rustup
 source "$HOME/.cargo/env"
 
+# npm
 export PATH="$HOME/.local/bin:$PATH"
-export PATH="$PATH:/usr/local/go/bin"
 
-. "$HOME/.cargo/env"

@@ -319,4 +319,8 @@ node_modules/
 .solargraph.yml
 definitions.rb
 
+# asdf-vm
 .tool-versions
+
+# direnv
+.envrc
