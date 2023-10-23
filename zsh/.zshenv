@@ -50,3 +50,4 @@ source "$HOME/.cargo/env"
 # npm
 export PATH="$HOME/.local/bin:$PATH"
 
+export CLOUDSDK_HOME=/usr/local/share/google-cloud-sdk

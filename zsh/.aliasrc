@@ -3,3 +3,4 @@ alias k=kubectl
 alias cloud_sql_proxy_***REMOVED***="cloud_sql_proxy -instances=***REMOVED***=tcp:48401"
 alias cloud_sql_proxy_***REMOVED***="cloud_sql_proxy -instances=***REMOVED***=tcp:48402"
 alias cloud_sql_proxy_***REMOVED***="cloud_sql_proxy -instances=***REMOVED***=tcp:48403"
+

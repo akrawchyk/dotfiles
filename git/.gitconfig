@@ -8,28 +8,29 @@
   whitespace = trailing-space,space-before-tab
   safecrlf = true
   trustctime = false
+  pager = delta
   excludesfile = ~/.gitignore_global
   attributesfile = ~/.gitattributes
 
-[pager]
-  diff = delta
-  log = delta
-  reflog = delta
-  show = delta
-  colorMoved = default
-
 [interactive]
-  diffFilter = delta --color-only
+  diffFilter = delta --color-only --features=interactive
 
 [delta]
-    features = side-by-side line-numbers decorations
-    whitespace-error-style = 22 reverse
-    navigate = true
+  features = decorations
+  # --color-moved support
+  map-styles = bold purple => syntax magenta, bold cyan => syntax blue
+
+[delta "interactive"]
+  keep-plus-minus-markers = false
 
 [delta "decorations"]
-    commit-decoration-style = bold yellow box ul
-    file-style = bold yellow ul
-    file-decoration-style = none
+  commit-decoration-style = blue ol
+  commit-style = raw
+  file-style = omit
+  hunk-header-decoration-style = blue box
+  hunk-header-file-style = red
+  hunk-header-line-number-style = "#067a00"
+  hunk-header-style = file line-number syntax
 
 [help]
   autocorrect = 1
@@ -52,8 +53,14 @@
 
 [merge]
   log = true
+  conflictstyle = diff3
+
+[merge "npm-merge-driver"]
+  name = automatically merge npm lockfiles
+  driver = npx npm-merge-driver merge %A %O %B %P
 
 [diff]
+  colorMoved = default
   renames = copies
   tool = vimdiff
 
@@ -72,8 +79,5 @@
 [gpg]
   #program = gpg
 
-[merge "npm-merge-driver"]
-  name = automatically merge npm lockfiles
-  driver = npx npm-merge-driver merge %A %O %B %P
 [branch]
-	autosetuprebase = always
+  autosetuprebase = always
